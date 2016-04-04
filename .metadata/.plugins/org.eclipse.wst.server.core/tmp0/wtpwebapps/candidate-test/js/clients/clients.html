@@ -1,0 +1,18 @@
+<div class="container navbar-container">
+  	<span class="row">
+       <span class="col-md-3 col-sm-3 col-xs-3"></span>
+ 	   <span class="col-md-6 col-sm-6 col-xs-6" style="text-align: center">Clients</span>
+       <button type="button" ng-click="newClient()" class="btn btn-default col-md-3 col-sm-3 col-xs-3">New Client</button>
+	</span>
+</div>
+
+
+<br>
+<div class="list-group"> 
+    <div ng-repeat="client in clients | toArray | orderBy: 'name'"  class="row ">
+        <a ng-click="clientInfo(client._id.$oid)" class="col-xs-10 col-sm-10 col-md-10 list-group-item">
+				 {{client.name}}
+        </a>
+      	<button ng-click="deleteClient(client._id.$oid)" class="col-md-2 col-sm-2 col-xs-2 deletebtn">Remove</button>
+	</div>
+</div>

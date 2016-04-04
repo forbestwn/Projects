@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <meta charset="utf-8" />
+        <title>Nosliw Go Go !!</title>
+
+        <script src="libs/underscore.js"></script>
+        <script src="libs/jquery.js"></script>
+        <script src="libs/backbone.js"></script>
+        <script src="libs/backbone.marionette.js"></script>
+        <script src="libs/log4javascript.js"></script>
+
+        <script src="js/generated/NOSLIWCOMMONCONSTANT.js"></script>
+        <script src="js/generated/NOSLIWATCOMMONTRIBUTECONSTANT.js"></script>
+
+        <script src="js/constant/constant.js"></script>
+
+        <script src="js/common/commonutility.js"></script>
+        <script src="js/common/entity.js"></script>
+        <script src="js/common/event.js"></script>
+        <script src="js/common/lifecycle.js"></script>
+        <script src="js/common/orderedcontainer.js"></script>
+        <script src="js/common/segmentparser.js"></script>
+        <script src="js/common/setting.js"></script>
+
+        <script src="js/error/errorutility.js"></script>
+        <script src="js/error/entitys.js"></script>
+        <script src="js/error/error.js"></script>
+
+        <script src="js/logging/loggingService.js"></script>
+
+        <script src="js/login/loginService.js"></script>
+
+        <script src="js/remoteservice/entitys.js"></script>
+        <script src="js/remoteservice/errorutility.js"></script>
+        <script src="js/remoteservice/synctask.js"></script>
+        <script src="js/remoteservice/remoteservice.js"></script>
+        <script src="js/remoteservice/serviceutility.js"></script>
+
+        <script src="js/request/entitys.js"></script>
+        <script src="js/request/request.js"></script>
+        <script src="js/request/requestmanager.js"></script>
+        <script src="js/request/requestutility.js"></script>
+        <script src="js/request/requestservice.js"></script>
+        <script src="js/request/requestset.js"></script>
+        <script src="js/request/requestsequence.js"></script>
+
+        <script src="js/dynamicload/scriptload.js"></script>
+
+        <script src="js/wraper/entitys.js"></script>
+        <script src="js/wraper/contextvargroup.js"></script>
+        <script src="js/wraper/wraper.js"></script>
+        <script src="js/wraper/wrapereventutility.js"></script>
+        <script src="js/wraper/wraperutility.js"></script>
+
+        <script src="js/uiresource/entitys.js"></script>
+        <script src="js/uiresource/uiresource.js"></script>
+        <script src="js/uiresource/uiresourcemanager.js"></script>
+        <script src="js/uiresource/uitag.js"></script>
+        <script src="js/uiresource/uitagmanager.js"></script>
+        <script src="js/uiresource/uiutility.js"></script>
+
+        <script src="js/datatype/datatypemanager.js"></script>
+        <script src="js/datatype/entitys.js"></script>
+        
+        <script src="js/nosliw/nosliw.js"></script>
+        
+</head>
+
+<body>
+	    aaaaa
+
+	<div id="testDiv">
+	</div>
+
+	bbbbb
+</body>
+
+<script>
+	
+	$(function () {
+		
+//		loadJs("http://localhost:8080/Application/uiResourceScript?name=test");
+		
+		nosliw.start();
+		
+		nosliw.registerEventListener({}, function(event, transitStatus){
+			if(transitStatus.newStatus==NOSLIWCONSTANT.LIFECYCLE_RESOURCE_STATUS_ACTIVE){
+				var requestArray = [];
+				requestArray.push(new NosliwDataTypeInfo("simple", "string"));
+				requestArray.push(new NosliwDataTypeInfo("simple", "integer"));
+				
+				nosliw.getDataTypeManager().requestGetDataTypes(requestArray, {
+					success : function(requestInfo, dataTypeArray){
+						alert("bbbbbbb");
+					}
+				});
+
+
+/*				
+				nosliw.getUIResourceManager().requestGetUIResource('test', {
+					success : function(requestInfo, resourceView){
+					}
+				});
+*/
+
+				
+				nosliw.getUIResourceManager().requestCreateUIResourceView('test', {
+					success : function(requestInfo, resourceView){
+//						nosliwLogging.info(resourceView);
+						$("#testDiv").append(resourceView.getViews());	
+						
+						var business = {
+							a : {
+								aa : {
+									dataType:{
+										categary:"simple",
+										type : "string",
+									},
+									data: "abcdefghijklmnopqrstuvwxyz",
+								}
+							}
+						};
+						var contextData = {
+							business : business,
+						};
+						resourceView.updateContext(contextData);
+						
+					},
+					fail : function(requestInfo, serviceData){
+						
+					},
+					exception : function(requestInfo, serviceData){
+						
+					}
+				});
+				
+			}
+		});
+		
+ 	});	
+	
+	function loadJs(url, cb) {  
+		  var script = document.createElement('script');
+		  script.setAttribute('src', url);
+		  script.setAttribute('type', 'text/javascript');
+
+		  var loaded = false;
+		  var loadFunction = function () {
+		    if (loaded) return;
+		    loaded = true;
+		  };
+		  script.onload = loadFunction;
+		  script.onreadystatechange = loadFunction;
+		  document.getElementsByTagName("head")[0].appendChild(script);
+		};
+	
+</script>
+</html>

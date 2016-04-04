@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;HAPLogger.java&apos; to &apos;Common/src/com.nosliw.common.configure&apos;&#x0A;- Original project: &apos;HappyEntity&apos;&#x0A;- Destination element: &apos;Common/src/com.nosliw.common.configure&apos;&#x0A;- Original element: &apos;com.nosliw.log.HAPLogger.java&apos;" description="Copy compilation unit" destination="=Common/src&lt;com.nosliw.common.configure" element1="/src&lt;com.nosliw.log{HAPLogger.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1446728633619" units="1" version="1.0"/>
+</session>

@@ -1,0 +1,47 @@
+package com.nosliw.app.instance;
+
+import com.nosliw.common.configure.HAPConfigurable;
+import com.nosliw.common.utils.HAPConstant;
+import com.nosliw.data.HAPDataTypeManager;
+import com.nosliw.entity.dataaccess.HAPEntityManager;
+import com.nosliw.entity.definition.HAPEntityDefinitionManager;
+import com.nosliw.entity.options.HAPOptionsManager;
+import com.nosliw.entity.query.HAPQueryDefinitionManager;
+import com.nosliw.uiresource.HAPUIResourceManager;
+
+public class HAPApplicationInstance{
+	HAPApplicationDataTypeManager m_dataTypeMan;
+	
+	public HAPApplicationInstance(HAPConfigurable configure){
+		this.m_dataTypeMan = new HAPApplicationDataTypeManager(configure.getConfigurableValue(HAPConstant.CONS_APPLICATION_CONFIGURE_DATATYPE));
+	}
+	
+	public void init() {
+		
+	}
+
+	public HAPDataTypeManager getDataTypeManager() {
+		return this.m_dataTypeMan;
+	}
+
+	public HAPEntityDefinitionManager getEntityDefinitionManager() {
+		return null;
+	}
+
+	public HAPUIResourceManager getUIResourceManager(){
+		return null;
+	}
+	
+	public HAPOptionsManager getOptionsManager() {
+		return null;
+	}
+
+	public HAPQueryDefinitionManager getQueryDefinitionManager() {
+		return null;
+	}
+
+	public HAPEntityManager createEntityManager() {
+		return null;
+	}
+
+}

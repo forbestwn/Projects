@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="US-ASCII">
+<title>UI Resource</title>
+
+        <script src="libs/underscore.js"></script>
+        <script src="libs/jquery.js"></script>
+        <script src="libs/jquery.jsPlumb-1.7.5.js"></script>
+        <script src="libs/backbone.js"></script>
+        <script src="libs/backbone.marionette.js"></script>
+        <script src="libs/raphael.js"></script>
+        
+        <script src="js/common.js"></script>
+
+        <script src="js/datacontainer.js"></script>
+        <script src="js/context.js"></script>
+        <script src="js/container.js"></script>
+        <script src="js/entity.js"></script>
+        <script src="js/wraper.js"></script>
+        <script src="js/object.js"></script>
+        <script src="js/data.js"></script>
+
+        <script src="js/error.js"></script>
+        <script src="js/request.js"></script>
+        <script src="js/serviceutil.js"></script>
+        <script src="js/entitys.js"></script>
+        <script src="js/entitymanager.js"></script>
+        <script src="js/query.js"></script>
+        <script src="libs/jquery-ui/jquery-ui.js"></script>
+        <script src="js/options.js"></script>
+        <script src="js/service.js"></script>
+        <script src="js/remoteservice.js"></script>
+        <script src="js/entityoperationmanager.js"></script>
+        <script src="js/servicemanager.js"></script>
+        <script src="js/uiresourcemanager.js"></script>
+        <script src="js/uiresource.js"></script>
+        <script src="js/uitag.js"></script>
+        <script src="js/datatype.js"></script>
+        <script src="js/expression.js"></script>
+        <script src="js/entitydefinition.js"></script>
+        <script src="js/nosliw.js"></script>
+        <script src="js/operation.js"></script>
+        <script src="js/operationmanager.js"></script>
+        <script src="js/appfunction.js"></script>
+        
+        <script src="tags/errorhandle.js"></script>
+        <script src="tags/loop.js"></script>
+        <script src="tags/textinput.js"></script>
+        <script src="tags/switchcase.js"></script>
+        <script src="tags/select.js"></script>
+        <script src="tags/datatype.js"></script>
+
+        <script src="mobile/tags/face.js"></script>
+        <script src="mobile/tags/border.js"></script>
+        <script src="mobile/tags/body.js"></script>
+        <script src="mobile/tags/component.js"></script>
+
+</head>
+<body>
+
+<div id="uiresource">
+
+<input id="input_uiresource" type="text"/>
+<a href="" onclick="return getUIResource();">Get</a><br>
+
+</div>
+<div id="context"></div>
+
+<div id="view"></div>
+
+<div id="event"></div>
+
+</body>
+
+<script>
+	var currentResourceView;
+	var currentUIResource;
+	var configureUIResource;
+	var configureUIResourceView;
+	
+	function getUIResource(){
+		var uiresourceName = $("#input_uiresource").val();
+		var uiResourceTask = NosliwServiceManager.getGetUIResourceServiceTask(uiresourceName, new NosliwServiceRequestInfo(), {
+			success : function(requestInfo, uiresource){
+				currentUIResource = uiresource;
+
+				if(currentResourceView!=undefined){
+					currentResourceView.destroy();
+				}
+				
+				currentResourceView = m_createUIResourceView(uiresource);
+				$("#view").append(currentResourceView.getViews());
+				
+		 		var context = {};
+		 		setContext(context, 'uiresource', createObjectWraper(uiresource));
+		 		configureUIResourceView.setContext(context);
+			},
+		});
+		NosliwRemoteServiceTaskManager.addServiceTask(uiResourceTask);
+		return false;
+	};
+
+	function processContextInfo(requestGroup, contextInfo){
+		var type = contextInfo.type;
+		if(type=='entity'){
+			var task = NosliwServiceManager.getGetEntityWrapersServiceTask([contextInfo.configure.ID], new NosliwServiceRequestInfo(), {
+				success : function(serviceTask, data){
+					contextInfo.data = data[contextInfo.configure.ID];
+					var context = requestGroup.getMetaData('context');
+					context[contextInfo.name] =	createContextElementEntity(data[contextInfo.configure.ID]);
+				}
+			});
+			requestGroup.addTask(task);
+		}
+	};
+	
+	function processConfigureUI (){
+		var uiResourceTask = NosliwServiceManager.getGetUIResourceServiceTask("uiresourceconfigure", new NosliwServiceRequestInfo(), {
+			success : function(requestInfo, uiresource){
+				configureUIResource = uiresource;
+				configureUIResourceView = m_createUIResourceView(configureUIResource);
+				$("#context").append(configureUIResourceView.getViews());
+				
+				configureUIResourceView.on('refresh', function(){
+					var contextInfos = currentUIResource.contextInfos;
+
+					var requestGroup = new NosliwRemoteServiceGroupTask(new NosliwServiceRequestInfo());
+					requestGroup.setMetaData('context', {});
+					for (var name in contextInfos) {
+					    if (contextInfos.hasOwnProperty(name)) {
+							var contextInfo = contextInfos[name];
+							processContextInfo(requestGroup, contextInfo);
+					    }
+					}
+					
+					requestGroup.setHandler({
+						handler : function(serviceTask, data){
+							var context = requestGroup.getMetaData('context');
+							currentResourceView.setContext(context);
+						},
+					});
+					
+					NosliwRemoteServiceTaskManager.addServiceTask(requestGroup);
+				});
+			},
+		});
+		NosliwRemoteServiceTaskManager.addServiceTask(uiResourceTask);
+		
+	};
+	
+	$(function () {
+		
+		Nosliw.requestInit({
+			success:function(serviceTask, data){
+				processConfigureUI();
+			},
+			fail : function(serviceTask, serviceData){
+				alert(serviceData.code);
+			},
+			exception : function(serviceTask, serviceData){
+				alert(serviceData.code);
+			},
+		});
+		
+	});	
+	
+</script>	
+</html>

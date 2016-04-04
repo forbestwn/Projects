@@ -1,0 +1,11 @@
+<datasources>
+
+	<datasource.webpage.datasource name="aboutus" id="" >
+		<input name="aboutus" url="http://www.goensaving.com/index.php?option=com_content&amp;view=article&amp;id=47&amp;Itemid=60"/>
+		<outputtype type="simple" subtype="html"/>
+		<processor type="simple">
+			<path path="td > table:eq(1) > tbody > tr:eq(1) > td"/>
+		</processor>	
+	</datasource.webpage.datasource>
+
+</datasources>

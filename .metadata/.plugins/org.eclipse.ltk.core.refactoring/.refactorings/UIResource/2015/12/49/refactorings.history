@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;UIExpressionScript.txt&apos; to &apos;DataDefinition/src/com.nosliw.data&apos;&#x0A;- Original project: &apos;UIResource&apos;&#x0A;- Destination element: &apos;DataDefinition/src/com.nosliw.data&apos;&#x0A;- Original element: &apos;UIExpressionScript.txt&apos;" description="Copy file" destination="=DataDefinition/src&lt;com.nosliw.data" element1="src/com/nosliw/uiresource/UIExpressionScript.txt" files="1" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1449221156256" units="0" version="1.0"/>
+</session>

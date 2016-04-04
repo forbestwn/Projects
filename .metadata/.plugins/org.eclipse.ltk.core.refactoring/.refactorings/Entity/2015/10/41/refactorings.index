@@ -1,0 +1,13 @@
+1443963835537	Rename local variable 'existEntityID'
+1443968197720	Rename field 'm_entityLoader'
+1443996354884	Rename method 'start'
+1443997041184	Rename method 'clear'
+1443998309061	Rename method 'getAllEntity'
+1443999541581	Rename method 'setOperationInfoScope'
+1444129709615	Rename method 'getAllEntitys'
+1444129721312	Rename method 'getEntitysByType'
+1444131328780	Rename local variable 'ID'
+1444131713364	Rename method 'addEntity'
+1444163759584	Rename method 'getQueryComponentByName'
+1444401591024	Delete element
+1444403490148	Rename field 'm_attributes'

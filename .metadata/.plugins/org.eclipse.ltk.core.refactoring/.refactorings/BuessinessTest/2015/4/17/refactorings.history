@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;BuessinessTest/WebContent/web2app/functions/uitemplateinfo.js&apos; to &apos;uitemplatedata.js&apos;" description="Rename resource &apos;uitemplateinfo.js&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="WebContent/web2app/functions/uitemplateinfo.js" name="uitemplatedata.js" stamp="1429731995767" updateReferences="true"/>
+</session>

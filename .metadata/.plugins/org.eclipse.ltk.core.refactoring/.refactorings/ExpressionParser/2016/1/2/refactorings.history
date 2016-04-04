@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move 2 elements to &apos;ExpressionParser/src/com.nosliw.expression.utils&apos;&#x0A;- Original project: &apos;ExpressionParser&apos;&#x0A;- Destination element: &apos;ExpressionParser/src/com.nosliw.expression.utils&apos;&#x0A;- Original elements:&#x0A;     com.nosliw.expression.HAPIterateOperandTask.java&#x0A;     com.nosliw.expression.HAPIterateOperandTaskOut.java&#x0A;- Update references to refactored element" description="Move compilation units" destination="/src&lt;com.nosliw.expression.utils" element1="/src&lt;com.nosliw.expression{HAPIterateOperandTask.java" element2="/src&lt;com.nosliw.expression{HAPIterateOperandTaskOut.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.move" patterns="*" policy="org.eclipse.jdt.ui.moveResources" qualified="false" references="true" stamp="1451885003044" units="2" version="1.0"/>
+</session>

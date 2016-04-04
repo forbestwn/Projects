@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move 3 elements to &apos;uiresource&apos;&#x0A;- Original project: &apos;BuessinessTest&apos;&#x0A;- Destination element: &apos;uiresource&apos;&#x0A;- Original elements:&#x0A;     uiresource.js&#x0A;     uitag.js&#x0A;     uiresourcemanager.js&#x0A;- Update references to refactored element" description="Move files" element1="WebContent/js/uiresource.js" element2="WebContent/js/uitag.js" element3="WebContent/js/uiresourcemanager.js" files="3" flags="589830" folders="0" id="org.eclipse.jdt.ui.move" policy="org.eclipse.jdt.ui.moveResources" qualified="false" references="true" stamp="1439148886653" target="/Application/WebContent/js/uiresource" units="0" version="1.0"/>
+</session>

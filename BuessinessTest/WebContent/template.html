@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <meta charset="utf-8" />
+        <title></title>
+
+        <link rel =" stylesheet" href ="libs/jquery.mobile.css" />
+
+        <script src="libs/underscore.js"></script>
+        <script src="libs/jquery.js"></script>
+        <script src="libs/backbone.js"></script>
+        <script src="libs/backbone.marionette.js"></script>
+        <script src="libs/jquery.mobile.js"></script>
+        
+        <script src="js/common.js"></script>
+
+        <script src="js/datacontainer.js"></script>
+        <script src="js/context.js"></script>
+        <script src="js/container.js"></script>
+        <script src="js/entity.js"></script>
+        <script src="js/wraper.js"></script>
+        <script src="js/object.js"></script>
+        <script src="js/data.js"></script>
+
+        <script src="js/error.js"></script>
+        <script src="js/request.js"></script>
+        <script src="js/serviceutil.js"></script>
+        <script src="js/entitys.js"></script>
+        <script src="js/entitymanager.js"></script>
+        <script src="js/query.js"></script>
+        <script src="libs/jquery-ui/jquery-ui.js"></script>
+        <script src="js/options.js"></script>
+        <script src="js/service.js"></script>
+        <script src="js/remoteservice.js"></script>
+        <script src="js/entityoperationmanager.js"></script>
+        <script src="js/servicemanager.js"></script>
+        <script src="js/uiresourcemanager.js"></script>
+        <script src="js/uiresource.js"></script>
+        <script src="js/uitag.js"></script>
+        <script src="js/datatype.js"></script>
+        <script src="js/expression.js"></script>
+        <script src="js/entitydefinition.js"></script>
+        <script src="js/nosliw.js"></script>
+        <script src="js/operation.js"></script>
+        <script src="js/operationmanager.js"></script>
+        <script src="js/appfunction.js"></script>
+        
+        <script src="tags/errorhandle.js"></script>
+        <script src="tags/loop.js"></script>
+        <script src="tags/textinput.js"></script>
+        <script src="tags/switchcase.js"></script>
+        <script src="tags/select.js"></script>
+
+        <script src="mobile/tags/face.js"></script>
+        <script src="mobile/tags/border.js"></script>
+        <script src="mobile/tags/body.js"></script>
+        <script src="mobile/tags/component.js"></script>
+        
+        <script src="mobile/application.js"></script>
+        <script src="mobile/mobileservice.js"></script>
+        <script src="mobile/datatunnel.js"></script>
+        <script src="mobile/facemanager.js"></script>
+        <script src="mobile/navigation.js"></script>
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" >
+
+</head>
+
+<body>
+<div data-role="page" id="face"/>
+	Page
+	
+	<div id="page1">
+	
+	</div>
+	 
+</div>
+</body>
+
+<script>
+	var templateID;
+	var templateInfo;
+	var templateView;
+	var funModule;
+	
+	$(function () {
+/*		
+		var vars = getUrlVars();
+		templateID = vars['ID'];
+		
+		templateInfo = MobileServiceManager.getTemplate(templateID);
+		templateView = m_createUIResourceView(templateInfo.uiresource); 
+		$("#page1").append(templateView.getViews());
+		
+		templateView.on('face', function(data){
+			if(funModule!=undefined){
+				funModule.command('showEvent', {
+					templateInfo:templateInfo,
+					event : data,
+				});
+			}			
+		});
+*/		
+	});	
+	
+	function setDatas(datas){
+		var context = {};
+		_.each(datas, function(data, name, list){
+			var eleContext = createContextElement(createObjectWraper(data));
+			context[name] = eleContext;
+		}, this);
+		templateView.setContext(context);
+	};
+	
+	function command(command, parms){
+		templateView.callFunction('command', command, parms, undefined, templateView);
+		
+	};
+	
+	function setEventFunction(fun){
+		funModule = fun;
+	};
+	
+	function getUrlVars()
+	{
+	    var vars = {}, hash;
+	    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+	    for(var i = 0; i < hashes.length; i++)
+	    {
+	    	hash = hashes[i].split('=');
+	    	vars[hash[0]] = hash[1];
+	    }
+	    return vars;
+	}
+	
+	
+</script>
+</html>

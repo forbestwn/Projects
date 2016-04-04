@@ -1,0 +1,15 @@
+1446389607921	Rename method 'getOptionsManager'
+1446498383314	Rename field 'm_clientId'
+1446498520581	Rename method 'createUserEnvironment'
+1446498554034	Rename type 'HAPClientInfo'
+1446672283915	Rename type 'HAPApplicationUserEnvManager'
+1446672425534	Rename method 'newUserEnvironment'
+1446673155191	Rename field 'm_userEnvs'
+1446673177939	Rename method 'getUserEnvironment'
+1446727949660	Delete element
+1446728503042	Move compilation unit
+1446738311738	Rename method 'getUserEnvManager'
+1446738326053	Rename field 'm_userEnvMan'
+1446743160648	Rename local variable 'requestsServiceData'
+1446786512176	Rename type 'FileLogger'
+1446937791769	Rename local variable 'loc_syncTaskName'

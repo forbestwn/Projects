@@ -1,0 +1,22 @@
+package com.nosliw.instance;
+
+import com.nosliw.data.HAPDataTypeManager;
+import com.nosliw.entity.definition.HAPEntityDefinitionManager;
+
+public class HAPInstance {
+
+	public void init(){
+		
+	}
+	
+	public HAPDataTypeManager getDataTypeManager(){
+		return null;
+	}
+	
+	public HAPEntityDefinitionManager getEntityDefinitionMan(){
+		return null;
+	}
+	
+	public 
+	
+}

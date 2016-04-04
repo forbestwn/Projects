@@ -1,0 +1,34 @@
+package com.nosliw.instance;
+
+import com.nosliw.data.HAPDataTypeManager;
+import com.nosliw.entity.dataaccess.HAPEntityManager;
+import com.nosliw.entity.definition.HAPEntityDefinitionManager;
+import com.nosliw.entity.options.HAPOptionsManager;
+import com.nosliw.entity.query.HAPQueryDefinitionManager;
+
+public class HAPInstance {
+
+	public void init(){
+		
+	}
+	
+	public HAPDataTypeManager getDataTypeManager(){
+		return null;
+	}
+	
+	public HAPEntityDefinitionManager getEntityDefinitionManager(){
+		return null;
+	}
+	
+	public HAPOptionsManager getOptionsManager(){
+		return null;
+	}
+	
+	public HAPQueryDefinitionManager getQueryDefinitionManager(){
+		return null;
+	}
+	
+	public HAPEntityManager createEntityManager(){
+		return null;
+	}
+}

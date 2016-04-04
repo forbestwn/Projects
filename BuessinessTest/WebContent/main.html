@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <meta charset="utf-8" />
+        <title>My first jQuery Mobile code</title>
+        <script src="libs/underscore.js"></script>
+        <script src="libs/jquery.js"></script>
+        <script src="libs/backbone.js"></script>
+        <script src="libs/backbone.marionette.js"></script>
+        
+        <script src="js/common.js"></script>
+
+        <script src="js/datacontainer.js"></script>
+        <script src="js/context.js"></script>
+        <script src="js/container.js"></script>
+        <script src="js/entity.js"></script>
+        <script src="js/wraper.js"></script>
+        <script src="js/object.js"></script>
+        <script src="js/data.js"></script>
+
+        <script src="js/error.js"></script>
+        <script src="js/request.js"></script>
+        <script src="js/serviceutil.js"></script>
+        <script src="js/entitys.js"></script>
+        <script src="js/entitymanager.js"></script>
+        <script src="js/query.js"></script>
+        <script src="js/options.js"></script>
+        <script src="js/service.js"></script>
+        <script src="js/remoteservice.js"></script>
+        <script src="js/entityoperationmanager.js"></script>
+        <script src="js/servicemanager.js"></script>
+        <script src="js/uiresourcemanager.js"></script>
+        <script src="js/uiresource.js"></script>
+        <script src="js/uitag.js"></script>
+        <script src="js/datatype.js"></script>
+        <script src="js/expression.js"></script>
+        <script src="js/entitydefinition.js"></script>
+        <script src="js/nosliw.js"></script>
+        <script src="js/operation.js"></script>
+        
+        <script src="tags/errorhandle.js"></script>
+        <script src="tags/loop.js"></script>
+        <script src="tags/textinput.js"></script>
+        <script src="tags/switchcase.js"></script>
+        <script src="tags/select.js"></script>
+        
+</head>
+
+<body>
+
+<a href="" onclick="return startTransaction();">Start Transaction</a><br>
+<a href="" onclick="return commitTransaction();">Commit Transaction</a><br>
+<a href="" onclick="return rollbackTransaction();">Rollback Transaction</a><br>
+
+
+<a href="" onclick="return newBusiness();">New Business</a><br>
+
+<table>
+<tr>
+	<td><div id="businesslist"/></div><br></td>
+	<td><div id="business"></div><br></td>
+	
+</tr>
+
+</table>
+
+<div id="employeelist"/></div><br>
+
+</body>
+
+<script>
+	function startTransaction(){
+		NosliwOperationManager.startTransaction();
+		return false;
+	};
+
+	function commitTransaction(){
+		NosliwOperationManager.commitTransaction();
+		return false;
+	};
+
+	function rollbackTransaction(){
+		NosliwOperationManager.rollbackTransaction();
+		return false;
+	};
+
+	function newBusiness(){
+		NosliwOperationManager.newEntity('test.business');
+		return false;
+	};
+	
+	function initBusiness(){
+		
+		
+		
+		
+		var query = {
+				attributes : ["name"],
+				entityTypes : [
+				               {
+				            	   categary : 'entity',
+				            	   type : 'test.business',
+				               }
+				               ],
+
+		};
+		var queryResult = NosliwQueryManager.query(query);
+	 		var businessListResourceView = NosliwUIResourceManager.createUIResourceViewByName("businesslist");
+
+	 		var context = {};
+	 		setContext(context, 'businesses', queryResult);
+	 		businessListResourceView.setContext(context);
+			$("#businesslist").append(businessListResourceView.getViews());
+
+	 		var businessResourceView = NosliwUIResourceManager.createUIResourceViewByName("business");
+			$("#business").append(businessResourceView.getViews());
+
+			businessListResourceView.on('selectBusiness', function(ID){
+		 		var context = {};
+		 		setContext(context, 'business', NosliwEntityManager.getEntity(ID), '');
+		 		businessResourceView.setContext(context);
+			});
+	};
+	
+	function initEmployee(){
+		var query = {
+				entityType : 'test.employee',
+		};
+		var queryResult = NosliwEntityManager.query(query);
+	 	var employeeListResourceView = NosliwUIResourceManager.createUIResourceViewByName("employeelist");
+
+	}
+
+	
+	$(function () {
+		Nosliw.requestInit({
+			success:function(serviceTask, data){
+				initBusiness();
+			},
+			fail : function(serviceTask, serviceData){
+				alert(serviceData.code);
+			},
+			exception : function(serviceTask, serviceData){
+				alert(serviceData.code);
+			},
+		});
+ });	
+	
+</script>
+</html>

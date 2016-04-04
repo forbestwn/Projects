@@ -1,0 +1,17 @@
+package com.nosliw.entity.dataaccess;
+
+import com.nosliw.common.serialization.HAPStringable;
+
+public class HAPUserEnvManager implements HAPStringable{
+
+	public HAPUserEnv createUserEnvironment() {
+		return null;
+	}
+
+	@Override
+	public String toStringValue(String format) {
+		return null;
+	}
+
+	
+}

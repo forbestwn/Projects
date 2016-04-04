@@ -1,0 +1,28 @@
+package com.nosliw.entity.data;
+
+import com.nosliw.common.exception.HAPServiceData;
+
+public class HAPWraperContainer  extends HAPDataTypeExtend{
+
+	public static HAPDataType dataType;
+
+	public HAPWraperContainer(HAPDataTypeManager dataTypeMan) {
+		super(new HAPDataTypeInfo(HAPConstant.CATEGARY_CONTAINER, HAPConstant.DATATYPE_CONTAINER_WRAPER), null, null, dataTypeMan);
+	}
+
+	@Override
+	public HAPData getDefaultData() {
+		return new HAPWraperContainerData(this);
+	}
+
+	@Override
+	public HAPData toData(Object value, String format) {
+		return null;
+	}
+
+	@Override
+	public HAPServiceData validate(HAPData data) {
+		return HAPServiceData.createSuccessData();
+	}
+
+}

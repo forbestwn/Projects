@@ -1,0 +1,378 @@
+package com.nosliw.entity.dataaccess;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
+
+import com.nosliw.common.exception.HAPServiceData;
+import com.nosliw.common.serialization.HAPStringable;
+import com.nosliw.common.utils.HAPBasicUtility;
+import com.nosliw.common.utils.HAPConstant;
+import com.nosliw.common.utils.HAPJsonUtility;
+import com.nosliw.entity.data.HAPDataWraper;
+import com.nosliw.entity.data.HAPEntityContainerAttributeWraper;
+import com.nosliw.entity.data.HAPEntityID;
+import com.nosliw.entity.data.HAPEntityWraper;
+import com.nosliw.entity.data.HAPReferenceWraper;
+import com.nosliw.entity.operation.HAPEntityOperation;
+import com.nosliw.entity.operation.HAPEntityOperationInfo;
+import com.nosliw.entity.persistent.HAPEntityLoader;
+import com.nosliw.entity.query.HAPQueryComponent;
+import com.nosliw.entity.query.HAPQueryDefinition;
+import com.nosliw.entity.transaction.HAPTransaction;
+import com.nosliw.entity.transaction.HAPTransactionDeleteEntity;
+import com.nosliw.entity.transaction.HAPTransactionEntityMultiOperates;
+import com.nosliw.entity.transaction.HAPTransactionEntityOperate;
+import com.nosliw.entity.transaction.HAPTransactionNewElement;
+import com.nosliw.entity.transaction.HAPTransactionNewEntity;
+import com.nosliw.entity.transaction.HAPTransactionNormal;
+import com.nosliw.entity.utils.HAPEntityDataTypeUtility;
+import com.nosliw.entity.utils.HAPEntityEnvironment;
+import com.nosliw.entity.utils.HAPEntityUtility;
+import com.nosliw.entity.utils.HAPTransactionUtility;
+
+/*
+ * entity manager class that handle all type of entity managment task
+ * 		new entity
+ * 		save entity
+ * 		update entity
+ * 		remove entity
+ * 		find entity
+ * all the entity operator task is done by entity loader
+ * the entity is grouped
+ * so the identity for entity is categary + id
+ * 
+ */
+
+public class HAPEntityManager implements HAPStringable{
+	
+	private HAPEntityLoader m_entityLoader = null;
+	private Stack<HAPTransaction> m_transactions;
+
+	private HAPEntityEnvironment m_entityEnv;
+	
+	public HAPEntityManager(HAPEntityEnvironment entityEvn, HAPEntityLoader loader){
+		this.m_entityEnv = entityEvn;
+		this.m_entityLoader = loader;
+		this.m_transactions = new Stack<HAPTransaction>();
+	}
+	
+	
+//	@Override
+//	public void clear(){this.m_entityLoader.clear();}
+//	
+//	@Override
+//	public void load(){
+//		this.m_entityLoader.load();
+//		this.m_entityLoader.afterLoad();
+//	}
+	
+	//*********************  Query
+	public HAPQueryComponent queryRequest(HAPQueryDefinition query){
+		HAPEntityDataAccess dataAccess = this.getCurrentDataAccess();
+		return dataAccess.queryEntityComponent(query);
+	}
+	
+	public void removeQueryRequest(String queryName, String transactionId){
+		HAPEntityDataAccess dataAccess = this.getCurrentDataAccess();
+		dataAccess.removeQuery(queryName);
+	}
+
+	public HAPEntityWraper[] getEntityWrapersRequest(HAPEntityID[] IDs){
+		HAPEntityDataAccess dataAccess = this.getCurrentDataAccess();
+		Set<HAPEntityID> existEntityID = new HashSet<HAPEntityID>();
+		return this.getEntityWrapersRequest(IDs, existEntityID, dataAccess);
+	}
+
+	public HAPEntityWraper[] getEntityWrapersRequest(HAPEntityID[] IDs, Set<HAPEntityID> existEntityID, HAPEntityDataAccess dataAccess){
+		
+		List<HAPEntityWraper> out = new ArrayList<HAPEntityWraper>();
+		for(HAPEntityID ID : IDs){
+			if(!existEntityID.contains(ID)){
+				HAPServiceData dataService = dataAccess.useEntityByID(ID);
+
+				if(dataService.isSuccess()){
+					HAPEntityWraper entityWraper = (HAPEntityWraper)dataService.getData();
+					out.add(entityWraper);
+
+					existEntityID.add(ID);
+					Set<HAPEntityID> childRefEntityIDs = this.getAllChildReferenceEntityID(entityWraper);
+					
+					HAPEntityWraper[] childRefEntitys = getEntityWrapersRequest(childRefEntityIDs.toArray(new HAPEntityID[0]), existEntityID, dataAccess);
+					
+					
+/*					
+					Set<HAPEntityID> requestIDs = new HashSet<HAPEntityID>();
+					for(HAPEntityID childID : childRefEntityIDs){
+						if(!existEntityID.contains(childID)){
+							requestIDs.add(childID);
+						}
+						else{
+							existEntityID.add(childID);
+						}
+					}
+					
+					HAPEntityWraper[] childRefEntitys = getEntityWrapersRequest(requestIDs.toArray(new HAPEntityID[0]), existEntityID, dataAccess);
+*/					
+					
+					for(HAPEntityWraper e : childRefEntitys){
+						out.add(e);
+					}
+				}
+				else out.add(null);
+			}
+		}
+		return out.toArray(new HAPEntityWraper[0]);
+	}
+
+	public HAPEntityWraper getEntityWraperRequest(HAPEntityID ID, String transactionId){
+		HAPEntityDataAccess dataAccess = this.getCurrentDataAccess();
+		HAPServiceData dataService = dataAccess.useEntityByID(ID);
+		if(dataService.isSuccess()) return (HAPEntityWraper)dataService.getData();
+		else return null;
+	}
+
+	private Set<HAPEntityID> getAllChildReferenceEntityID(HAPEntityWraper entityWraper){
+		Set<HAPEntityID> out = new HashSet<HAPEntityID>();
+		
+		if(entityWraper.getEntityData()==null)	return out;
+		
+		String[] atts = entityWraper.getEntityData().getAttributes();
+		for(String attr : atts){
+			HAPDataWraper attrWraper = entityWraper.getEntityData().getAttributeValueWraper(attr);
+			if(HAPEntityDataTypeUtility.isReferenceType(attrWraper)){
+				if(!attrWraper.isEmpty()){
+					if(((HAPReferenceWraper)attrWraper).getIDData()!=null){
+						out.add(((HAPReferenceWraper)attrWraper).getIDData());
+					}
+				}
+			}
+			else if(HAPEntityDataTypeUtility.isContainerType(attrWraper)){
+				HAPEntityContainerAttributeWraper containerAttr = (HAPEntityContainerAttributeWraper)attrWraper;
+				if(HAPConstant.CONS_DATATYPE_CATEGARY_REFERENCE.equals(containerAttr.getChildDataTypeDefInfo().getDataTypeInfo().getCategary())){
+					HAPDataWraper[] eleWrapers = containerAttr.getContainerData().getElementWrapers();
+					for(HAPDataWraper eleWraper : eleWrapers){
+						if(HAPEntityDataTypeUtility.isReferenceType(eleWraper)){
+							if(!eleWraper.isEmpty()){
+								if(((HAPReferenceWraper)eleWraper).getIDData()!=null){
+									out.add(((HAPReferenceWraper)eleWraper).getIDData());
+								}
+							}
+						}
+					}
+				}
+				else if(HAPConstant.CONS_DATATYPE_CATEGARY_ENTITY.equals(containerAttr.getChildDataTypeDefInfo().getDataTypeInfo().getCategary())){
+					HAPDataWraper[] eleWrapers = containerAttr.getContainerData().getElementWrapers();
+					for(HAPDataWraper eleWraper : eleWrapers){
+						if(HAPEntityDataTypeUtility.isEntityType(eleWraper)){
+							if(!eleWraper.isEmpty()){
+								out.addAll(getAllChildReferenceEntityID((HAPEntityWraper)eleWraper));
+							}
+						}
+					}
+				}
+				
+			}
+			else if(HAPEntityDataTypeUtility.isEntityType(attrWraper)){
+				out.addAll(getAllChildReferenceEntityID((HAPEntityWraper)attrWraper));
+			}
+		}
+		return out;
+	}
+	
+	//*********************  Transaction
+	public HAPServiceData startTransactionRequest(){
+		HAPServiceData serviceData = this.getCurrentDataAccess().isValidOperationTransaction(null);
+		if(serviceData.isFail())  return serviceData;
+		HAPTransaction transaction = this.startTransaction(HAPEntityOperation.ENTITYOPERATION_TRANSACTION_START);
+		HAPOperationAllResult result = new HAPOperationAllResult();
+		result.setTransactionId(transaction.getId());
+		return HAPServiceData.createSuccessData(result);
+	}
+	
+	public HAPServiceData commitRequest(){
+		HAPServiceData out = HAPServiceData.createFailureData();
+		HAPTransaction trans = this.getCurrentTransaction(); 
+		if(trans!=null){
+			out = trans.preSubmit();
+			if(out.isSuccess())	{
+				HAPOperationAllResult results = trans.commit();
+				List<HAPEntityOperationInfo> operations = trans.getFullOperations();
+				results.removeResult(operations);
+				this.removeTopTransaction();
+				out.setData(results);
+			}
+		}
+		return out;
+	}
+
+	public HAPServiceData rollBackRequest(){
+		HAPServiceData out = HAPServiceData.createFailureData();
+		HAPTransaction trans = this.getCurrentTransaction(); 
+		if(trans!=null){
+			HAPOperationAllResult result = trans.getRollBackResult();
+			this.removeTopTransaction();
+			out = HAPServiceData.createSuccessData(result);
+			HAPTransactionUtility.setServiceDataTransactionId(out, this.setResultTransaction(result, transactionId));
+		}
+		return out;
+	}
+	
+	//*********************  Operation
+	public HAPServiceData operateRequest(HAPEntityOperationInfo operation){
+		operation.setIsRootOperation(true);
+
+		HAPEntityDataAccess dataAccess = this.getCurrentDataAccess();
+		HAPServiceData serviceData = dataAccess.isValidOperationTransaction(operation);
+		if(serviceData.isFail())  return serviceData;
+
+		HAPTransaction transaction = this.startTransaction(operation.getOperation());
+		//if success, return all the change made by this operation
+		transaction.openOperationResult();
+		serviceData = transaction.operate(operation);
+		
+		if(serviceData.isFail()){
+			//failed, rollback and return all the change made by this rollback
+			this.autoRollBack();
+			serviceData.setData(new HAPOperationAllResult());
+		}
+		else{
+			transaction.updateQueryByResult();
+			
+			HAPOperationAllResult results = transaction.getOperationResult();
+			serviceData.setData(results);
+			if(operation.isAutoCommit()){
+				//for operation with new transaction, commit or rollback at the end of operation
+				HAPServiceData commitSData = this.autoCommit();
+				if(commitSData.isFail()){
+					serviceData = HAPServiceData.createServiceData(HAPConstant.SERVICECODE_FAIL_COMMIT, results, commitSData.getMessage());
+				}
+				else{
+					serviceData = commitSData;
+				}
+			}
+		}
+		
+		return serviceData;
+	}
+
+	/*
+	 * method called right after some operation
+	 * this operation should already start a transaction
+	 */
+	private HAPServiceData autoCommit(){
+		HAPServiceData out = HAPServiceData.createFailureData();
+		HAPTransaction trans = this.getCurrentTransaction();
+		if(trans!=null){
+			out = trans.preSubmit();
+			if(out.isSuccess())	{
+				HAPOperationAllResult result = trans.commit();
+				this.removeTopTransaction();
+				out = HAPServiceData.createSuccessData(result);
+			}
+		}
+		return out;
+	}
+
+	/*
+	 * method called right after some operation
+	 * this operation should already start a transaction
+	 * if fail, just remove the transaction
+	 */
+	private HAPServiceData autoRollBack(){
+		HAPServiceData out = HAPServiceData.createFailureData();
+		HAPTransaction trans = this.getCurrentTransaction();
+		if(trans!=null){
+			this.removeTopTransaction();
+			out = HAPServiceData.createSuccessData(new HAPOperationAllResult());
+		}
+		return out;
+	}
+	
+	/*
+	 * get currnet data access object
+	 */
+	private HAPEntityDataAccess getCurrentDataAccess(){
+		HAPEntityDataAccess out = this.m_entityLoader;
+		if(!this.m_transactions.isEmpty()){
+			out = this.m_transactions.lastElement();
+		}
+		return out;
+	}
+	
+	/*
+	 * get current transaction in transaction stack
+	 * return null if no transaction exist
+	 */
+	private HAPTransaction getCurrentTransaction(){
+		HAPTransaction out = null;
+		if(!this.m_transactions.isEmpty()){
+			out = this.m_transactions.lastElement();
+		}
+		return out;
+	}
+
+	/*
+	 * remove the top transaction
+	 */
+	private void removeTopTransaction(){
+		if(!this.m_transactions.isEmpty()){
+			this.m_transactions.pop();
+		}
+	}
+
+	/*
+	 * start a new trasaction according to operation info provided
+	 */
+	private HAPTransaction startTransaction(HAPEntityOperation op){
+		HAPEntityDataAccess underMe = this.getCurrentDataAccess();
+
+		HAPTransaction trans = null;
+		switch(op){
+		case ENTITYOPERATION_ENTITY_NEW:
+			trans = new HAPTransactionNewEntity(transactionId, underMe, this.getUserContext());
+			break;
+		case ENTITYOPERATION_ENTITY_DELETE:
+			trans = new HAPTransactionDeleteEntity(underMe);
+			break;
+		case ENTITYOPERATION_TRANSACTION_START:
+			trans = new HAPTransactionNormal(underMe);
+			break;
+		case ENTITYOPERATION_ENTITY_OPERATIONS:
+			trans = new HAPTransactionEntityMultiOperates(underMe);
+			break;
+		case ENTITYOPERATION_ATTR_ELEMENT_NEW:
+			trans = new HAPTransactionNewElement(underMe);
+			break;
+		case ENTITYOPERATION_ATTR_ATOM_SET:
+		case ENTITYOPERATION_ATTR_CRITICAL_SET:
+//		case ENTITYOPERATION_ATTR_ELEMENT_DELETE:
+		case ENTITYOPERATION_ATTR_REFERENCE_SET:
+//		case ENTITYOPERATION_ATTR_REFERENCE_CLEAR:
+			trans = new HAPTransactionEntityOperate(underMe);
+			break;
+		}
+		this.m_transactions.add(trans);
+		trans.start();
+		return trans;
+	}
+
+	@Override
+	public String toStringValue(String format){
+		Map<String, String> jsonMap = new LinkedHashMap<String, String>();
+		
+		jsonMap.put("Persistent", this.m_entityLoader.toStringValue(format));
+		jsonMap.put("Transactions", HAPJsonUtility.getListObjectJson(this.m_transactions));
+		
+		return HAPJsonUtility.getMapJson(jsonMap);
+	}
+	
+	public String toString(){
+		return this.m_entityLoader.toString();
+	}
+
+}

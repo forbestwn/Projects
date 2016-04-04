@@ -1,0 +1,13 @@
+1437665207323	Delete element
+1437666334092	Rename type 'HAPQuerySorting'
+1437683550704	Move compilation unit
+1437683563438	Move compilation unit
+1437684318372	Rename compilation unit 'HAPSortingInfo.java'
+1437698829480	Rename type 'HAPSortingAttribute'
+1437759131882	Rename type 'HAPSecondaryEntity'
+1437771682226	Rename type 'HAPSecondaryEntityTypes'
+1437771702150	Rename local variable 'types'
+1437772058047	Rename method 'isValidEntityType'
+1437772262529	Rename field 'm_secondaryEntityTypes'
+1437773000307	Rename method 'isValidEntity'
+1437785672179	Rename method 'isValidEntityType'

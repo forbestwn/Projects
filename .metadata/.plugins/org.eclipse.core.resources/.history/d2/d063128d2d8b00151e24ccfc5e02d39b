@@ -1,0 +1,134 @@
+/**
+ * 
+ */
+var nosliwCreateServiceRequestCommon = function(requester, handlers, service){
+	//request type
+	this.type = NOSLIWCONSTANT.REQUEST_TYPE_SERVICE;
+	//unique id for this request
+	this.id = nosliw.generateId();
+	//who initilize this request
+	loc_requester = requester;
+	//what want to do 
+	loc_service = service;
+	//original request handlers
+	loc_handlers = handlers;
+	//store all the information for implement the request
+	this.pri_metaData = {
+		//other data
+		pri_data : {},
+		//all parms for this request
+		pri_parmData : {},
+		//the execute information to process this request directly
+		pri_execute : undefined,
+		//final handlers used during implementation
+		pri_handlers : handlers,
+		//whether this request need remote request
+		pri_isLocal : true, 
+		//remote request this service request depend on
+		pri_remoteRequest : undefined,
+		//child service
+		pri_childService : undefined,
+	};
+	
+	if(this.service!=undefined){
+		//copy all the service data to metaData.data
+		_.each(this.service.parms, function(value, name, list){
+			this[name] = value;
+		}, this.pri_metaData.pri_parmData);
+	}
+
+	
+	var loc_out = {
+			/*
+			 * get/set meta data 
+			 */
+			getMetaData : function(name){return this.pri_metaData.pri_data[name];},
+			setMetaData : function(name, data){this.pri_metaData.pri_data[name]=data;},
+			
+			/*
+			 * get/set meta data 
+			 */
+			getParms : function(){ return this.pri_metaData.pri_parmData; },
+			getParmData : function(name){return this.pri_metaData.pri_parmData[name];},
+			setParmData : function(name, data){this.pri_metaData.pri_parmData[name]=data;},
+			
+			/*
+			 * execute info: provide function to run for this request
+			 */
+			getRequestExecuteInfo : function(){return this.pri_metaData.pri_execute;},
+			setRequestExecuteInfo : function(execute){this.pri_metaData.pri_execute=execute;},
+			
+			/*
+			 * hanlers within metadata is current handlers for request
+			 */
+			getHandlers : function(){return this.pri_metaData.pri_handlers;},
+			setHandlers : function(handlers){this.pri_metaData.pri_handlers = handlers;},
+
+			/*
+			 * set processor so that they can do sth before call the handlers 
+			 */
+			setRequestProcessors : function(processors){
+				var handlers = this.getHandlers();
+				var newHandlers = {
+					success : nosliwRequestUtility.createRequestProcessorHandlerFunction(handlers.success, processors.success),
+					error : nosliwRequestUtility.createRequestProcessorHandlerFunction(handlers.error, processors.error),
+					exception : nosliwRequestUtility.createRequestProcessorHandlerFunction(handlers.exception, processors.exception),
+				};
+				this.pri_metaData.pri_handlers = nosliwRequestUtility.mergeHandlers(handlers, newHandlers);
+			},
+
+			
+
+			
+			
+			/*
+			 * whether this request do remote ajax call 
+			 */
+			isLocalRequest : function(){return this.pri_metaData.pri_isLocal;},
+			setIsLocalRequest : function(local){this.pri_metaData.pri_isLocal=local;},
+
+			
+			/*
+			 * 
+			 */
+			getRemoteRequest : function(){return this.pri_metaData.pri_remoteRequest;},
+			setRemoteRequest : function(remoteRequest){this.pri_metaData.pri_remoteRequest=remoteRequest;},
+			
+			getChildServiceRequestInfo : function(){
+				var childService = this.pri_metaData.childService;
+				if(childService!=undefined){
+					return childService.requestInfo;
+				}
+			},
+			
+			/*
+			 * when some service need to do sth part of which can be provided by another service
+			 * this service can be child service so that it does not need to be implemented again within another service
+			 * child service has the its own requestinfo that share the request id and requester with its parent service 
+			 */
+			setChildService : function(childService){
+				this.pri_metaData.childService = childService;
+				//set parent request
+				childService.parentRequestInfo = this;
+				
+				var childRequestInfo = childService.requestInfo;
+
+				//set child request id based on parent request id
+				childRequestInfo.id = this.id;
+				//set child requester base on parent requester
+				childRequestInfo.requester = this.requester;
+				
+				//create child reqeust handler based on original handlers and processors
+				var childReqeustHandlers = nosliwRequestUtility.createChildRequestHandlers(this.getHandlers(), childService.processors);
+				childRequestInfo.setHandlers(childReqeustHandlers);
+				
+				this.setRequestExecuteInfo(new NosliwServiceRequestExecuteInfo(nosliwRequestUtility.processRequestWithChildRequest, this));
+			},
+			
+	};
+	return loc_out;
+};
+
+
+
+

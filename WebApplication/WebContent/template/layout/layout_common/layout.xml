@@ -1,0 +1,13 @@
+<data>
+
+<ui.template 	type="layout" 
+				name="layout_common"
+				id = "layout_layout_common">
+	<borders>
+		<element name="border1" type=""/>
+		<element name="border2" type=""/>
+		<element name="border3" type=""/>
+	</borders>
+</ui.template>
+
+</data>

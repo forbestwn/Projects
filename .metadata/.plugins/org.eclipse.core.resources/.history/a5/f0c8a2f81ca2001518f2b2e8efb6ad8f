@@ -1,0 +1,73 @@
+/**
+ * 
+ */
+var nosliwCreateExpression = function(expression){
+
+	 var loc_expression = expression[NOSLIWATCOMMONTRIBUTECONSTANT.ATTR_EXPRESSION_EXPRESSION];
+	 var loc_operand = expression[NOSLIWATCOMMONTRIBUTECONSTANT.ATTR_EXPRESSION_OPERAND];
+	 var loc_variablesInfo = expression[NOSLIWATCOMMONTRIBUTECONSTANT.ATTR_EXPRESSION_VARIABLESINFO];
+	 var loc_constants = expression[NOSLIWATCOMMONTRIBUTECONSTANT.ATTR_EXPRESSION_CONSTANTS];
+		 
+	
+	/*
+	 * execute operand
+	 * 		variables : name --- data/wraper 
+	 * return : wraper
+	 */
+	var loc_executeOperand = function(operand, variables){
+		var out = undefined;
+		var operandType = operand[NOSLIWATCOMMONTRIBUTECONSTANT.ATTR_OPERAND_TYPE];
+		if(operandType==NOSLIWCOMMONCONSTANT.CONS_EXPRESSION_OPERAND_CONSTANT){
+			out = operand[NOSLIWATCOMMONTRIBUTECONSTANT.ATTR_OPERAND_CONSTANT_DATA];
+		}
+		else if(operandType==NOSLIWCOMMONCONSTANT.CONS_EXPRESSION_OPERAND_VARIABLE){
+			var varName = operand[NOSLIWATCOMMONTRIBUTECONSTANT.ATTR_OPERAND_VARIABLE_VARNAME];
+			out = variables[varName];
+		}
+		elseif(operandType==NOSLIWCOMMONCONSTANT.CONS_EXPRESSION_OPERAND_DATAOPERATION ||
+				operandType==NOSLIWCOMMONCONSTANT.CONS_EXPRESSION_OPERAND_DATATYPEOPERATION){
+			var operation = operand[NOSLIWATCOMMONTRIBUTECONSTANT.ATTR_OPERAND_OPERATION_OPERATION];
+			var baseOperand = operand[NOSLIWATCOMMONTRIBUTECONSTANT.ATTR_OPERAND_DATAOPERATION_BASEDATA];
+			var baseDataTypeInfo = operand[NOSLIWATCOMMONTRIBUTECONSTANT.ATTR_OPERAND_OPERATION_BASEDATATYPEINFO];
+
+			var parms = [];
+			if(baseOperand!=undefined){
+				var baseObj = loc_executeOperand(baseOperand, variables);
+				parms.push(baseObj);
+				baseDataTypeInfo = baseObj;
+			}
+			
+			var parmsOperand = operand[NOSLIWATCOMMONTRIBUTECONSTANT.ATTR_OPERAND_OPERATION_PARAMETERS];
+			for(var i=0; i<parmsOperand.length; i++){
+				parms.push(loc_executeOperand(parmsOperand[i], variables));
+			}
+			out nowliw.getDataTypeManager.executeDataOperation(baseDataTypeInfo, operation, parms);
+		}
+		elseif(operandType==NOSLIWCOMMONCONSTANT.CONS_EXPRESSION_OPERAND_PATHOPERATION){
+			
+		}
+		return out;
+	};
+	
+	var loc_operateData = function(operation, parmWrapers){
+		var parms = [];
+		var categary = undefined;
+		var type = undefined;
+		for(var i=1; i<arguments.length; i++){
+			if(categary==undefined){
+				categary = getWraperDataCategary(arguments[i]);
+				type = getWraperDataType(arguments[i]);
+			}
+			parms.push(arguments[i].data);
+		}
+		var outDataWraper = NosliwDataTypeManager.dataTypeOperationWraper(categary, type, operation, parms);
+		return outDataWraper;
+	};
+	
+	var loc_out = {
+		executeExpression : function(){
+			
+		},
+	};
+	return loc_out;
+}();

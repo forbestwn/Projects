@@ -1,0 +1,32 @@
+1435812326672	Rename method 'getName'
+1435812388988	Rename field 'm_name'
+1435812456920	Rename method 'setType'
+1435812470591	Rename local variable 'type'
+1435813476452	Delete element
+1435813483577	Delete element
+1435849336085	Rename field 'm_className'
+1435850146900	Delete element
+1435850905381	Rename type 'HAPEntityStraightDefinition'
+1435850938766	Rename type 'HAPEntityDefinition'
+1435850963778	Rename type 'HAPCriticalEntityDefinition'
+1435852506442	Move compilation unit
+1435866368800	Delete element
+1435866507831	Delete element
+1435866629444	Delete element
+1435866729540	Delete element
+1435866770644	Delete element
+1435866815101	Delete element
+1435885042445	Delete element
+1435958417938	Rename type 'HAPOptionsDefinitionConstant'
+1435958543330	Rename type 'HAPOptionsDefinitionVariable'
+1435958656450	Rename type 'HAPOptionsDefinitionVariableExpression'
+1435959516433	Delete element
+1435959552028	Rename type 'HAPOptionsDefinition'
+1435959610740	Rename type 'HAPOptionsDefinitionQuery'
+1435979610052	Rename package 'com.nosliw.options'
+1435979637856	Move compilation unit
+1435979864045	Move package
+1435979867963	Move package
+1435979883166	Move package
+1435981766187	Rename type 'HAPOptionsDefinitionAttr'
+1435981784226	Rename type 'HAPOptionsExpressionAttr'

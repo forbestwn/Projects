@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+
+	<servlet>
+    	<servlet-name>init</servlet-name>
+    	<servlet-class>com.webmobile.servlet.InitServlet</servlet-class>
+    	<load-on-startup>1</load-on-startup>
+	</servlet>
+
+    <servlet-mapping>
+        <servlet-name>mainservlet</servlet-name>
+        <url-pattern>/main</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>mainservlet</servlet-name>
+        <servlet-class>com.webmobile.servlet.MainServlet</servlet-class>
+    </servlet>
+
+
+    <servlet-mapping>
+        <servlet-name>entityservlet</servlet-name>
+        <url-pattern>/entity</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>entityservlet</servlet-name>
+        <servlet-class>com.webmobile.servlet.EntityServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>saveEntityServlet</servlet-name>
+        <url-pattern>/saveEntity</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>saveEntityServlet</servlet-name>
+        <servlet-class>com.webmobile.servlet.SaveEntityServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>newEntityServlet</servlet-name>
+        <url-pattern>/newEntity</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>newEntityServlet</servlet-name>
+        <servlet-class>com.webmobile.servlet.NewEntityServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>persistEntityServlet</servlet-name>
+        <url-pattern>/persistEntity</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>persistEntityServlet</servlet-name>
+        <servlet-class>com.webmobile.servlet.PersistEntityServlet</servlet-class>
+    </servlet>
+
+</web-app>

@@ -1,0 +1,59 @@
+package com.nosliw.entity.data;
+
+import com.nosliw.HAPApplicationContext;
+import com.nosliw.common.exception.HAPServiceData;
+import com.nosliw.entity.definition.HAPContainerAttributeDefinition;
+import com.nosliw.utils.HAPEntityUtility;
+
+public class HAPEntityContainerAttribute extends HAPDataTypeImp{
+
+	public static HAPDataType dataType;
+
+	public HAPEntityContainerAttribute(HAPDataTypeManager dataTypeMan) {
+		super(new HAPDataTypeInfo(HAPConstant.CATEGARY_CONTAINER, HAPConstant.DATATYPE_CONTAINER_NORMAL), null, null, dataTypeMan);
+	}
+
+	@Override
+	public HAPData getDefaultData() {
+		return null;
+	}
+
+	@Override
+	public HAPData toData(Object value, String format) {
+		return null;
+	}
+
+	@Override
+	public HAPServiceData validate(HAPData data) {
+		return HAPServiceData.createSuccessData();
+	}
+
+	public String newContainerElement(HAPEntityContainerAttributeWraper containerWraper, String eid){
+		String id = HAPEntityUtility.isStringNotEmpty(eid)?eid:HAPEntityUtility.getNextID();
+		HAPDataTypeInfo childDataType = containerWraper.getChildDataTypeDefInfo();
+		HAPData data = null;
+		if(HAPEntityUtility.isAtomType(childDataType)){
+			data = this.getDataTypeManager().getDefaultValue(childDataType);
+		}
+		else if(HAPEntityUtility.isReferenceType(childDataType)){
+		}
+		else if(HAPEntityUtility.isEntityType(childDataType)){
+			HAPEntity entityDataType = this.getDataTypeManager().getEntityDataType(childDataType.getType());
+			data = entityDataType.newEntity();
+		}
+		
+		containerWraper.getContainerData().addElementData(data, id);
+		return id;
+	}
+	
+	@Override
+	public HAPWraper createDataWraper(){
+		return new HAPEntityContainerAttributeWraper(new HAPDataTypeDefInfo(this.getDataTypeInfo()), this.getDataTypeManager());		
+	}
+	
+	@Override
+	public HAPWraper createDataWraper(HAPData data){
+		return null;
+	}
+
+}

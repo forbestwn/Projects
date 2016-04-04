@@ -1,0 +1,224 @@
+package com.nosliw.entity.data;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import com.nosliw.common.exception.HAPServiceData;
+import com.nosliw.data.HAPDataTypeDefInfo;
+import com.nosliw.data.HAPDataTypeManager;
+import com.nosliw.entity.definition.HAPAtomAttributeDefinition;
+import com.nosliw.entity.definition.HAPAttributeDefinition;
+import com.nosliw.entity.definition.HAPContainerAttributeDefinition;
+import com.nosliw.transaction.HAPOperationFactory;
+import com.nosliw.transaction.HAPOperationInfo;
+import com.nosliw.utils.HAPEntityUtility;
+
+/*
+ * relationship between container and element
+ * 		the parent of element : the entity
+ * 		the listener of element : the container 
+ * the possible event between container and element
+ * 		operation : atom element
+ * 		entity change: entity update
+ * 		reference : 
+ * 				clear up
+ * 				entity update
+ * 
+ */
+public class HAPEntityContainerAttributeWraper extends HAPDataWraper{
+
+	/*
+	 * operations supported by ContainerValueWraper
+	 * OPERATION_ADDELEMENT: 
+	 * 		add element to container
+	 * OPERATION_REMOVEELEMENT:
+	 * 		remove element from container
+	 * OPERATION_MODIFYELEMENT
+	 * 		the content of element is changed
+	 */
+
+	HAPEntityContainerAttributeWraper(HAPDataTypeDefInfo dataTypeDefInfo, HAPDataTypeManager dataTypeManager) {
+		super(dataTypeDefInfo, dataTypeManager);
+		this.setData(new HAPEntityContainerAttributeWraperData(this, dataTypeManager.getDataType(dataTypeDefInfo.getDataTypeInfo())));
+	}
+	
+	@Override
+	protected void initAttributeData(){}
+	
+	//*************************** Clear Up
+	@Override
+	void clearUPData(int scope){
+		this.getContainerData().clearUp(scope);
+	}
+	
+	//*************************** Basic Info
+	public int getSize() {	return this.getContainerData().getSize();	}
+
+	public Iterator<HAPDataWraper> iterate(){
+		return this.getContainerData().iterate();
+	}
+	
+	public HAPDataWraper getElement(String id){return this.getContainerData().getElementWraper(id);}
+	
+	public HAPEntityContainerAttributeWraperData getContainerData(){	return (HAPEntityContainerAttributeWraperData)this.getData(); }
+
+	@Override
+	public boolean isEmpty(){return this.getSize()==0;}
+	
+	public HAPDataTypeDefInfo getChildDataTypeDefInfo(){
+		HAPContainerAttributeDefinition attrDef = (HAPContainerAttributeDefinition)this.getAttributeDefinition();
+		return attrDef.getChildDataTypeDefinitionInfo();
+	}
+
+	@Override
+	protected HAPDataWraper getChildWraper(String attribute){
+		HAPDataWraper out = null;
+		
+		if("each".equals(attribute)){
+			HAPWraperContainer wraperContainer = (HAPWraperContainer)this.getDataTypeManager().getDataType(new HAPDataTypeInfo(HAPConstant.CATEGARY_CONTAINER, HAPConstant.DATATYPE_CONTAINER_WRAPER));
+			HAPWraperContainerWraper wraper = (HAPWraperContainerWraper)wraperContainer.createDataWraper();
+			HAPWraperContainerData wraperContainerData = wraper.getWraperContainerData();
+			Iterator<HAPDataWraper> its = this.iterate();
+			while(its.hasNext()){
+				wraperContainerData.addWraper(its.next());
+			}
+			out = wraper;
+		}
+		else{
+			out = this.getElement(attribute);	
+		}
+		return out;
+	}
+	
+	@Override
+	public void setEmpty(){	this.getContainerData().removeAllElementDatas();}
+	
+	@Override
+	protected Set<HAPDataWraper> getGenericChildWraper(String pathEle){
+		Set<HAPDataWraper> out = new HashSet<HAPDataWraper>();
+		if("*".equals(pathEle)){
+			for(HAPDataWraper wraper : this.getContainerData().getElementWrapers()){
+				out.add(wraper);
+			}
+		}
+		else{
+			out.add(this.getContainerData().getElementWraper(pathEle));
+		}
+		return out;
+	}
+
+	//**********************  Operation
+	@Override
+	protected HAPServiceData doOperate(HAPOperationInfo operation, List<HAPOperationInfo> extraOps){
+		switch(operation.getOperation()){
+		case OPERATION_ATTR_ELEMENT_DELETE:
+		{
+			String id = operation.getElementId();
+			HAPDataWraper eleWraper = this.getContainerData().removeElementData(id);
+			return HAPServiceData.createSuccessData(eleWraper);
+		}
+		case OPERATION_ATTR_ELEMENT_NEW:
+		{
+			String id = operation.getElementId();
+			String eleId = this.getDataTypeManager().getEntityContainerDataType().newContainerElement(this, id);
+			operation.setExtra(this.getChildWraper(eleId).toStringValue(HAPConstant.FORMAT_JSON));
+			
+			HAPDataTypeInfo childDataType = this.getChildDataTypeDefInfo();
+			if(HAPEntityUtility.isEntityType(childDataType)){
+				HAPEntityWraper eleEntityWraper = (HAPEntityWraper)this.getElement(eleId);
+
+				Map<String, String> parms = operation.getParms();
+				//critical attr first
+				Set<String> criticalAttrs = new HashSet<String>();
+				for(String attr : parms.keySet()){
+					String value = parms.get(attr);
+					HAPDataWraper attrWraper = eleEntityWraper.getChildWraperByPath(attr);
+					if(attrWraper!=null){
+						HAPAttributeDefinition attrDef = attrWraper.getAttributeDefinition();
+						HAPDataTypeDefInfo attrDataTypeInfo = attrDef.getDataTypeDefinitionInfo();
+						if(HAPEntityUtility.isAtomType(attrDataTypeInfo)){
+							if(((HAPAtomAttributeDefinition)attrDef).getIsCritical()){
+								criticalAttrs.add(attr);
+								HAPOperationInfo opInfo = HAPOperationFactory.createAttributeAtomSetOperationByString(eleEntityWraper.getID(), attr, value);
+								this.getCurrentTransaction().operate(opInfo);
+							}
+						}
+					}
+				}
+				
+				//set parms value to attribute
+				for(String attr : parms.keySet()){
+					if(!parms.containsValue(attr)){
+						HAPOperationInfo opInfo = null;
+						String value = parms.get(attr);
+						
+						HAPAttributeDefinition attrDef = eleEntityWraper.getChildWraperByPath(attr).getAttributeDefinition();
+						HAPDataTypeDefInfo attrDataTypeInfo = attrDef.getDataTypeDefinitionInfo();
+						String categary = attrDataTypeInfo.getCategary();
+						if(HAPEntityUtility.isAtomType(attrDataTypeInfo)){
+							opInfo = HAPOperationFactory.createAttributeAtomSetOperationByString(eleEntityWraper.getID(), attr, value);
+						}
+						else if(HAPEntityUtility.isReferenceType(attrDataTypeInfo)){
+							opInfo = HAPOperationFactory.createAttributeReferenceSetOperation(eleEntityWraper.getID(), attr, new HAPEntityID(value));
+						}
+						extraOps.add(opInfo);
+					}
+				}
+			}
+			
+			return HAPServiceData.createSuccessData(eleId);
+		}
+		}
+		
+		return HAPServiceData.createFailureData();
+	}
+
+	@Override
+	public void prepareReverseOperation(HAPOperationInfo operation, HAPServiceData serviceData){
+		switch(operation.getOperation()){
+		case OPERATION_ATTR_ELEMENT_DELETE:
+		{
+			String id = operation.getElementId();
+			operation.setExtra(this.getElement(id).cloneWraper());
+			break;
+		}
+		case OPERATION_ATTR_ELEMENT_NEW:
+		{
+			operation.setExtra(serviceData.getData());
+			break;
+		}
+		}
+	}
+	
+	@Override
+	protected void postOperation(HAPOperationInfo operation, HAPServiceData serviceData){
+		switch(operation.getOperation()){
+		case OPERATION_ATTR_ELEMENT_DELETE:
+		{
+			HAPDataWraper eleWraper = (HAPEntityWraper)serviceData.getData();
+			eleWraper.clearUP(operation.getScope());
+			break;
+		}
+		}
+	}
+
+	//******************************  Clone
+	protected void cloneData(HAPData data){
+		HAPEntityContainerAttributeWraperData containerData = (HAPEntityContainerAttributeWraperData)data;
+		this.getContainerData().cloneFrom(containerData);
+	}
+
+	@Override
+	void setParentEntity(HAPEntityData parentEntity, String attributePath, HAPAttributeDefinition attrDef){
+		super.setParentEntity(parentEntity, attributePath, attrDef);
+		HAPContainerAttributeDefinition attrDefinition = (HAPContainerAttributeDefinition)this.getAttributeDefinition();
+		for(HAPDataWraper eleWraper : this.getContainerData().getElementWrapers()){
+			eleWraper.setParentEntity(this.getParentEntity(), HAPEntityUtility.buildPath(this.getParentEntityAttributePath(), eleWraper.getId()), attrDefinition.getChildAttributeDefinition());
+		}
+	}
+}

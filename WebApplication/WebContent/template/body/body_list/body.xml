@@ -1,0 +1,38 @@
+
+<data>
+
+<ui.template 	type="body" 
+				name="body_list"
+				id="body_body_list">
+
+	<datasources>
+		<element name="listdata" id="listdata">
+			<datatype categary="container" type="table">
+					<columns>
+						<element name="title" id="title">
+							<datatype categary="simple" type="text"/>
+						</element>
+						<element name="image" id="image">
+							<datatype categary="block" type="image"/>
+						</element>
+					</columns>
+			</datatype>
+		</element>
+	</datasources>
+
+	<events>
+		<element name="itemselected" id="itemselected">
+			<datatype categary="container" type="map">
+				<element name="title">
+					<datatype categary="simple" type="text"/>
+				</element>
+				<element name="image">
+					<datatype categary="body" type="image"/>
+				</element>
+			</datatype>  
+		</element>
+	</events>
+
+</ui.template>
+
+</data>

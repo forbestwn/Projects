@@ -1,0 +1,161 @@
+package com.nosliw.app.service;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import com.nosliw.app.instance.HAPApplicationInstance;
+import com.nosliw.common.exception.HAPServiceData;
+import com.nosliw.common.utils.HAPConstant;
+import com.nosliw.common.utils.HAPJsonUtility;
+import com.nosliw.entity.data.HAPEntityID;
+import com.nosliw.entity.operation.HAPEntityOperationInfo;
+import com.nosliw.entity.transaction.HAPTransaction;
+import com.nosliw.entity.utils.HAPEntityUtility;
+
+public class HAPJsonService {
+	
+	private String m_clientId; 
+	
+	public HAPJsonService(String clientId){
+		this.m_clientId = clientId;
+	}
+	
+	public HAPServiceData service(String command, JSONObject jsonParms, HAPRequestInfo requestInfo){
+		HAPLogger logger = userContext.getLogger();
+		String jsonOut = ""; 
+		HAPServiceData serviceData = null;
+		try{
+			StringBuffer out = new StringBuffer();
+
+			String transactionId = requestInfo.transactionId;
+			String requestId = requestInfo.requestId; 
+			
+			HAPServices webServices = this.getApplicationContext().getWebServices();
+			boolean logData = false;
+			boolean logAppending = true;
+			String categary = command;
+			String title = command;
+			
+			if(command!=null){
+				if("getAllDataTypes".equals(command)){
+					logAppending = false;
+					Map<String, String> dataTypesJson = new LinkedHashMap<String, String>();
+					serviceData = webServices.getAllDataTypes();
+				}
+				else if("getAllEntityDefinitions".equals(command)){
+					logAppending = false;
+					serviceData = webServices.getAllEntityDefinitions();
+				}
+				else if("getAllUIResources".equals(command)){
+					logAppending = false;
+					serviceData = webServices.getAllUIResources();
+				}
+				else if("getEntityDefinitionsByGroup".equals(command)){
+					String group = jsonParms.optString("group");
+					serviceData = webServices.getEntityDefinitionsByGroup(group);
+				}
+				else if("getEntityDefinitionByName".equals(command)){
+					String name = jsonParms.optString("name");
+					serviceData = webServices.getEntityDefinitionByName(name);
+				}
+				else if("getUIResource".equals(command)){
+					String name = jsonParms.optString("name");
+					serviceData = webServices.getUIResource(name);
+				}
+				else if("startTransaction".equals(command)){
+					logData = true;
+					serviceData = webServices.startTransaction(transactionId);
+				}
+				else if("commit".equals(command)){
+					categary = "operate";
+					logData = true;
+					serviceData = webServices.commit();
+				}
+				else if("rollback".equals(command)){
+					categary = "operate";
+					logData = true;
+					serviceData = webServices.rollBack(transactionId, userContextInfo);
+				}
+				else if("query".equals(command)){
+					logData = true;
+					JSONObject query = new JSONObject(jsonParms.optString("query"));
+					serviceData = webServices.query(HAPQueryInfo.parse(query, this.getApplicationContext().getDataTypeManager()), transactionId, userContextInfo);
+				}
+				else if("remvoeQuery".equals(command)){
+					logData = true;
+				}
+				else if("getEntityWrapers".equals(command)){
+					JSONArray jsonIDs = jsonParms.optJSONArray("IDs");
+					List<HAPEntityID> entityIDs = new ArrayList<HAPEntityID>();
+					for(int i=0; i<jsonIDs.length(); i++)		entityIDs.add(new HAPEntityID(jsonIDs.optString(i)));
+					serviceData = webServices.getEntityWrapers(entityIDs.toArray(new HAPEntityID[0]), transactionId, userContextInfo);
+				}
+				else if("operate".equals(command)){
+					categary = "operate";
+					logData = true;
+					HAPEntityOperationInfo operation = HAPEntityOperationInfo.parseJson(new JSONObject(jsonParms.optString("operation")), this.getApplicationContext());
+					title = operation.getOperation().getName();
+					serviceData = webServices.operate(operation, transactionId, userContextInfo);
+				}
+				else if("operateEntity".equals(command)){
+					categary = "operate";
+					logData = true;
+					JSONArray operationsJsonArray = jsonParms.getJSONArray("operations");
+					List<HAPEntityOperationInfo> operations = new ArrayList<HAPEntityOperationInfo>();
+					for(int i=0; i<operationsJsonArray.length(); i++){
+						JSONObject operationJson = operationsJsonArray.getJSONObject(i);
+						HAPEntityOperationInfo operation = HAPEntityOperationInfo.parseJson(operationJson, this.getApplicationContext());
+
+						title = "[";
+						if(i!=0)		title = title + "-" + operation.getOperation().getName();
+						else   title = title + "" + operation.getOperation().getName();
+						title = title + "]";
+
+						operations.add(operation);
+					}
+					serviceData = webServices.operateEntity(operations.toArray(new HAPEntityOperationInfo[0]), transactionId, userContextInfo);
+				}
+				else if("getAttributeOptions".equals(command)){
+					HAPEntityID entityID = new HAPEntityID(jsonParms.optString("ID"));
+					String attrPath = jsonParms.optString("attrPath", "");
+					serviceData = webServices.getAttributeOptionsData(entityID, attrPath, transactionId, userContextInfo);
+				}
+			}
+			
+			if(serviceData==null){
+				serviceData = HAPServiceData.createFailureData(null, "No command exist : " + command + "  !!!!!");
+			}
+			
+			serviceData.setRequestId(requestId);
+			
+			if("-1".equals(serviceData.getTransactionId())){
+				HAPTransaction trans = userContext.getEntityManager().getTransactionById(requestId);
+				serviceData.setTransactionId(trans==null?null:trans.getId());
+			}
+			
+			out.append(serviceData.toStringValue(HAPConstant.FORMAT_JSON));
+			
+			jsonOut = HAPJsonUtility.formatJson(out.toString());
+
+			Map<String, String> logJsonMap = new LinkedHashMap<String, String>();
+			logJsonMap.put("command", command);
+			logJsonMap.put("parms", jsonParms.toString());
+			logJsonMap.put("infos", requestInfo.toStringValue(HAPConstant.FORMAT_JSON));
+			logJsonMap.put("userContext", userContextInfo.getId());
+			logJsonMap.put("output", out.toString());
+			if(logData)			logJsonMap.put("data", userContext.toStringValue(HAPConstant.FORMAT_JSON));
+			String logContent = HAPJsonUtility.getMapJson(logJsonMap);
+			logger.log(title, categary, logContent, logAppending);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		return serviceData;
+	}
+	
+}

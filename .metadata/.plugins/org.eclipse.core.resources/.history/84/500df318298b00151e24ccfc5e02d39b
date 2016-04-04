@@ -1,0 +1,26 @@
+/**
+ * 
+ */
+var nosliwCreateRequestSequence = function(){
+
+	//handlers for group request: start, end, error, exception
+	var loc_handlers = {};
+
+	//all the requests   name -- request
+	var loc_requests = {};
+	
+	var loc_out = {
+		
+		getType : function(){ return NOSLIWCONSTANT.REQUEST_TYPE_SET;  },
+			
+		addRequest : function(name, request){	loc_requests[name] = request;	},
+			
+			
+	};
+	
+	return loc_out;
+};
+
+
+
+

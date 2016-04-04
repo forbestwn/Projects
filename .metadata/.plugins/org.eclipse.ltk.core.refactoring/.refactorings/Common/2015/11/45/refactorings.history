@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move element &apos;HAPLogger.java&apos; to &apos;Common/src/com.nosliw.common.log&apos;&#x0A;- Original project: &apos;Common&apos;&#x0A;- Destination element: &apos;Common/src/com.nosliw.common.log&apos;&#x0A;- Original element: &apos;com.nosliw.common.configure.HAPLogger.java&apos;&#x0A;- Update references to refactored element" description="Move compilation unit" destination="/src&lt;com.nosliw.common.log" element1="/src&lt;com.nosliw.common.configure{HAPLogger.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.move" log="/src&lt;com.nosliw.common.configure&#x09;/src&lt;com.nosliw.common.log" patterns="*" policy="org.eclipse.jdt.ui.moveResources" qualified="false" references="true" stamp="1446728653959" units="1" version="1.0"/>
+</session>

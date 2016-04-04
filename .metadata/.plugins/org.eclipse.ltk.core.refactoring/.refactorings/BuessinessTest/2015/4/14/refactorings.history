@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;BuessinessTest/WebContent/web2app/functions/datasources.js&apos; to &apos;datasourcelist.js&apos;" description="Rename resource &apos;datasources.js&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="WebContent/web2app/functions/datasources.js" name="datasourcelist.js" stamp="1427951460860" updateReferences="true"/>
+</session>

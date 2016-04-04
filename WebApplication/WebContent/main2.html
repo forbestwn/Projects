@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+ <html>
+ <head>
+        <meta charset="utf-8" />
+        <title>My first jQuery Mobile code</title>
+        <script src="libs/underscore.js"></script>
+        <script src="libs/backbone.js"></script>
+        <script src="libs/backbone.marionette.js"></script>
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0/jquery.mobile-
+1.0.min.css" />
+        <script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+        <script type="text/javascript" src="http://code.jquery.com/mobile/1.0/
+jquery.mobile-1.0.min.js"></script>
+        <script data-main="configure.js" src="libs/require.js"></script> 
+
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+ <body>
+
+<script type="text/template" id="#id_layout">
+</script>
+
+<script>
+	var App = {};
+	App.face = ||face||;
+	App.templates.body = ||bodytemplate||;
+	App.templates.layout = ||bodytemplate||;
+	App.templates.borders ={
+		||bordertemplates||
+	};
+	
+	
+	$(function () {
+		var bodyDom = App.templates.body.render(data, parms);
+		
+		App.templates.layout.render($("#products"), parms, {body:bodyDom});
+	});	
+</script>
+
+
+
+ <div data-role="page" data-theme="a" id="products">
+	
+ </div>
+ </body>
+ </html>
+ 

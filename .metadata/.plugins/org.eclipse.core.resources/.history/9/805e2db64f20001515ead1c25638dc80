@@ -1,0 +1,161 @@
+package com.nosliw.entity.data;
+
+import java.lang.reflect.Constructor;
+import java.util.Map;
+
+import com.nosliw.HAPApplicationContext;
+import com.nosliw.common.exception.HAPServiceData;
+import com.nosliw.data.HAPDataTypeInfo;
+import com.nosliw.entity.definition.HAPAtomAttributeDefinition;
+import com.nosliw.entity.definition.HAPAttributeDefinition;
+import com.nosliw.entity.definition.HAPEntityDefinition;
+import com.nosliw.entity.definition.HAPEntityStraightDefinition;
+import com.nosliw.transaction.HAPOperationFactory;
+import com.nosliw.transaction.HAPOperationInfo;
+import com.nosliw.utils.HAPEntityUtility;
+
+public class HAPEntity extends HAPDataTypeImp{
+
+	HAPApplicationContext m_appContext;
+	
+	public HAPEntity(String name, HAPApplicationContext appContext) {
+		super(new HAPDataTypeInfo(HAPConstant.CATEGARY_ENTITY, name), null, null, appContext.getDataTypeManager());
+		this.m_appContext = appContext;
+	}
+
+	@Override
+	public HAPData getDefaultData() {
+		return this.newEntity(this.getDataTypeInfo().getType());
+	}
+
+	@Override
+	public HAPData toData(Object value, String format) {
+		HAPData out = null;
+		return out;
+	}
+	
+	
+	@Override
+	public HAPWraper createDataWraper(){
+		return new HAPEntityWraper(this.getDataTypeInfo().getType(), this.getDataTypeManager());
+	}
+	
+	@Override
+	public HAPWraper createDataWraper(HAPData data){
+		return new HAPEntityWraper((HAPEntityData)data, this.getDataTypeManager());
+	}
+
+	
+	@Override
+	public HAPServiceData validate(HAPData data) {
+		return HAPServiceData.createSuccessData();
+	}
+
+	/*
+	 * create a brand new Complex Entity, based on 1. entity type,  2, critical value
+	 * 1. get entity definition based on critical value
+	 * 2. create entity object based on entity definition
+	 * 3. set entity definition to entity object
+	 * 4. create attributes in the entity (attribute wraper + listener)
+	 * 5. add critical attribute to entity
+	 * 6. initialzation work after all attribute is created
+	 * type:  complex entity type
+	 * criticalValue:  critical attribute value if apliable, null if not specified
+	 * return null if type not exists 
+	 */
+	public HAPEntityData newEntity(){return this.newEntity(null);}
+
+	public HAPEntityData newEntity(String criticalValue){
+		String type = this.getDataTypeInfo().getType();
+		HAPEntityData entity = this.newEntityInstance(type, criticalValue);
+		
+		//fill out the attributes of complex entity
+		for(HAPAttributeDefinition attrDef: entity.getAttributeDefinitions()){
+			this.newAttributeWraper(attrDef, entity);
+		}
+		//after all the attributes are created, do something ---- consistency check
+		entity.initialize();
+		return entity;
+	}
+	
+	/*
+	 * create empty entity instance
+	 * all the attribute of the entity is empty
+	 * this method is used when loading data from storage
+	 */
+	public HAPEntityData newEmptyEntity(){return this.newEmptyEntity(null);}
+
+	public HAPEntityData newEmptyEntity(String criticalValue){
+		String type = this.getDataTypeInfo().getType();
+		HAPEntityData entity = this.newEntityInstance(type, criticalValue);
+		for(HAPAttributeDefinition attrDef : entity.getAttributeDefinitions()){
+			
+			this.newEmptyAttribute(attrDef, entity);
+		}
+		return entity;
+	}
+
+	public HAPDataWraper newAttributeWraper(HAPAttributeDefinition attrDef, HAPEntityData parent){
+		HAPDataWraper out = newEmptyAttribute(attrDef, parent);
+		out.initAttributeData();
+		return out;
+	}
+	
+	private HAPDataWraper newEmptyAttribute(HAPAttributeDefinition attrDef, HAPEntityData parent){
+		String attribute = attrDef.getName();
+		HAPDataTypeDefInfo type = attrDef.getDataTypeDefinitionInfo();
+		
+		HAPDataWraper wraper = (HAPDataWraper)this.getDataTypeManager().getDataType(type.getDataTypeInfo()).createDataWraper();
+		if(parent!=null){
+			setAttribute(wraper, parent, attribute);
+		}
+		return wraper;
+	}
+
+	/*
+	 * build parent, child relationship
+	 */
+	private HAPDataWraper setAttribute(HAPDataWraper attWraper, HAPEntityData parent, String attribute){
+		if(attWraper != null){
+			parent.addAttributeValue(attribute, attWraper);
+		}
+		return attWraper;
+	}
+	
+	private HAPEntityData newEntityInstance(String type, String criticalValue){
+		HAPEntityDefinition entityDef = this.getAppContext().getEntityDefinitionManager().getEntityDefinition(type);
+		if(entityDef==null)  return null;
+		
+		//get entityDef based on critical value
+		HAPAtomAttributeDefinition criticalAttrDef = entityDef.getCriticalAttributeDefinition();
+		if(criticalAttrDef!=null){
+			entityDef = entityDef.getEntityDefinitionByCriticalValue(criticalValue);
+		}
+
+		//create complex entity object
+		String className = entityDef.getBaseClassName();
+		if(className==null)  className = this.getAppContext().getEntityDefinitionManager().getDefaultClassName();
+		HAPEntityData entity = null;
+		try {
+			Class[] conInputs = {HAPDataType.class, HAPEntityStraightDefinition.class}; 
+			Constructor con = Class.forName(className).getConstructor(conInputs);
+			entity = (HAPEntityData) con.newInstance(this.getDataTypeManager().getEntityDataType(type), entityDef);
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+			return null;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} 
+		
+		//set entity definition for this entity
+		//this entity def may not from entity definition from entity defintion manager
+		entity.setEntityInfo(entityDef);
+		return entity;
+	}
+	
+	private HAPApplicationContext getAppContext(){
+		return this.m_appContext;
+	}
+	
+}

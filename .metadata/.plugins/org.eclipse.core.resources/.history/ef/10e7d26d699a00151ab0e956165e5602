@@ -1,0 +1,216 @@
+package com.nosliw.data;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.nosliw.common.configure.HAPConfigurable;
+import com.nosliw.common.serialization.HAPStringable;
+import com.nosliw.common.utils.HAPBasicUtility;
+import com.nosliw.common.utils.HAPConstant;
+import com.nosliw.common.utils.HAPJsonUtility;
+import com.nosliw.data.basic.bool.HAPBoolean;
+import com.nosliw.data.basic.floa.HAPFloat;
+import com.nosliw.data.basic.number.HAPInteger;
+import com.nosliw.data.basic.string.HAPString;
+import com.nosliw.data.basic.string.HAPStringData;
+import com.nosliw.data.info.HAPDataTypeInfo;
+import com.nosliw.data.info.HAPDataTypeInfoWithVersion;
+
+public class HAPDataTypeManager implements HAPStringable{
+
+	public final static String DEFAULT_CATEGARY = HAPConstant.CONS_DATATYPE_CATEGARY_SIMPLE;
+	public final static String DEFAULT_TYPE = HAPConstant.CONS_DATATYPE_TYPE_STRING;
+	
+	//static object for default data type: Bool, Integer, String, Float
+	public static HAPBoolean BOOLEAN;
+	public static HAPInteger INTEGER;
+	public static HAPString STRING;
+	public static HAPFloat FLOAT;
+	
+	//map for data type string vs data type obj
+	private Map<String, HAPDataType> m_dataTypes;
+	//store information for all the data type for particular categary
+	private Map<String, Set<String>> m_dataTypeCategary;
+
+	//configure info
+	private HAPConfigurable m_configures;
+
+	public HAPDataTypeManager(HAPConfigurable configures){
+		this.m_configures = configures;
+		
+		this.m_dataTypes = new LinkedHashMap<String, HAPDataType>();
+		this.m_dataTypeCategary = new LinkedHashMap<String, Set<String>>();
+		this.loadBasicDataType();
+	}
+	
+	public HAPConfigurable getConfiguration(){return this.m_configures;}
+	
+	public HAPDataType registerDataType(HAPDataType def){
+		HAPDataTypeInfo dataTypeInfo = def.getDataTypeInfo(); 
+		String key = this.getDataTypeKey(dataTypeInfo);
+		this.m_dataTypes.put(key, def);
+		
+		Set<String> types = this.m_dataTypeCategary.get(dataTypeInfo.getCategary());
+		if(types==null){
+			types = new HashSet<String>();
+			this.m_dataTypeCategary.put(dataTypeInfo.getCategary(), types);
+		}
+		types.add(dataTypeInfo.getType());
+		return def;
+	}
+	
+	public Set<String> getSupportedScripts(){
+		Set<String> out = new HashSet<String>();
+		out.add(HAPConstant.CONS_OPERATIONDEF_SCRIPT_JAVASCRIPT);
+		return out;
+	}
+	
+	public String[] getAllDataCategarys(){		return this.m_dataTypeCategary.keySet().toArray(new String[0]);	}
+	
+	public Set<String> getDataTypesByCategary(String categary){
+		return this.m_dataTypeCategary.get(categary);
+	}
+	
+	public HAPDataType[] getAllDataTypes(){		return this.m_dataTypes.values().toArray(new HAPDataType[0]);	}
+	
+	public HAPDataType getDataType(HAPDataTypeInfo dataType){
+		String key = this.getDataTypeKey(dataType);
+		return this.m_dataTypes.get(key);
+	}
+
+	public String getDataTypeScript(HAPDataTypeInfo dataType){
+		
+	}
+	
+	public HAPDataTypeInfo getDataTypeInfoByTypeName(String type){
+		for(String categary : this.getAllDataCategarys()){
+			if(this.isCategary(categary, type)){
+				return new HAPDataTypeInfo(categary, type);
+			}
+		}
+		return null;
+	}
+	
+	public boolean isCategary(String categary, String type){
+		return this.getDataType(new HAPDataTypeInfo(categary, type))!=null;
+	}
+	
+	public HAPData getDefaultValue(HAPDataTypeInfo dataTypeInfo){
+		HAPData out = null;
+		HAPDataType dataType = this.getDataType(dataTypeInfo);
+		if(dataType!=null){
+			out = dataType.getDefaultData();
+		}
+		return out;
+	}
+
+	public static HAPDataTypeInfo getDefaultDataTypeInfo(){		return new HAPDataTypeInfo(DEFAULT_CATEGARY, DEFAULT_TYPE);	}
+	
+	private void loadBasicDataType(){
+		
+		HAPDataTypeInfoWithVersion booleanDataTypeInfo = new HAPDataTypeInfoWithVersion(HAPConstant.CONS_DATATYPE_CATEGARY_SIMPLE, HAPConstant.CONS_DATATYPE_TYPE_BOOLEAN);
+		HAPDataTypeManager.BOOLEAN = (HAPBoolean)this.registerDataType(HAPBoolean.createDataType(booleanDataTypeInfo, null, null, null, "", this));
+
+		HAPDataTypeInfoWithVersion integerDataTypeInfo = new HAPDataTypeInfoWithVersion(HAPConstant.CONS_DATATYPE_CATEGARY_SIMPLE, HAPConstant.CONS_DATATYPE_TYPE_INTEGER);
+		HAPDataTypeManager.INTEGER = (HAPInteger)this.registerDataType(HAPInteger.createDataType(integerDataTypeInfo, null, null, null, "", this));
+
+		HAPDataTypeInfoWithVersion stringDataTypeInfo = new HAPDataTypeInfoWithVersion(HAPConstant.CONS_DATATYPE_CATEGARY_SIMPLE, HAPConstant.CONS_DATATYPE_TYPE_STRING);
+		HAPDataTypeManager.STRING = (HAPString)this.registerDataType(HAPString.createDataType(stringDataTypeInfo, null, null, null, "", this));
+		
+		
+		HAPDataTypeInfoWithVersion floatDataTypeInfo = new HAPDataTypeInfoWithVersion(HAPConstant.CONS_DATATYPE_CATEGARY_SIMPLE, HAPConstant.CONS_DATATYPE_TYPE_FLOAT);
+		HAPDataTypeManager.FLOAT = (HAPFloat)this.registerDataType(HAPFloat.createDataType(floatDataTypeInfo, null, null, null, "", this));
+	}
+
+	public HAPStringData getStringData(String value){
+		return STRING.createDataByValue(value);
+	}
+	
+	private String getDataTypeKey(HAPDataTypeInfo info){
+		return info.toString();
+	}
+
+	/****************************** transform between data object and json string ********************************/
+	
+	/*
+	 * transform string to data object, according to the structure of the string, for instance: 
+	 * 		json : start with { 
+	 * 		otherwise, treat as simple text
+	 */
+	public HAPData parseString(String text, String categary, String type){
+		if(text==null)  return null;
+		if(text.equals(""))  return this.getStringData(text);
+		
+		String token = text.substring(0, 1);
+		if(token.equals("{")){
+			//json
+			try {
+				 JSONObject jsonObj = new JSONObject(text);
+				 return this.parseJson(jsonObj, categary, type);
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return null;
+			}
+		}
+		else if(token.equals("#")){
+			//literate
+			return null;
+		}
+		else{
+			if(categary!=null && type!=null){
+				HAPDataType dataType = this.getDataType(new HAPDataTypeInfo(categary, type));
+				return dataType.toData(text, HAPConstant.CONS_SERIALIZATION_TEXT);
+			}
+			else{
+				//simple / text
+				return this.getStringData(text);
+			}
+		}
+	}
+
+	public HAPData parseJson(JSONObject jsonObj, String categary, String type){
+		if(HAPBasicUtility.isStringEmpty(categary)){
+			categary = jsonObj.optJSONObject("dataType").optString("categary");
+		}
+		if(HAPBasicUtility.isStringEmpty(type)){
+			type = jsonObj.optJSONObject("dataType").optString("type");
+		}
+		JSONObject dataJson = jsonObj.optJSONObject("data");
+		if(dataJson==null)  dataJson = jsonObj;
+		return this.getDataType(new HAPDataTypeInfo(categary, type)).toData(dataJson, HAPConstant.CONS_SERIALIZATION_JSON);
+	}
+
+	public HAPWraper parseWraper(JSONObject jsonObj){
+		return null;
+	}
+
+	@Override
+	public String toStringValue(String format) {
+		Map<String, String> jsonMap = new HashMap<String, String>();
+		
+		Map<String, String> jsonTypeMap = new HashMap<String, String>();
+		for(String key : this.m_dataTypes.keySet()){
+			jsonTypeMap.put(key, this.m_dataTypes.get(key).toStringValue(format));
+		}
+		jsonMap.put("data", HAPJsonUtility.getMapJson(jsonTypeMap));
+		
+		return HAPJsonUtility.getMapJson(jsonMap);
+	}
+
+	@Override
+	public String toString(){
+		StringBuffer out = new StringBuffer();
+		
+		out.append("\n\n\n**************************     DataTypeManager  Start   *****************************\n");
+		out.append(HAPJsonUtility.formatJson(this.toStringValue(HAPConstant.CONS_SERIALIZATION_JSON)));
+		out.append("\n**************************     DataTypeManager  End   *****************************\n\n\n");
+		
+		return out.toString();
+	}
+}

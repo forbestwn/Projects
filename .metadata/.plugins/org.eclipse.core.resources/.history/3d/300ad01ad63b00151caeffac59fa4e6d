@@ -1,0 +1,357 @@
+package com.nosliw.uiresource;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Attribute;
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
+import org.jsoup.nodes.TextNode;
+import org.jsoup.select.Elements;
+
+import com.nosliw.common.utils.HAPBasicUtility;
+import com.nosliw.common.utils.HAPConstant;
+import com.nosliw.common.utils.HAPFileUtility;
+import com.nosliw.common.utils.HAPNamingConversionUtility;
+
+/*
+ * This is a utility class that process ui resource file and create ui resource object
+ * 
+ */
+public class HAPUIResourceImporter {
+	static final private String EXPRESSION_BORDER_LEFT="<%="; 
+	static final private String EXPRESSION_BORDER_RIGHT="%>"; 
+	
+	static final private String TAG_PLACEHOLDER = "nosliw";
+	
+	static final private String TAG_ATTRIBUTE_ELEID = "nosliwid";
+	static final private String TAG_ATTRIBUTE_DATABIND = "data";
+	static final private String TAG_ATTRIBUTE_EVENT = "event";
+	static final private String TAG_ATTRIBUTE_SEPERATOR = "-";
+
+//	static final private String TAG_CUSTOME_PREFIX = "nosliw-";
+	
+	static public HAPUIResource readUIResource(String fileName) throws Exception{
+		
+		HAPUIResource resource = null;
+		
+		File input = new File(fileName);
+		//use file name as ui resource name
+		String resourceName = HAPFileUtility.getFileName(input);
+		
+		resource = new HAPUIResource(resourceName);
+
+		Document doc = Jsoup.parse(input, "UTF-8");
+		Element bodyEle = doc.body();
+
+		//process body tag's attribute
+		processAttribute(bodyEle, resource);
+
+		//
+		adjustTagAccordToDataBinding(bodyEle);
+		
+		processContent(bodyEle, resource);
+		precessChildTags(bodyEle, resource);
+		
+		addSpanToText(bodyEle);
+
+		resource.postRead();
+		
+		resource.setContent(bodyEle.html());
+			
+		return resource;
+	}
+
+	/*
+	 * convert all standard child tags that have data key attribute to default custom tag 
+	 */
+	static private void adjustTagAccordToDataBinding(Element ele){
+		Elements eles = ele.children();
+		for(Element e : eles){
+			//for each child element
+			String tag = e.tagName();
+			if(HAPUIResourceImporter.isCustomTag(e)==null){
+				//for none custom tag
+				Attributes attrs = e.attributes();
+				boolean dataKeyAttr = false;
+				for(Attribute attr : attrs){
+					//check if there is any data key attribute
+					dataKeyAttr = isDataKeyAttribute(attr.getKey());
+					if(dataKeyAttr)	break;
+				}
+				if(dataKeyAttr){
+					//if have data key attribute, then change the standard tag name to default custome tag name
+					tag = makeCustomTagName(tag);
+					e.tagName(tag);
+				}
+			}
+			adjustTagAccordToDataBinding(e);
+		}
+	}
+	
+	static private void processContent(Element ele, HAPUIResourceBasic resource){
+		List<TextNode> textNodes = ele.textNodes();
+		for(TextNode textNode : textNodes){
+			String text = textNode.text();
+			int start = text.indexOf(EXPRESSION_BORDER_LEFT);
+			while(start != -1){
+				int expEnd = text.indexOf(EXPRESSION_BORDER_RIGHT, start);
+				int end = expEnd + EXPRESSION_BORDER_RIGHT.length();
+				int expStart = start + EXPRESSION_BORDER_LEFT.length();
+				String expression = text.substring(expStart, expEnd);
+				String textId = HAPUIResourceManager.createId();
+				text=text.substring(0, start) + "<span "+TAG_ATTRIBUTE_ELEID+"="+textId+"></span>" + text.substring(end);
+				HAPExpressionContent expressionContent = new HAPExpressionContent(textId, expression, HAPUIResourceManager.createId());
+				resource.addExpressionContent(expressionContent);
+				start = text.indexOf(EXPRESSION_BORDER_LEFT);
+			}
+			
+			textNode.after(text);
+			textNode.remove();
+		}
+	}
+
+	static private void addSpanToText(Element ele){
+		List<TextNode> textNodes = new ArrayList<TextNode>();
+		addSpanToText(ele, textNodes);
+
+		for(TextNode textNode : textNodes){
+			String t1 = textNode.text();
+			String t = t1.replaceAll("\\n+\\t+", "");
+			t = StringUtils.stripToEmpty(t);
+			if(HAPBasicUtility.isStringNotEmpty(t)){
+				String text = spanText(t1);
+				textNode.after(text);
+				textNode.remove();
+			}
+			else{
+				Node preNode = textNode.previousSibling();
+				Node nextNode = textNode.nextSibling();
+				if((preNode!=null&&"span".equals(preNode.nodeName())) || 
+						(nextNode!=null&&"span".equals(nextNode.nodeName())))
+				{
+						String text = spanText(t1);
+						textNode.after(text);
+						textNode.remove();
+				}
+			}
+		}
+	}
+
+	static private void addSpanToText(Element ele, List<TextNode> outputTextNodes){
+		List<TextNode> textNodes = ele.textNodes();
+		for(TextNode textNode : textNodes){
+			outputTextNodes.add(textNode);
+		}
+
+		Elements eles = ele.children();
+		for(Element e : eles){
+			addSpanToText(e, outputTextNodes);
+		}
+}
+	
+	static private String spanText(String text){
+		return "<span>"+text+"</span>";
+	}
+	
+	static private void precessChildTags(Element ele, HAPUIResourceBasic resource){
+		List<Element> removes = new ArrayList<Element>();
+		Elements eles = ele.children();
+		for(Element e : eles){
+			if(HAPBasicUtility.isStringEmpty(getEleId(e))){
+				String eleId = createId(e, resource);
+			}
+			
+			boolean ifRemove = readTag(e, resource);
+			if(ifRemove)  removes.add(e);
+		}
+		
+		for(Element remove : removes){
+			remove.remove();
+		}
+	}
+	
+	static private boolean readTag(Element ele, HAPUIResourceBasic resource){
+		String eleTag = ele.tagName();
+		if("script".equals(eleTag)){
+			processJS(ele, resource);
+			return true;
+		}
+		else{
+			String customTag = isCustomTag(ele);
+			if(customTag!=null){
+				readCustomTag(customTag, ele, resource);
+			}
+			else{
+				processContent(ele, resource);
+				processKeyAttribute(ele, resource, false);
+				precessExpressionAttribute(ele, resource, false);
+				precessChildTags(ele, resource);
+			}
+		}
+		return false;
+	}
+
+	static private void readCustomTag(String tagName, Element ele, HAPUIResourceBasic resource){
+		String eleId = getEleId(ele); 
+		
+		HAPUITag uiTag = new HAPUITag(tagName, eleId);
+
+		processKeyAttribute(ele, resource, true);
+
+		processUITagDataBindingAttribute(ele, uiTag);
+		
+		precessExpressionAttribute(ele, resource, true);
+		
+		processAttribute(ele, uiTag);
+		
+		ele.after("<"+TAG_PLACEHOLDER+" style=\"display:none;\" "+TAG_ATTRIBUTE_ELEID+"="+ eleId +"-tag-end></"+TAG_PLACEHOLDER+">");
+		ele.after("<"+TAG_PLACEHOLDER+" style=\"display:none;\" "+TAG_ATTRIBUTE_ELEID+"="+ eleId +"-tag-start></"+TAG_PLACEHOLDER+">");
+		ele.remove();
+		
+		processContent(ele, uiTag);
+		precessChildTags(ele, uiTag);
+		
+		addSpanToText(ele);
+		
+		uiTag.postRead();
+		
+		uiTag.setContent(ele.html());
+		
+		resource.addUITag(uiTag);
+	}
+
+	/*
+	 * process attribute of Element for resource(UI resource or custom tag)
+	 */
+	static private void processAttribute(Element ele, HAPUIResourceBasic resource){
+		Attributes eleAttrs = ele.attributes();
+		for(Attribute eleAttr : eleAttrs){
+			resource.addAttribute(eleAttr.getKey(), eleAttr.getValue());
+		}
+	}
+	
+	
+	static private void precessExpressionAttribute(Element ele, HAPUIResourceBasic resource, boolean isCustomerTag){
+		String eleId = getEleId(ele); 
+		
+		//read attributes
+		Attributes eleAttrs = ele.attributes();
+		for(Attribute eleAttr : eleAttrs){
+			String eleAttrValue = eleAttr.getValue();
+			String eleAttrKey = eleAttr.getKey();
+			//replace express attribute value with; create ExpressEle object
+			if(isExpressionAttribute(eleAttr)){
+				//handle expression attribute
+				HAPExpressionAttribute eAttr = new HAPExpressionAttribute(eleId, eleAttrKey, eleAttrValue, HAPUIResourceManager.createId());
+				if(isCustomerTag)  resource.addExpressionTagAttribute(eAttr);
+				else  resource.addExpressionAttribute(eAttr);
+				ele.attr(eleAttrKey, "");
+			}
+		}
+	}
+	
+	static private void processUITagDataBindingAttribute(Element ele, HAPUITag resource){
+		Attributes eleAttrs = ele.attributes();
+		for(Attribute eleAttr : eleAttrs){
+			String eleAttrValue = eleAttr.getValue();
+			String eleAttrName = eleAttr.getKey();
+			String keyAttrName = isKeyAttribute(eleAttrName);
+			
+			if(keyAttrName!=null){
+				if(keyAttrName.startsWith(TAG_ATTRIBUTE_DATABIND)){
+					//create DataSourceEle
+					HAPDataBinding dataBinding = new HAPDataBinding(keyAttrName, eleAttrValue);
+					resource.addDataBinding(dataBinding);
+					ele.removeAttr(eleAttrName);
+				}
+			}
+		}
+	}
+	
+	static private void processKeyAttribute(Element ele, HAPUIResourceBasic resource, boolean isCustomerTag){
+		String eleId = getEleId(ele); 
+		Attributes eleAttrs = ele.attributes();
+		for(Attribute eleAttr : eleAttrs){
+			String eleAttrValue = eleAttr.getValue();
+			String eleAttrName = eleAttr.getKey();
+			String keyAttrName = isKeyAttribute(eleAttrName);
+			
+			if(keyAttrName!=null){
+				if(keyAttrName.contains(TAG_ATTRIBUTE_EVENT)){
+					String[] events = eleAttrValue.split(";");
+					for(String event : events){
+						if(isCustomerTag){
+							HAPTagEvent tagEvent = new HAPTagEvent(eleId, event);
+							resource.addTagEvent(tagEvent);
+						}
+						else{
+							HAPElementEvent eleEvent = new HAPElementEvent(eleId, event);
+							resource.addElementEvent(eleEvent);
+						}
+					}
+					ele.removeAttr(eleAttrName);
+				}
+			}
+		}
+	}
+	
+	static private String getEleId(Element ele){
+		String id = ele.attr(TAG_ATTRIBUTE_ELEID);
+		return id;
+	}
+	
+	static private boolean isExpressionAttribute(Attribute attr){
+		String value = attr.getValue();
+		return value.contains(EXPRESSION_BORDER_LEFT);
+	}
+	
+	/*
+	 * build custom tag name based on tag basic name
+	 */
+	static private String makeCustomTagName(String tag){
+		return HAPNamingConversionUtility.createKeyword(tag, HAPConstant.CONS_UIRESOURCE_CUSTOMTAG_PREFIX);
+	}
+	
+	/*
+	 * check whether a tag is custom tag
+	 * if yes, return custom tag name
+	 * if no, return null
+	 */
+	static private String isCustomTag(Element ele){
+		String tagName = ele.tagName();
+		return HAPNamingConversionUtility.getKeyword(tagName, HAPConstant.CONS_UIRESOURCE_CUSTOMTAG_PREFIX);
+	}
+
+	
+	static private boolean isDataKeyAttribute(String attribute){
+		return attribute.startsWith(TAG_CUSTOME_PREFIX+TAG_ATTRIBUTE_DATABIND);
+	}
+	
+	static private String makeKeyAttribute(String attribute){
+		return TAG_CUSTOME_PREFIX+attribute;
+	}
+	
+	static private String isKeyAttribute(String attribute){
+		if(attribute.startsWith(TAG_CUSTOME_PREFIX))		return attribute.substring(TAG_CUSTOME_PREFIX.length());
+		else		return null;
+	}
+	
+	static private String createId(Element ele, HAPUIResourceBasic resource){
+		String id = HAPUIResourceManager.createId();
+		ele.attr(TAG_ATTRIBUTE_ELEID, id);
+		return id;
+	}
+	
+	static private void processJS(Element ele, HAPUIResourceBasic resource){
+		String content = ele.html();
+		HAPJSFunction js = new HAPJSFunction(content);
+		resource.addJS(js);
+	}
+
+}

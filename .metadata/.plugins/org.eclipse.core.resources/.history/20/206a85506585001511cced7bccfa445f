@@ -1,0 +1,168 @@
+/**
+ * 
+ */
+
+var nosliwCreateRemoteSyncTask = function(name, remoteServiceMan, setting){
+	//reference to remote service manager obj
+	loc_remoteServiceMan = remoteServiceMan;
+	
+	//name of this sync task
+	loc_name = name;
+
+	//setting for this sync task
+	loc_setting = setting;
+	
+	//store all sync tasks that have been processed
+	loc_syncTasks = [];
+	//store all sync tasks that have not been processed
+	loc_syncTaskQueue = [];
+	//flag whether sync tasks in queue is ready for process
+	loc_syncReady = true;
+	
+	/*
+	 * process all sync tasks in task array
+	 * 		service : url service
+	 * 		command : command to use
+	 */
+	function loc_syncRemoteCall(){
+		//set flag so that no new processing allowed before this function is finished
+		loc_syncReady = false;
+		
+		//prepare remote request and do ajax call
+		var serviceTaskRequests = [];
+		for(var i in loc_syncTasks){
+			serviceTaskRequests.push(loc_syncTasks[i].getRemoteServiceRequest());
+		}
+		var serviceRequests = {
+				'clientId' : 	Nosliw.getClientId(),	
+				'command'	:	loc_setting.command, 
+				'parms'		:	JSON.stringify(serviceTaskRequests),
+		};
+	
+		$.ajax({
+			url : loc_setting.service,
+			type : "POST",
+			dataType: "json",
+			data : serviceRequests,
+			async : true,
+			success : function(serviceDataResult, status){
+				if(nosliwErrorUtility.isSuccess(serviceDataResult)==true){
+					var serviceDatas = serviceDataResult.data;
+					//processed normally
+					for(var j in serviceDatas){
+						var serviceData = serviceDatas[j];
+						var task = loc_syncTasks[j];
+						var taskType = task.type;
+
+						if(task.type==NOSLIWCOMMONCONSTANT.CONS_REMOTESERVICE_TASKTYPE_GROUP){
+							//for group task, handle child task first
+							for(var k in task.children)		loc_handleServiceResult(task.children[k], serviceData.data[k]);
+						}
+						//handle task
+						loc_handleServiceResult(task, serviceData);
+					}
+				}
+				else{
+					loc_processSyncRequestSystemError(serviceDataResult);
+				}
+				
+				//clear tasks
+				loc_syncTasks = [];
+				//ready to process new task
+				loc_syncReady = true;
+				//process sync task again
+				loc_processTasks();
+			},
+			error: function(obj, textStatus, errorThrown){
+				//when ajax error happened, which may be caused by network error, server is down or server internal error
+				//remote service manager is put into suspend status
+				//the service request is not removed
+				var serviceData = nosliwRemoteServiceErrorUtility.createRemoteServiceExceptionServiceData(obj, textStatus, errorThrown); 
+				
+				nosliwRemoteServiceUtility.handleServiceTask(serviceTasks, function(serviceTask){
+					loc_handleServiceResult(serviceTask, serviceData);
+					serviceTask.status = NOSLIWCONSTANT.REMOTESERVICE_SERVICESTATUS_FAIL;
+				});
+				
+				//suspend the system
+				loc_remoteServiceMan.suspend();
+				//finish processing, so that ready to process again
+				loc_syncReady = true;
+			},
+		});
+	};
+
+	/*
+	 * process the system error (invalid client id, ...) 
+	 */
+	var loc_processSyncRequestSystemError = function(serviceData){
+		
+	}
+	
+	/*
+	 * call the responding handler according to service data
+	 */
+	var loc_handleServiceResult = function(serviceTask, serviceData){
+		var resultStatus = nosliwRemoteServiceUtility.getServiceDataStatus(serviceData);
+		switch(resultStatus){
+		case NOSLIWCONSTANT.REMOTESERVICE_RESULT_SUCCESS:
+			return nosliwRemoteServiceUtility.executeServiceTaskSuccessHandler(serviceTask, serviceData.data, serviceTask);
+			break;
+		case NOSLIWCONSTANT.REMOTESERVICE_RESULT_EXCEPTION:
+			return nosliwRemoteServiceUtility.executeServiceTaskExceptionHandler(serviceTask, serviceData, serviceTask);
+			break;
+		case NOSLIWCONSTANT.REMOTESERVICE_RESULT_ERROR:
+			return nosliwRemoteServiceUtility.executeServiceTaskErrorHandler(serviceTask, serviceData, serviceTask);
+			break;
+		}
+	};
+	
+	/*
+	 * process all tasks
+	 */
+	var loc_processTasks = function(){
+		if(loc_syncReady==true){
+			//if ready to process
+			if(this.isEmpty()==false){
+				//if not empty 
+				//put all tasks in queue into tasks array and process all tasks in it
+				for(var i in loc_syncTaskQueue){
+					loc_syncTasks.push(loc_syncTaskQueue[i]);
+				}
+				loc_syncTaskQueue = [];
+				loc_syncRemoteCall();
+			}
+		}
+	};
+	
+	var loc_isEmpty = function(){
+		var out = false;
+		if(loc_syncTaskQueue.length()==0){
+			if(loc_syncTasks.length()==0){
+				out = true;
+			}
+		}
+		return out;
+	};
+	
+	var loc_out = {
+		/*
+		 * add a new task
+		 */
+		addTask : function(task){	this.syncTaskQueue.push(task);	},
+	
+		/*
+		 * process all tasks
+		 */
+		processTasks : function(){	loc_processTasks();		},
+		
+		isEmpty : function(){	return loc_isEmpty();	},
+		
+		clear : function(){
+			loc_syncTaskQueue = [];
+			loc_syncTasks = [];
+		},
+	};
+	
+	return loc_out;
+};

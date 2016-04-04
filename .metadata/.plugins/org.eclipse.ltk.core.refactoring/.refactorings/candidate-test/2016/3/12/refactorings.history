@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;com.cleverdevice.task.Task&apos; to &apos;Utility&apos;&#x0A;- Original project: &apos;candidate-test&apos;&#x0A;- Original element: &apos;com.cleverdevice.task.Task&apos;&#x0A;- Renamed element: &apos;com.cleverdevice.task.Utility&apos;&#x0A;- Update references to refactored element&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;Task&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/back-end&lt;com.cleverdevice.task{Task.java[Task" matchStrategy="1" name="Utility" qualified="false" references="true" similarDeclarations="false" stamp="1458274315096" textual="false" version="1.0"/>
+</session>

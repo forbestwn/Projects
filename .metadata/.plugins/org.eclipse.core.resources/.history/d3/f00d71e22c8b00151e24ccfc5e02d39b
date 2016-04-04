@@ -1,0 +1,49 @@
+/**
+ * 
+ */
+var NosliwServiceRequestInfo = function(requester, handlers, service){
+	//request type
+	this.type = NOSLIWCONSTANT.REQUEST_TYPE_SERVICE;
+	//unique id for this request
+	this.id = nosliw.generateId();
+	//who initilize this request
+	this.requester = requester;
+	//what want to do 
+	this.service = service;
+	//original request handlers
+	this.handlers = handlers;
+	//store all the information for implement the request
+	this.pri_metaData = {
+		//other data
+		pri_data : {},
+		//all parms for this request
+		pri_parmData : {},
+		//the execute information to process this request directly
+		pri_execute : undefined,
+		//final handlers used during implementation
+		pri_handlers : handlers,
+		//whether this request need remote request
+		pri_isLocal : true, 
+		//remote request this service request depend on
+		pri_remoteRequest : undefined,
+		//child service
+		pri_childService : undefined,
+	};
+	
+	if(this.service!=undefined){
+		//copy all the service data to metaData.data
+		_.each(this.service.parms, function(value, name, list){
+			this[name] = value;
+		}, this.pri_metaData.pri_parmData);
+	}
+
+	
+	var loc_out = {
+			
+	};
+	return loc_out;
+};
+
+
+
+

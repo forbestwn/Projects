@@ -1,0 +1,8 @@
+1439756047327	Rename type 'HAPUIExpressionContent'
+1439756156310	Delete element
+1439756167406	Rename type 'HAPUIExpressionText'
+1439930586675	Rename method 'getExpression'
+1439930624238	Rename field 'm_expression'
+1439930771747	Rename field 'ATTR_UIEXPRESSIONCONTENT_EXPRESSION'
+1440016033781	Rename field 'm_allUITagNames'
+1440016056808	Rename method 'addUITagName'

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;Application/src/nosliw.property&apos; to &apos;nosliw.properties&apos;" description="Rename resource &apos;nosliw.property&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/nosliw.property" name="nosliw.properties" stamp="1445648137315" updateReferences="true"/>
+</session>

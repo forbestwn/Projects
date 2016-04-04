@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <meta charset="utf-8" />
+        <title>My first jQuery Mobile code</title>
+        
+		<link rel="stylesheet" href="libs/jquery-ui/jquery-ui.css">        
+        
+        <script src="libs/underscore.js"></script>
+        <script src="libs/jquery.js"></script>
+        <script src="libs/dom.jsPlumb-1.7.5.js"></script>
+        <script src="libs/backbone.js"></script>
+        <script src="libs/backbone.marionette.js"></script>
+        <script src="libs/raphael.js"></script>
+        
+        <script src="js/common.js"></script>
+
+        <script src="js/datacontainer.js"></script>
+        <script src="js/context.js"></script>
+        <script src="js/container.js"></script>
+        <script src="js/entity.js"></script>
+        <script src="js/wraper.js"></script>
+        <script src="js/object.js"></script>
+        <script src="js/data.js"></script>
+        <script src="js/servicecontext.js"></script>
+
+        <script src="js/error.js"></script>
+        <script src="js/request.js"></script>
+        <script src="js/serviceutil.js"></script>
+        <script src="js/entitys.js"></script>
+        <script src="js/entitymanager.js"></script>
+        <script src="js/query.js"></script>
+        <script src="libs/jquery-ui/jquery-ui.js"></script>
+        <script src="js/options.js"></script>
+        <script src="js/service.js"></script>
+        <script src="js/remoteservice.js"></script>
+        <script src="js/entityoperationmanager.js"></script>
+        <script src="js/servicemanager.js"></script>
+        <script src="js/uiresourcemanager.js"></script>
+        <script src="js/uiresource.js"></script>
+        <script src="js/uitag.js"></script>
+        <script src="js/datatype.js"></script>
+        <script src="js/expression.js"></script>
+        <script src="js/entitydefinition.js"></script>
+        <script src="js/nosliw.js"></script>
+        <script src="js/operation.js"></script>
+        <script src="js/operationmanager.js"></script>
+        <script src="js/appfunction.js"></script>
+        
+        <script src="tags/errorhandle.js"></script>
+        <script src="tags/loop.js"></script>
+        <script src="tags/textinput.js"></script>
+        <script src="tags/checkbox.js"></script>
+        <script src="tags/switchcase.js"></script>
+        <script src="tags/select.js"></script>
+        <script src="tags/include.js"></script>
+
+        <script src="web2app/exchangeDataType.js"></script>
+        <script src="web2app/appmanager.js"></script>
+        <script src="web2app/utility.js"></script>
+        
+        <script src="web2app/tags/storyboard.js"></script>
+        <script src="web2app/tags/datatype.js"></script>
+        <script src="web2app/tags/uiface.js"></script>
+        <script src="web2app/tags/navigation.js"></script>
+        <script src="web2app/tags/unitstructure.js"></script>
+        <script src="web2app/tags/unitdata.js"></script>
+        
+        <script src="web2app/functions/main.js"></script>
+        <script src="web2app/functions/datasourceprovider.js"></script>
+        <script src="web2app/functions/datasourcelist.js"></script>
+        <script src="web2app/functions/faceinfo.js"></script>
+        <script src="web2app/functions/unitinfo.js"></script>
+        <script src="web2app/functions/faceunitstructure.js"></script>
+        <script src="web2app/functions/faceemulation.js"></script>
+        <script src="web2app/functions/uitemplatelist.js"></script>
+        <script src="web2app/functions/uitemplateinfo.js"></script>
+        <script src="web2app/functions/uitemplatedata.js"></script>
+        <script src="web2app/functions/uitemplateevent.js"></script>
+        <script src="web2app/functions/uitemplatecommand.js"></script>
+        <script src="web2app/functions/uitemplatecomponent.js"></script>
+        <script src="web2app/functions/uitemplatecomponenttemplatesel.js"></script>
+        <script src="web2app/functions/storyboard.js"></script>
+        <script src="web2app/functions/newdatasource.js"></script>
+        <script src="web2app/functions/editdatasource.js"></script>
+
+        <script src="mobile/mobileservice.js"></script>
+
+</head>
+
+<body>
+
+<a href="" onclick="return startTransaction();">Start Transaction</a><br>
+<a href="" onclick="return commitTransaction();">Commit Transaction</a><br>
+<a href="" onclick="return rollbackTransaction();">Rollback Transaction</a><br>
+<br>
+<div id="plumbcontainer" style="position: relative;"></div>
+
+<!-- 
+<div id="drawing_board" style="top:10; position: relative;width: 500px;height: 500px;border: 1px solid #000000;margin-bottom:20px;">
+	<div id="drawing_board1" style="left:0px; top:10px; position:absolute;width: 100px;height: 100px;border: 1px solid #000000;margin-bottom:20px;"></div>
+	<div id="drawing_board2" style="left:300px; top:300px; position:absolute;width: 100px;height: 100px;border: 1px solid #000000;margin-bottom:20px;"></div>
+</div>
+ -->
+ 
+ 
+<table>
+<tr>
+	<td><div id="datasourceproviderlist"/></div><br></td>
+	<td><div id="datasourcelist"></div><br></td>
+	<td><div id="datasource"></div><br></td>
+	<td><div id="templatelist"></div><br></td>
+	<td><div id="templateinfo"></div><br></td>
+	<td><div id="templateevent"></div><br></td>
+</tr>
+</table>
+
+<div id="faceinfo"/>
+
+<div id="application"/>
+
+<div id="faceemulation"/>
+
+<!-- 
+<iframe id="faceEmulation" src="faceemulate.html?" height="442" width="294"><br />
+			Your brouwser does not support inline frames.<br />
+</iframe>
+ -->
+
+
+<!-- 
+<div>
+<iframe id="templateSrc" src="template.html?ID=default#ui.template:body_body_list" height="442" width="294"><br />
+			Your brouwser does not support inline frames.<br />
+</iframe>
+</div>
+ -->
+
+
+</body>
+
+<script>
+
+	function startTransaction(){
+    	NosliwOperationRequestManager.requestStartTransaction({}, {});
+		return false;
+	};
+
+	function commitTransaction(){
+    	NosliwOperationRequestManager.requestCommit({}, {});
+		return false;
+	};
+
+	function rollbackTransaction(){
+        NosliwOperationRequestManager.requestRollback({}, {});
+		return false;
+	};
+
+	var faceEmulationFunction;
+	
+	$(function () {
+		
+		Nosliw.requestInit({
+			success:function(serviceTask, data){
+// 				createDataSourceProviderFunction();
+//				createDataSourceListFunction();
+				createStoryboardFunction();
+ //				createUITemplateListFunction();
+				faceEmulationFunction = createFaceEmulationFunction();
+			},
+			fail : function(serviceTask, serviceData){
+				alert(serviceData.code);
+			},
+			exception : function(serviceTask, serviceData){
+				alert(serviceData.code);
+			},
+		});
+ 	});	
+	
+	var jsPlumbInstance;
+	
+	jsPlumb.ready(function(){
+/*		
+        // Create a 480 x 640 canvas.
+        var paper1 = Raphael('drawing_board1');	
+        var paper2 = Raphael('drawing_board2');	
+
+     // Draw a circle in the middle of the canvas with a radius
+        // of 90 pixels.
+        var circle1 = paper1.circle(50, 50,30).attr({ fill: '#3D6AA2', stroke: '#000000', 'stroke-width': 8 });
+        var circle2 = paper2.circle(50, 50, 30).attr({ fill: '#FF0000', stroke: '#000000', 'stroke-width': 8 }); 
+        
+        var ele1 = circle1.node;
+//        	paper.getById(circle1.node.raphaelid);
+        var ele2 = circle2.node; 
+//        	paper.getById(circle2.node.raphaelid);
+
+		   var instance = jsPlumb.getInstance({
+		        // default drag options
+		        DragOptions: { cursor: 'pointer', zIndex: 2000 },
+		        // the overlays to decorate each connection with.  note that the label overlay uses a function to generate the label text; in this
+		        // case it returns the 'labelText' member that we set on each connection in the 'init' method below.
+		        ConnectionOverlays: [
+		            [ "Arrow", { location: 1 } ],
+		            [ "Label", {
+		                location: 0.1,
+		                id: "label",
+		                cssClass: "aLabel"
+		            }]
+		        ],
+		        Container: "drawing_board",
+		   });					
+		   instance.draggable(jQuery("#drawing_board1")[0]);
+		   instance.draggable(jQuery("#drawing_board2")[0]);
+		
+//        jsPlumb.Defaults.Container = "drawing_board";
+
+        instance.connect({source:jQuery("#drawing_board1")[0], target:jQuery("#drawing_board2")[0]});
+//        instance.connect({source:jQuery("svg")[0], target:jQuery("svg")[1]});
+
+//        jsPlumb.connect({source:circle1.node, target:rect.node, anchors:["Center", "Top"], connector:"Straight"});  
+*/
+	});
+	
+	
+	
+</script>
+</html>

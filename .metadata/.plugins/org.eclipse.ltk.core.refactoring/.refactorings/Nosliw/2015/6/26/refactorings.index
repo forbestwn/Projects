@@ -1,0 +1,15 @@
+1434984975479	Rename package 'com.nosliw.data'
+1435005629553	Rename type 'HAPOperationable'
+1435005643577	Rename type 'HAPOperant'
+1435005669176	Rename method 'getOperationDataType'
+1435005761273	Rename method 'getOperationData'
+1435006775695	Move compilation unit
+1435074446708	Move package
+1435091731870	Rename type 'HAPDataTypeExtendDomain'
+1435120119704	Rename field 'm_data'
+1435154796464	Move package
+1435154802822	Move package
+1435154807333	Move package
+1435154813085	Move package
+1435154817361	Move package
+1435154829456	Move package

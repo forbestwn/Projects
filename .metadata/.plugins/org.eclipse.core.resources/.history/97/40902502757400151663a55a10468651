@@ -1,0 +1,17 @@
+package com.nosliw.instance;
+
+import com.nosliw.data.HAPDataTypeManager;
+
+public class HAPInstance {
+
+	public void init(){
+		
+	}
+	
+	public HAPDataTypeManager getDataTypeManager(){
+		return null;
+	}
+	
+	
+	
+}

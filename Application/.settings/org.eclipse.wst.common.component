@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="Application">
+        <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
+        <dependent-module archiveName="MangoPersistent.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/MangoPersistent/MangoPersistent">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="Entity.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Entity/Entity">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="UIResource.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/UIResource/UIResource">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="DataDefinition.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/DataDefinition/DataDefinition">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="ExpressionParser.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/ExpressionParser/ExpressionParser">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="DataTypeLibrary.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/DataTypeLibrary/DataTypeLibrary">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="Common.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Common/Common">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="context-root" value="Application"/>
+        <property name="java-output-path" value="/Application/build/classes"/>
+    </wb-module>
+</project-modules>

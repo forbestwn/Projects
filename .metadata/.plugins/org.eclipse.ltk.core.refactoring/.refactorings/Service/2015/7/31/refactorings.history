@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Move element &apos;HAPOperationAllResult.java&apos; to &apos;Entity/src/com.nosliw.entity.transaction&apos;&#x0A;- Original project: &apos;Service&apos;&#x0A;- Destination element: &apos;Entity/src/com.nosliw.entity.transaction&apos;&#x0A;- Original element: &apos;com.nosliw.service.HAPOperationAllResult.java&apos;&#x0A;- Update references to refactored element" description="Move compilation unit" destination="=Entity/src&lt;com.nosliw.entity.transaction" element1="/src&lt;com.nosliw.service{HAPOperationAllResult.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.move" patterns="*" policy="org.eclipse.jdt.ui.moveResources" qualified="false" references="true" stamp="1438010354314" units="1" version="1.0"/>
+</session>

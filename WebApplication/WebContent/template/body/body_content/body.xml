@@ -1,0 +1,21 @@
+<data>
+
+<ui.template 	type="body" 
+				name="body_info"
+				id="body_body_info">
+	<events>
+	</events>
+
+	<datasources>
+		<element name="title">
+			<datatype categary="simple" type="text"/>
+		</element>
+		<element name="image">
+			<datatype categary="block" type="image"/>
+		</element>
+	</datasources>
+
+</ui.template>
+				
+</data>
+

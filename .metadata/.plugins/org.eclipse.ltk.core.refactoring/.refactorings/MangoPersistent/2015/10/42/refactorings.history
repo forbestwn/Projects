@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename local variable &apos;attrDoc&apos; in &apos;com.nosliw.entity.persistent.mango.HAPEntityExportUtil.createAtomDocument(...)&apos; to &apos;doc&apos;&#x0A;- Original project: &apos;MangoPersistent&apos;&#x0A;- Original element: &apos;com.nosliw.entity.persistent.mango.HAPEntityExportUtil.createAtomDocument(HAPData).attrDoc&apos;&#x0A;- Renamed element: &apos;attrDoc&apos;&#x0A;- Update references to refactored element" description="Rename local variable &apos;attrDoc&apos;" id="org.eclipse.jdt.ui.rename.local.variable" input="/src&lt;com.nosliw.entity.persistent.mango{HAPEntityExportUtil.java[HAPEntityExportUtil~createAtomDocument~QHAPData;@attrDoc!3923!3956!3932!3938!QDocument;!0!false" name="doc" references="true" stamp="1445089786612" version="1.0"/>
+</session>

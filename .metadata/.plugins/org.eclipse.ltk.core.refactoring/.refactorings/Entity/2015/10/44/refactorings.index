@@ -1,0 +1,17 @@
+1445956961103	Rename type 'HAPOptionsManager'
+1445958065126	Rename type 'HAPOptions'
+1445958091193	Rename type 'HAPOptionsStatic'
+1445958429802	Rename type 'HAPOptionsDynamic'
+1445958606092	Rename type 'HAPOptionsDynamicExpression'
+1445959041751	Rename type 'HAPOptionsDynamicAttribute'
+1445961415449	Rename type 'HAPOptionsAttribute'
+1445962508282	Rename type 'HAPOptionsQuery'
+1445973555901	Delete element
+1445973717192	Rename type 'HAPOptionsDefinitionDynamicExpression'
+1446165467966	Rename field 'entityName'
+1446165488430	Rename field 'attribute'
+1446165965713	Rename field 'm_entityName'
+1446165973459	Rename field 'm_attribute'
+1446236465851	Rename type 'HAPEntityManager'
+1446236495175	Move compilation unit
+1446236524308	Move compilation unit
