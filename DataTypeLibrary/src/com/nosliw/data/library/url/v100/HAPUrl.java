@@ -7,6 +7,8 @@ import com.nosliw.data.HAPDataType;
 import com.nosliw.data.HAPDataTypeImp;
 import com.nosliw.data.HAPDataTypeManager;
 import com.nosliw.data.HAPDataTypeOperationsAnnotation;
+import com.nosliw.data.basic.number.HAPIntegerOperation;
+import com.nosliw.data.basic.string.HAPStringData;
 import com.nosliw.data.info.HAPDataTypeInfo;
 import com.nosliw.data.info.HAPDataTypeInfoWithVersion;
 
@@ -14,14 +16,28 @@ public class HAPUrl extends HAPDataTypeImp{
 
 	private HAPUrl(HAPDataTypeInfoWithVersion dataTypeInfo, 
 					HAPDataType olderDataType, 
-					HAPDataTypeInfo parentDataTypeInfo, 
+					HAPDataTypeInfoWithVersion parentDataTypeInfo, 
 					HAPConfigurable configure,
 					String description,
 					HAPDataTypeManager dataTypeMan) {
 		super(dataTypeInfo, olderDataType, parentDataTypeInfo, configure, description, dataTypeMan);
-		this.setDataTypeOperations(new HAPDataTypeOperationsAnnotation(new HAPUrlOperation(dataTypeMan), dataTypeInfo, dataTypeMan));
 	}
 
+	@Override
+	public void buildOperation(){
+		this.setDataTypeOperations(new HAPDataTypeOperationsAnnotation(new HAPUrlOperation(this.getDataTypeManager()), this.getDataTypeInfo(), this.getDataTypeManager()));
+	}
+
+	@Override
+	public HAPData parseLiteral(String value) {
+		HAPData out = this.createDataByValue(value.toString());
+		return out;
+	}
+	
+	public HAPUrlData createDataByValue(String value){
+		return new HAPUrlData(value, this);
+	}
+	
 	@Override
 	public HAPData getDefaultData() {
 		// TODO Auto-generated method stub
@@ -45,7 +61,7 @@ public class HAPUrl extends HAPDataTypeImp{
 	//factory method to create data type object 
 	static public HAPUrl createDataType(HAPDataTypeInfoWithVersion dataTypeInfo, 
 			HAPDataType olderDataType, 		
-			HAPDataTypeInfo parentDataTypeInfo, 
+			HAPDataTypeInfoWithVersion parentDataTypeInfo, 
 			HAPConfigurable configures,
 			String description,
 			HAPDataTypeManager dataTypeMan){

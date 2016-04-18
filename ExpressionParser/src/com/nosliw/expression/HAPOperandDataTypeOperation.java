@@ -37,7 +37,7 @@ public class HAPOperandDataTypeOperation extends HAPOperandOperation{
 	@Override
 	public boolean isScriptRunnable(String script) {
 		//check operatio script
-		if(!this.isScriptRunnable(script))   return false;
+		if(!this.isOperationScriptAvailable(script))   return false;
 		
 		//check parms
 		for(HAPOperand parm : this.getParameters()){

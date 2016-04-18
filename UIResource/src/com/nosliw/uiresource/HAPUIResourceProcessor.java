@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Attribute;
@@ -26,6 +27,8 @@ import com.nosliw.common.utils.HAPFileUtility;
 import com.nosliw.common.utils.HAPSegmentParser;
 import com.nosliw.data.HAPData;
 import com.nosliw.data.HAPDataTypeManager;
+import com.nosliw.expression.HAPExpression;
+import com.nosliw.expression.HAPExpressionInfo;
 
 /*
  * This is a utility class that process ui resource file and create ui resource object
@@ -299,15 +302,75 @@ public class HAPUIResourceProcessor {
 	private void processConstantBlocks(Element ele, HAPUIResourceBasic resource){
 		List<Element> removes = new ArrayList<Element>();
 		
+		Map<String, HAPExpression> expressions = new LinkedHashMap<String, HAPExpression>();
+		Map<String, HAPData> datas = new LinkedHashMap<String, HAPData>();
+		
 		Elements constantEles = ele.getElementsByTag(HAPConstant.CONS_UIRESOURCE_TAG_CONSTANT);
 		for(int i=0; i<constantEles.size(); i++){
-			processConstantDefinition(constantEles.get(i), resource);
+			try {
+				String content = constantEles.get(i).html();
+				JSONObject defsJson = new JSONObject(content);
+				Iterator<String> defNames = defsJson.keys();
+				while(defNames.hasNext()){
+					String defName = defNames.next();
+					String constantDef = defsJson.getString(defName);
+
+					HAPExpressionInfo expInfo = new HAPExpressionInfo(constantDef, null, null);
+					HAPExpression expression = new HAPExpression(expInfo, this.getDataTypeManager());
+					expressions.put(defName, expression);
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			
 			removes.add(constantEles.get(i));
 		}
 		//remove script ele from doc
 		for(Element remove : removes)	remove.remove();
+
+		for(String constantName : expressions.keySet()){
+			HAPData data = this.processConstantExpression(constantName, expressions, datas);
+			resource.addConstant(constantName, data);
+		}
 	}
 
+	private HAPData processConstantExpression(String name, Map<String, HAPExpression> expressions, Map<String, HAPData> datas){
+		HAPData out = datas.get(name);
+		if(out!=null)  return out;
+		
+		HAPExpression expression = expressions.get(name);
+		Set<String> varNames = expression.getAllVariableNames();
+		for(String varName : varNames){
+			HAPData varData = this.processConstantExpression(varName, expressions, datas);
+			datas.put(varName, varData);
+		}
+		out = expression.execute(datas, null);
+		datas.put(name, out);
+		return out;
+	}
+	
+	/*
+	 * process constant definition
+	 */
+//	private void processConstantDefinition(Element ele, HAPUIResourceBasic resource){
+//		try{
+//			String content = ele.html();
+//			
+//			JSONObject defsJson = new JSONObject(content);
+//			Iterator<String> defNames = defsJson.keys();
+//			while(defNames.hasNext()){
+//				String defName = defNames.next();
+//				JSONObject defJson = defsJson.getJSONObject(defName);
+//				HAPData data = this.getDataTypeManager().parseJson(defJson, null, null);
+//				resource.addConstant(defName, data);
+//			}
+//		}
+//		catch(Exception e){
+//			e.printStackTrace();
+//		}
+//	}
+	
+	
 	/*
 	 * process a tag element 
 	 * return true : this element should be removed after processing
@@ -484,26 +547,6 @@ public class HAPUIResourceProcessor {
 		String content = ele.html();
 		HAPJSBlock jsBlock = new HAPJSBlock(content);
 		resource.addJSBlock(jsBlock);
-	}
-	
-	/*
-	 * process constant definition
-	 */
-	private void processConstantDefinition(Element ele, HAPUIResourceBasic resource){
-		try{
-			String content = ele.html();
-			JSONObject defsJson = new JSONObject(content);
-			Iterator<String> defNames = defsJson.keys();
-			while(defNames.hasNext()){
-				String defName = defNames.next();
-				JSONObject defJson = defsJson.getJSONObject(defName);
-				HAPData data = this.getDataTypeManager().parseJson(defJson, null, null);
-				resource.addConstant(defName, data);
-			}
-		}
-		catch(Exception e){
-			e.printStackTrace();
-		}
 	}
 	
 	/*

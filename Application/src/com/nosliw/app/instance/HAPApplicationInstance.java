@@ -55,6 +55,7 @@ public class HAPApplicationInstance{
 		this.m_logger = new HAPFileLogger(this.m_configure.getConfigurableValue(HAPConstant.CONS_APPLICATION_CONFIGURE_LOGGER));
 		
 		this.m_dataTypeMan = new HAPApplicationDataTypeManager(this.m_configure.getConfigurableValue(HAPConstant.CONS_APPLICATION_CONFIGURE_DATATYPE));
+		this.m_dataTypeMan.init();
 		this.m_optionsDefMan = new HAPApplicationOptionsDefinitionManager(this.getDataTypeManager());
 		this.m_entityDefMan = new HAPApplicationEntityDefinitionManager(this.m_configure.getConfigurableValue(HAPConstant.CONS_APPLICATION_CONFIGURE_ENTITYDEFINITION), this.m_dataTypeMan, this.m_optionsDefMan);
 		this.m_queryDefMan = new HAPApplicationQueryDefinitionManager(this.m_configure.getConfigurableValue(HAPConstant.CONS_APPLICATION_CONFIGURE_QUERYDEFINITION), this.getDataTypeManager(), this.getEntityDefinitionManager());

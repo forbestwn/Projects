@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.nosliw.common.utils.HAPConstant;
 import com.nosliw.data.HAPDataTypeManager;
 import com.nosliw.data.HAPOperand;
 import com.nosliw.data.info.HAPDataTypeInfo;
@@ -56,7 +57,14 @@ public class HAPExpressionParser {
 		  else if(expressionEles.dataTypeNode!=null){
 			  String dataTypeInfo = (String)expressionEles.dataTypeNode.jjtGetValue();
 			  String operation = (String)expressionEles.nameNode.jjtGetValue();
-			  operand = new HAPOperandDataTypeOperation(HAPDataTypeInfo.parseDataTypeInfo(dataTypeInfo), operation, getOperationParms(expressionEles.expressionNodes, dataTypeMan), dataTypeMan);
+			  if(HAPConstant.CONS_DATAOPERATION_NEWDATA.equals(operation)){
+				  //new operation
+				  operand = new HAPOperandNewOperation(HAPDataTypeInfo.parseDataTypeInfo(dataTypeInfo), getOperationParms(expressionEles.expressionNodes, dataTypeMan), dataTypeMan);
+			  }
+			  else{
+				  //normal data type operation
+				  operand = new HAPOperandDataTypeOperation(HAPDataTypeInfo.parseDataTypeInfo(dataTypeInfo), operation, getOperationParms(expressionEles.expressionNodes, dataTypeMan), dataTypeMan);
+			  }
 		  }
 		  
 		  out = processExpression1Node(expressionEles.expression1Node, operand, dataTypeMan);

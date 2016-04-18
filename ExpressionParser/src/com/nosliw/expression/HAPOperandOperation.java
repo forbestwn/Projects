@@ -21,16 +21,16 @@ import com.nosliw.expression.utils.HAPAttributeConstant;
 public abstract class HAPOperandOperation extends HAPOperandImp{
 
 	//operation name
-	private String m_operation;
+	protected String m_operation;
 	//operation parms
-	private HAPOperand[] m_parms;
+	protected HAPOperand[] m_parms;
 
 	//data type that operation defined on
-	private HAPDataTypeInfo m_baseDataTypeInfo;
+	protected HAPDataTypeInfo m_baseDataTypeInfo;
 
 	//calculated out information
-	private HAPDataType m_baseDataType;
-	private HAPDataOperationInfo m_operationInfo;
+	protected HAPDataType m_baseDataType;
+	protected HAPDataOperationInfo m_operationInfo;
 	
 	public HAPOperandOperation(String operation, HAPOperand[] parms, HAPDataTypeManager dataTypeMan) {
 		super(dataTypeMan);
@@ -49,11 +49,17 @@ public abstract class HAPOperandOperation extends HAPOperandImp{
 	protected boolean isOperationScriptAvailable(String format){
 		HAPDataType baseDataType = this.getBaseDataType();
 		//chekc if base datatype information is available 
-		if(baseDataType==null)   return false;
-		
-		//check operation script defined on this data type
-		String script = baseDataType.getOperateScript(this.getOperationName(), format);
-		return script!=null;
+		if(baseDataType==null || m_operationInfo==null)   return false;
+
+		return baseDataType.isScriptAvailable(this.getOperationName(), format);
+	}
+
+	protected boolean isOperationScriptAvailableLocally(String format){
+		HAPDataType baseDataType = this.getBaseDataType();
+		//chekc if base datatype information is available 
+		if(baseDataType==null || m_operationInfo==null)   return false;
+
+		return baseDataType.isScriptAvailableLocally(this.getOperationName(), format);
 	}
 	
 	/*
@@ -69,7 +75,7 @@ public abstract class HAPOperandOperation extends HAPOperandImp{
 		this.m_operationInfo = this.m_baseDataType.getOperationInfoByName(m_operation);
 		this.setOutDataTypeInfo(this.m_operationInfo.getOutDataTypeInfo());
 	}
-	
+
 	protected HAPDataTypeInfo getBasedDataTypeInfo(){return this.m_baseDataTypeInfo;}
 	protected HAPDataType getBaseDataType(){return this.m_baseDataType;}
 	protected HAPDataOperationInfo getOperationInfo(){return this.m_operationInfo;}

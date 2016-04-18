@@ -2,7 +2,6 @@ package com.nosliw.data.basic.bool;
 
 import com.nosliw.common.configure.HAPConfigurable;
 import com.nosliw.common.exception.HAPServiceData;
-import com.nosliw.common.utils.HAPConstant;
 import com.nosliw.data.HAPData;
 import com.nosliw.data.HAPDataType;
 import com.nosliw.data.HAPDataTypeImp;
@@ -19,12 +18,16 @@ public class HAPBoolean extends HAPDataTypeImp{
 	
 	private HAPBoolean(HAPDataTypeInfoWithVersion dataTypeInfo, 
 						HAPDataType olderDataType, 
-						HAPDataTypeInfo parentDataTypeInfo, 
+						HAPDataTypeInfoWithVersion parentDataTypeInfo, 
 						HAPConfigurable configure,
 						String description,
 						HAPDataTypeManager dataTypeMan) {
 		super(dataTypeInfo, olderDataType, parentDataTypeInfo, configure, description, dataTypeMan);
-		this.setDataTypeOperations(new HAPDataTypeOperationsAnnotation(new HAPBooleanOperation(dataTypeMan), dataTypeInfo, dataTypeMan));
+	}
+	
+	@Override
+	public void buildOperation(){
+		this.setDataTypeOperations(new HAPDataTypeOperationsAnnotation(new HAPBooleanOperation(this.getDataTypeManager()), this.getDataTypeInfo(), this.getDataTypeManager()));
 	}
 	
 	@Override
@@ -33,10 +36,13 @@ public class HAPBoolean extends HAPDataTypeImp{
 	}
 
 	@Override
-	public HAPData toData(Object value, String format) {
-		HAPData out = null;
-		out = createDataByValue(Boolean.parseBoolean(value.toString()));
-		return out;
+	public HAPData parseLiteral(String value) {
+		return createDataByValue(Boolean.parseBoolean(value.toString()));
+	}
+
+	@Override
+	public HAPData parseJson(Object jsonObj){
+		return createDataByValue(Boolean.parseBoolean(jsonObj.toString()));
 	}
 
 	@Override
@@ -53,7 +59,7 @@ public class HAPBoolean extends HAPDataTypeImp{
 	//factory method to create data type object 
 	static public HAPBoolean createDataType(HAPDataTypeInfoWithVersion dataTypeInfo, 
 											HAPDataType olderDataType, 		
-											HAPDataTypeInfo parentDataTypeInfo, 
+											HAPDataTypeInfoWithVersion parentDataTypeInfo, 
 											HAPConfigurable configures,
 											String description,
 											HAPDataTypeManager dataTypeMan){

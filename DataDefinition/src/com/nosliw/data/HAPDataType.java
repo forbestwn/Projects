@@ -31,6 +31,8 @@ import com.nosliw.data.info.HAPDataTypeInfoWithVersion;
 
 public interface HAPDataType extends HAPStringable{
 
+	public void buildOperation();
+	
 	/*
 	 * get basic information for this data type (categary, type, description)
 	 */
@@ -56,6 +58,7 @@ public interface HAPDataType extends HAPStringable{
 	 */
 	public HAPDataType getOlderDataType();
 	public HAPDataType getNewerDataType();
+	public HAPDataTypeImp getDataTypeByVersion(int version);
 	
 	/*
 	 * some data type has limited set of data
@@ -69,6 +72,13 @@ public interface HAPDataType extends HAPStringable{
 	 */
 	public Map<String, HAPDataOperationInfo> getOperationInfos();
 	public HAPDataOperationInfo getOperationInfoByName(String name);
+	//get only locally defined operation infos
+	public Map<String, HAPDataOperationInfo> getLocalOperationInfos();
+	public HAPDataOperationInfo getLocalOperationInfoByName(String name);
+	
+	//object that defined all the operations info
+	public HAPDataTypeOperations getDataTypeOperationsObject();
+	
 	/*
 	 * get constructor (newData) operations
 	 */
@@ -76,11 +86,16 @@ public interface HAPDataType extends HAPStringable{
 	
 	//for java, run operate
 	public HAPServiceData operate(String operation, HAPData[] data);
+	public HAPServiceData localOperate(String operation, HAPData[] data);
 	//create a new data instance 
 	public HAPServiceData newData(HAPData[] data);
+	//create a new data instance by using the name new method
+	public HAPServiceData newData(String name, HAPData[] data);
+	//get new data operation info by parms type
+	public HAPDataOperationInfo getNewDataOperation(HAPDataTypeInfo[] dataTypeInfos);
 
-	//for script language other than java, return operation script
-	public String getOperateScript(String operation, String format);
+	public boolean isScriptAvailable(String operation, String format);
+	public boolean isScriptAvailableLocally(String operation, String format);
 	public String buildLocalOperationScript(String scriptName);
 	//get dependent data type for operation
 	public Set<HAPDataTypeInfo> getOperationDependentDataTypes(String operation);
@@ -90,6 +105,10 @@ public interface HAPDataType extends HAPStringable{
 	 */
 	public HAPData toData(Object value, String format);
 	public String toDataStringValue(HAPData data, String format);
+
+	//parse literal text to data object
+	public HAPData parseLiteral(String text);
+	public HAPData parseJson(Object jsonObj);
 
 	/*
 	 * validate the data

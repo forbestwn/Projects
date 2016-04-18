@@ -8,6 +8,7 @@ import com.nosliw.data.HAPDataType;
 import com.nosliw.data.HAPDataTypeImp;
 import com.nosliw.data.HAPDataTypeManager;
 import com.nosliw.data.HAPDataTypeOperationsAnnotation;
+import com.nosliw.data.basic.bool.HAPBooleanOperation;
 import com.nosliw.data.info.HAPDataTypeInfo;
 import com.nosliw.data.info.HAPDataTypeInfoWithVersion;
 
@@ -18,12 +19,16 @@ public class HAPString extends HAPDataTypeImp{
 	
 	private HAPString(HAPDataTypeInfoWithVersion dataTypeInfo, 
 					HAPDataType olderDataType, 
-					HAPDataTypeInfo parentDataTypeInfo, 
+					HAPDataTypeInfoWithVersion parentDataTypeInfo, 
 					HAPConfigurable configure,
 					String description,
 					HAPDataTypeManager dataTypeMan) {
 		super(dataTypeInfo, olderDataType, parentDataTypeInfo, configure, description, dataTypeMan);
-		this.setDataTypeOperations(new HAPDataTypeOperationsAnnotation(new HAPStringOperation(dataTypeMan), dataTypeInfo, dataTypeMan));
+	}
+	
+	@Override
+	public void buildOperation(){
+		this.setDataTypeOperations(new HAPDataTypeOperationsAnnotation(new HAPStringOperation(this.getDataTypeManager()), this.getDataTypeInfo(), this.getDataTypeManager()));
 	}
 	
 	@Override
@@ -33,7 +38,7 @@ public class HAPString extends HAPDataTypeImp{
 	}
 
 	@Override
-	public HAPData toData(Object value, String format) {
+	public HAPData parseLiteral(String value) {
 		HAPData out = this.createDataByValue(value.toString());
 		return out;
 	}
@@ -50,7 +55,7 @@ public class HAPString extends HAPDataTypeImp{
 	//factory method to create data type object 
 	static public HAPString createDataType(HAPDataTypeInfoWithVersion dataTypeInfo, 
 										HAPDataType olderDataType, 		
-										HAPDataTypeInfo parentDataTypeInfo, 
+										HAPDataTypeInfoWithVersion parentDataTypeInfo, 
 										HAPConfigurable configures,
 										String description,
 										HAPDataTypeManager dataTypeMan){

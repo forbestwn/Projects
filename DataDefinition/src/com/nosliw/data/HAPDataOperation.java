@@ -4,7 +4,7 @@ import com.nosliw.common.exception.HAPServiceData;
 import com.nosliw.data.info.HAPDataTypeInfo;
 
 /*
- * data type operation object
+ * utility class for data type operation object
  */
 public class HAPDataOperation {
 
@@ -18,11 +18,6 @@ public class HAPDataOperation {
 		return this.m_dataTypeMan.getDataType(new HAPDataTypeInfo(categary, type));
 	}
 
-	protected HAPServiceData newData(String categary, String type, HAPData[] parms){
-		HAPServiceData serviceData = this.getDataType(categary, type).newData(parms);
-		return serviceData;
-	}
-	
 	protected HAPServiceData dataOperate(String categary, String type, String operation, HAPData[] parms){
 		HAPServiceData serviceData = this.getDataType(categary, type).operate(operation, parms);
 		return serviceData;

@@ -1,0 +1,18 @@
+package com.nosliw.data;
+
+import java.util.Map;
+import java.util.Set;
+
+import com.nosliw.data.info.HAPDataOperationInfo;
+
+public class HAPDataTypeOperationInfos {
+
+	//store all newData operations (constructor)
+	private Set<HAPDataOperationInfo> m_newDataOperations;
+	//store all local data operations
+	private Map<String, HAPDataOperationInfo> m_localOperations;
+	//cache all available operation information including the operation path
+	private Map<String, HAPDataOperationInfo> m_availableOperations;
+	
+	
+}

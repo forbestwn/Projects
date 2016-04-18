@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="com.nosliw.uiresource.HAPUIResourceManager"/>
-<fullyQualifiedTypeName name="com.nosliw.uiresource.HAPUITagManager"/>
-<fullyQualifiedTypeName name="com.nosliw.app.instance.HAPApplicationInstance"/>
-<fullyQualifiedTypeName name="com.nosliw.entity.dataaccess.HAPClientContext"/>
-<fullyQualifiedTypeName name="com.nosliw.app.utils.HAPApplicationErrorUtility"/>
-<fullyQualifiedTypeName name="com.nosliw.app.instance.HAPApplicationClientContext"/>
-<fullyQualifiedTypeName name="com.nosliw.common.configure.HAPConfigurable"/>
-<fullyQualifiedTypeName name="com.nosliw.common.utils.HAPBasicUtility"/>
 <fullyQualifiedTypeName name="com.nosliw.common.log.HAPLogger"/>
 <fullyQualifiedTypeName name="com.nosliw.app.log.FileLogger"/>
 <fullyQualifiedTypeName name="com.nosliw.app.instance.HAPApplicationClientInfo"/>
@@ -35,7 +27,6 @@
 <fullyQualifiedTypeName name="com.mongodb.client.FindIterable"/>
 <fullyQualifiedTypeName name="com.mongodb.Block"/>
 <fullyQualifiedTypeName name="org.bson.Document"/>
-<fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="org.bson.types.ObjectId"/>
 <fullyQualifiedTypeName name="org.restlet.resource.ServerResource"/>
 <fullyQualifiedTypeName name="org.restlet.resource.Get"/>
@@ -43,7 +34,6 @@
 <fullyQualifiedTypeName name="javax.ws.rs.core.Context"/>
 <fullyQualifiedTypeName name="org.restlet.resource.Post"/>
 <fullyQualifiedTypeName name="com.drivercheck.data.DataManager"/>
-<fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="com.drivercheck.data.ClientEntity"/>
 <fullyQualifiedTypeName name="org.restlet.Application"/>
 <fullyQualifiedTypeName name="org.restlet.Restlet"/>
@@ -60,4 +50,14 @@
 <fullyQualifiedTypeName name="com.drivercheck.data.TestEntity"/>
 <fullyQualifiedTypeName name="java.util.Map"/>
 <fullyQualifiedTypeName name="java.util.HashMap"/>
+<fullyQualifiedTypeName name="com.nosliw.expression.HAPExpression"/>
+<fullyQualifiedTypeName name="com.nosliw.expression.HAPExpressionInfo"/>
+<fullyQualifiedTypeName name="com.nosliw.data.basic.string.HAPStringData"/>
+<fullyQualifiedTypeName name="com.nosliw.data.info.HAPDataOperationInfo"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="com.nosliw.data.utils.HAPDataOperationUtility"/>
+<fullyQualifiedTypeName name="com.nosliw.data.HAPDataType"/>
+<fullyQualifiedTypeName name="com.nosliw.data.info.HAPDataTypeInfoWithVersion"/>
+<fullyQualifiedTypeName name="com.nosliw.common.resource.HAPResource"/>
 </qualifiedTypeNameHistroy>

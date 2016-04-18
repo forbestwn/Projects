@@ -20,22 +20,17 @@ public class HAPDataTypeInfo implements HAPStringable{
 	private String m_categary;
 	private String m_type;
 
+	public HAPDataTypeInfo(){}
+	
 	public HAPDataTypeInfo(String categary, String type){
 		this.m_categary = categary;
 		this.m_type = type;
 	}
 
-	public HAPDataTypeInfo(String strValue){
-		String[] parts = HAPNamingConversionUtility.parsePartlInfos(strValue);
-		this.m_type = parts[0];
-		if(parts.length>=2)   this.m_categary = parts[1];
-		else{
-			this.m_categary = HAPDataTypeManager.DEFAULT_TYPE;
-		}
-	}
-	
 	public String getCategary(){return this.m_categary;}
 	public String getType(){return this.m_type;	}
+	public void setCategary(String categary){ this.m_categary = categary;}
+	public void setType(String type){ this.m_type = type;}
 	
 	public HAPDataTypeInfo cloneDataTypeInfo(){
 		return new HAPDataTypeInfo(this.getCategary(), this.getType());
@@ -71,8 +66,11 @@ public class HAPDataTypeInfo implements HAPStringable{
 	public static HAPDataTypeInfo parseDataTypeInfo(String infoStr, HAPDataTypeInfo backup){
 		if(HAPBasicUtility.isStringEmpty(infoStr))	return backup;
 		else{
-	    	String[] out = HAPNamingConversionUtility.parsePartlInfos(infoStr); 
-			return new HAPDataTypeInfo(out[1], out[0]);
+	    	String[] parts = HAPNamingConversionUtility.parsePartlInfos(infoStr);
+			String type = parts[0];
+			String categary = HAPDataTypeManager.DEFAULT_TYPE;
+			if(parts.length>=2)   categary = parts[1];
+			return new HAPDataTypeInfo(categary, type);
 		}
 	}
 

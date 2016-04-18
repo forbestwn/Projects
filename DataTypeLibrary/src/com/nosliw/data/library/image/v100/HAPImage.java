@@ -14,7 +14,7 @@ public class HAPImage extends HAPDataTypeImp{
 
 	private HAPImage(HAPDataTypeInfoWithVersion dataTypeInfo, 
 					HAPDataType olderDataType, 
-					HAPDataTypeInfo parentDataTypeInfo, 
+					HAPDataTypeInfoWithVersion parentDataTypeInfo, 
 					HAPConfigurable configure,
 					String description,
 					HAPDataTypeManager dataTypeMan) {
@@ -45,7 +45,7 @@ public class HAPImage extends HAPDataTypeImp{
 	//factory method to create data type object 
 	static public HAPImage createDataType(HAPDataTypeInfoWithVersion dataTypeInfo, 
 			HAPDataType olderDataType, 		
-			HAPDataTypeInfo parentDataTypeInfo, 
+			HAPDataTypeInfoWithVersion parentDataTypeInfo, 
 			HAPConfigurable configures,
 			String description,
 			HAPDataTypeManager dataTypeMan){

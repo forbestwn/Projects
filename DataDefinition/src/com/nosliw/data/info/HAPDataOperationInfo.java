@@ -11,13 +11,17 @@ import com.nosliw.common.serialization.HAPStringable;
 import com.nosliw.common.utils.HAPBasicUtility;
 import com.nosliw.common.utils.HAPConstant;
 import com.nosliw.common.utils.HAPJsonUtility;
+import com.nosliw.data.HAPDataType;
 import com.nosliw.data.utils.HAPAttributeConstant;
 
 /*
- * store all the information related with operation:
+ * store all the information related with operation,
+ * these information is independent of implementation language
  * 		operation Name
  * 		operation Parms data type
  * 		operation Out data type
+ *      convertPath :  the path used to convert data type to original data type
+ *      original data type: sometime, data operation is not defined on data type itself, it may inherate from older version or parent data type
  * 		operation Description
  * for ins and out attribute, data type version information is not appliable 
  * we consider two operation is equal when only when they have the same name. 
@@ -33,22 +37,25 @@ public class HAPDataOperationInfo implements HAPStringable{
 	//operation description
 	private String m_description;
 
-	//path to describe how to convert the parms   version|123.parent.parent.version|456
+	private HAPDataType m_dataType;
+	
+	//path to describe how to convert the parms with data type to original data type when doing the operation, the path example:   version|123.parent.parent.version|456
 	private String m_convertPath;
-	//where the operation orignally come from
+	//where the operation orignally come from (when data operation is not defined on current data type, then then it may inherent from older version or parent data type)
 	private HAPDataOperationInfo m_originalDataOperationInfo;
 	
 	//all dependent data type infos
 	private Map<String, Set<HAPDataTypeInfo>> m_dependentDataTypeInfo;
 	
-	public HAPDataOperationInfo(HAPDataOperationInfo operationInfo, String path){
-		this(operationInfo.getName(), operationInfo.getInDataTypeInfos(), operationInfo.getOutDataTypeInfo(), operationInfo.getDescription());
+	public HAPDataOperationInfo(HAPDataType dataType, HAPDataOperationInfo operationInfo, String path){
+		this(dataType, operationInfo.getName(), operationInfo.getInDataTypeInfos(), operationInfo.getOutDataTypeInfo(), operationInfo.getDescription());
 		this.m_convertPath = path;
 		this.m_originalDataOperationInfo = operationInfo;
 		this.m_dependentDataTypeInfo = new LinkedHashMap<String, Set<HAPDataTypeInfo>>();
 	}
 	
-	public HAPDataOperationInfo(String name, List<HAPDataTypeInfo> inDataTypeInfos, HAPDataTypeInfo outDataTypeInfo, String description){
+	public HAPDataOperationInfo(HAPDataType dataType, String name, List<HAPDataTypeInfo> inDataTypeInfos, HAPDataTypeInfo outDataTypeInfo, String description){
+		this.m_dataType = dataType;
 		this.m_name = name;
 		this.m_inDataTypeInfos = inDataTypeInfos;
 		this.m_outDataTypeInfo = outDataTypeInfo;
@@ -56,11 +63,17 @@ public class HAPDataOperationInfo implements HAPStringable{
 		this.m_dependentDataTypeInfo = new LinkedHashMap<String, Set<HAPDataTypeInfo>>();
 	}
 	
+	public HAPDataType getDataType(){ return this.m_dataType; }
 	public String getName(){return this.m_name;}
 	public HAPDataTypeInfo getOutDataTypeInfo(){return this.m_outDataTypeInfo;}
+	public void setOutDataTypeInfo(HAPDataTypeInfo dataTypeInfo){this.m_outDataTypeInfo=dataTypeInfo;}
 	public List<HAPDataTypeInfo> getInDataTypeInfos(){return this.m_inDataTypeInfos;}
 	public String getDescription(){return this.m_description;}
 	public String getConvertPath(){return this.m_convertPath;}
+	public HAPDataOperationInfo getOriginalDataOperationInfo(){
+		if(HAPBasicUtility.isStringEmpty(m_convertPath)) return this;
+		else	return this.m_originalDataOperationInfo; 
+	}
 	public Set<HAPDataTypeInfo> getDependentDataTypeInfos(String scriptName){
 		if(HAPBasicUtility.isStringEmpty(m_convertPath)){
 			//no convert

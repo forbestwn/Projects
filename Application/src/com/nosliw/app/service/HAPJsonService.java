@@ -39,7 +39,7 @@ public class HAPJsonService {
 					String name = jsonParms.optString("name");
 					serviceData = clientContext.getUIResource(name);
 				}
-				if(HAPConstant.CONS_REMOTESERVICE_GETDATATYPES.equals(command)){
+				else if(HAPConstant.CONS_REMOTESERVICE_GETDATATYPES.equals(command)){
 					JSONArray existingArray = jsonParms.optJSONArray("existingArray");
 					JSONArray requestArray = jsonParms.optJSONArray("requestArray");
 
@@ -67,6 +67,9 @@ public class HAPJsonService {
 						}
 					}
 					serviceData = HAPServiceData.createSuccessData(outDataTypes);
+				}
+				else if(HAPConstant.CONS_REMOTESERVICE_EXECUTEEXPRESSION.equals(command)){
+					
 				}
 				else if("getAllUIResources".equals(command)){
 					logAppending = false;

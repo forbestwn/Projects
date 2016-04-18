@@ -30,6 +30,15 @@ public class HAPOperandAttribute extends HAPOperandDataOperaion{
 	public int getOperandType() {	return HAPConstant.CONS_EXPRESSION_OPERAND_ATTRIBUTEOPERATION;	}
 	
 	@Override
+	public boolean isScriptRunnable(String script)
+	{
+		//check base data
+		if(!this.getBaseData().isScriptRunnable(script))   return false;
+		return true;
+	}
+	
+	
+	@Override
 	protected void buildJsonMap(Map<String, String> jsonMap, Map<String, Class> jsonDataTypeMap){
 		super.buildJsonMap(jsonMap, jsonDataTypeMap);
 		jsonMap.put(HAPAttributeConstant.ATTR_OPERAND_OPERATION_ATTRIBUTE, this.m_attribute);

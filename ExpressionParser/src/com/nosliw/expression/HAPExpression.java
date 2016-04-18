@@ -33,6 +33,8 @@ public class HAPExpression implements HAPStringable{
 	// store all variable information in expression (variable name -- variable data type infor)
 	// for variable that we don't know data type, its value in this map is null
 	private Map<String, HAPDataTypeInfo> m_varsInfo;
+	//whether this expression is script runnable
+	private boolean m_isScriptRunnable = false;
 	
 	//store all data type info related with this expression
 	//this information is mainly for javascript side as it has to load data type on demand
@@ -67,6 +69,8 @@ public class HAPExpression implements HAPStringable{
 
 		//build path operand from attribute operand
 		this.buildPathOperand();
+		
+		this.m_isScriptRunnable = this.m_operand.isScriptRunnable("");
 	}
 
 	/*
@@ -100,6 +104,10 @@ public class HAPExpression implements HAPStringable{
 		}, null);
 		//replace operand in expression
 		if(itOut.outOperand!=null)   this.m_operand = itOut.outOperand;
+	}
+	
+	public Set<String> getAllVariableNames(){
+		return this.m_varsInfo.keySet();
 	}
 	
 	/*
@@ -152,9 +160,7 @@ public class HAPExpression implements HAPStringable{
 	/*
 	 * whether this expression is runnable under particular script
 	 */
-	public boolean isScriptRunnable(String script){
-		return this.m_operand.isScriptRunnable(script);
-	}
+	public boolean isScriptRunnable(String script){		return this.m_isScriptRunnable;	}
 	
 	/*
 	 * preprocess Expression, it includes:

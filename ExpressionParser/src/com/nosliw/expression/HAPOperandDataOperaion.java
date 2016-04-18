@@ -41,9 +41,6 @@ public class HAPOperandDataOperaion extends HAPOperandOperation{
 	@Override
 	public boolean isScriptRunnable(String script)
 	{
-		//check operation script
-		if(!this.isOperationScriptAvailable(script))   return false;
-		
 		//check base data
 		if(!this.m_baseData.isScriptRunnable(script))   return false;
 		
@@ -51,6 +48,10 @@ public class HAPOperandDataOperaion extends HAPOperandOperation{
 		for(HAPOperand parm : this.getParameters()){
 			if(!parm.isScriptRunnable(script))  return false;
 		}
+
+		//check operation script
+		if(!this.isOperationScriptAvailable(script))   return false;
+		
 		return true;
 	}
 	

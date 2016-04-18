@@ -8,6 +8,6 @@
 </listAttribute>
 <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="javacc"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="/Users/ningwang/Desktop/WebToApp/CoreProject/Projects/ExpressionParser/src/com/nosliw/expression/parser/expression.jj.jj"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="/Users/pro/Desktop/WebToApp/CoreProject/Projects/ExpressionParser/src/com/nosliw/expression/parser/expression.jj.jj"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="ExpressionParser"/>
 </launchConfiguration>

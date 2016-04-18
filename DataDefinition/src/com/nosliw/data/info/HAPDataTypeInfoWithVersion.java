@@ -4,6 +4,9 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
+import com.nosliw.common.utils.HAPBasicUtility;
+import com.nosliw.common.utils.HAPNamingConversionUtility;
+import com.nosliw.data.HAPDataTypeManager;
 import com.nosliw.data.utils.HAPAttributeConstant;
 
 /*
@@ -26,6 +29,25 @@ public class HAPDataTypeInfoWithVersion extends HAPDataTypeInfo{
 	public HAPDataTypeInfoWithVersion cloneDataTypeInfo(){
 		return new HAPDataTypeInfoWithVersion(this.getCategary(), this.getType(), this.getVersionNumber());
 	}
+	
+	public static HAPDataTypeInfoWithVersion parseDataTypeInfo(String infoStr){
+		return parseDataTypeInfo(infoStr, null);
+	}
+	
+	//get DataTypeInfo from string  (type:categary)
+	public static HAPDataTypeInfoWithVersion parseDataTypeInfo(String infoStr, HAPDataTypeInfoWithVersion backup){
+		if(HAPBasicUtility.isStringEmpty(infoStr))	return backup;
+		else{
+	    	String[] parts = HAPNamingConversionUtility.parsePartlInfos(infoStr);
+			String type = parts[0];
+			String categary = HAPDataTypeManager.DEFAULT_TYPE;
+			if(parts.length>=2)   categary = parts[1];
+			int version = -1;
+			if(parts.length>=3)   version = Integer.parseInt(parts[1]);
+			return new HAPDataTypeInfoWithVersion(categary, type, version);
+		}
+	}
+	
 	
 	@Override
 	protected void buildJsonMap(Map<String, String> jsonMap, Map<String, Class> jsonTypeMap){

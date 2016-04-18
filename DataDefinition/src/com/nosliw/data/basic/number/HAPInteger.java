@@ -8,6 +8,7 @@ import com.nosliw.data.HAPDataType;
 import com.nosliw.data.HAPDataTypeImp;
 import com.nosliw.data.HAPDataTypeManager;
 import com.nosliw.data.HAPDataTypeOperationsAnnotation;
+import com.nosliw.data.basic.bool.HAPBooleanOperation;
 import com.nosliw.data.info.HAPDataTypeInfo;
 import com.nosliw.data.info.HAPDataTypeInfoWithVersion;
 import com.nosliw.data.utils.HAPDataErrorUtility;
@@ -19,24 +20,31 @@ public class HAPInteger extends HAPDataTypeImp{
 	
 	private HAPInteger(HAPDataTypeInfoWithVersion dataTypeInfo,
 					HAPDataType olderDataType, 
-					HAPDataTypeInfo parentDataTypeInfo, 
+					HAPDataTypeInfoWithVersion parentDataTypeInfo, 
 					HAPConfigurable configure,
 					String description,
 					HAPDataTypeManager dataTypeMan) {
 		super(dataTypeInfo, olderDataType, parentDataTypeInfo, configure, description, dataTypeMan);
-		this.setDataTypeOperations(new HAPDataTypeOperationsAnnotation(new HAPIntegerOperation(dataTypeMan), dataTypeInfo, dataTypeMan));
 	}
 
+	@Override
+	public void buildOperation(){
+		this.setDataTypeOperations(new HAPDataTypeOperationsAnnotation(new HAPIntegerOperation(this.getDataTypeManager()), this.getDataTypeInfo(), this.getDataTypeManager()));
+	}
+	
 	@Override
 	public HAPData getDefaultData() {	return createDataByValue(0);	}
 
 	@Override
-	public HAPData toData(Object value, String format) {
-		HAPData out = null;
-		out = createDataByValue(Integer.parseInt(value.toString()));
-		return out;
+	public HAPData parseLiteral(String value) {
+		return createDataByValue(Integer.parseInt(value.toString()));
 	}
 
+	@Override
+	public HAPData parseJson(Object jsonObj){
+		return createDataByValue(Integer.parseInt(jsonObj.toString()));
+	}
+	
 	@Override
 	public HAPServiceData validate(HAPData data) {
 		HAPDataTypeInfo dataTypeInfo1 = HAPDataUtility.getDataTypeInfo(data);
@@ -51,7 +59,7 @@ public class HAPInteger extends HAPDataTypeImp{
 	//factory method to create data type object 
 	static public HAPInteger createDataType(HAPDataTypeInfoWithVersion dataTypeInfo, 
 										HAPDataType olderDataType, 		
-										HAPDataTypeInfo parentDataTypeInfo, 
+										HAPDataTypeInfoWithVersion parentDataTypeInfo, 
 										HAPConfigurable configures,
 										String description,
 										HAPDataTypeManager dataTypeMan){

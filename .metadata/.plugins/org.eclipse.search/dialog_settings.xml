@@ -6,20 +6,23 @@
 	<section name="SearchDialog.ScopePart">
 		<item value="0" key="scope"/>
 	</section>
+	<section name="">
+		<item value="1000" key="org.eclipse.search.resultpage.limit"/>
+	</section>
 	<section name="TextSearchPage">
 		<item value="12" key="HISTORY_SIZE"/>
 		<item value="true" key="CASE_SENSITIVE"/>
 		<item value="false" key="REG_EX_SEARCH"/>
 		<item value="false" key="SEARCH_DERIVED"/>
-		<item value="false" key="WHOLE_WORD"/>
+		<item value="true" key="WHOLE_WORD"/>
 		<section name="HISTORY6">
 			<item value="false" key="ignoreCase"/>
 			<item value="0" key="scope"/>
-			<item value="false" key="isWholeWord"/>
-			<item value="UIResourceScript.txt" key="textPattern"/>
+			<item value="true" key="isWholeWord"/>
+			<item value="ATTR_EXPRESSION_SCRIPTRUNNALBE" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
-				<item value="*.*"/>
+				<item value="*.js"/>
 			</list>
 			<list key="workingSets">
 			</list>
@@ -27,11 +30,11 @@
 		<section name="HISTORY7">
 			<item value="false" key="ignoreCase"/>
 			<item value="0" key="scope"/>
-			<item value="false" key="isWholeWord"/>
-			<item value="&quot;script&quot;" key="textPattern"/>
+			<item value="true" key="isWholeWord"/>
+			<item value="nosliwDataTypeOperations" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
-				<item value="*.java"/>
+				<item value="*.js"/>
 			</list>
 			<list key="workingSets">
 			</list>
@@ -39,11 +42,11 @@
 		<section name="HISTORY10">
 			<item value="false" key="ignoreCase"/>
 			<item value="0" key="scope"/>
-			<item value="false" key="isWholeWord"/>
-			<item value="getContextVariableInfo" key="textPattern"/>
+			<item value="true" key="isWholeWord"/>
+			<item value="DataTypeWithVersionOperations.txt" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
-				<item value="*.*"/>
+				<item value="*.java"/>
 			</list>
 			<list key="workingSets">
 			</list>
@@ -51,8 +54,8 @@
 		<section name="HISTORY4">
 			<item value="false" key="ignoreCase"/>
 			<item value="0" key="scope"/>
-			<item value="false" key="isWholeWord"/>
-			<item value="createDataByValue" key="textPattern"/>
+			<item value="true" key="isWholeWord"/>
+			<item value="nosliwCreateRequestServiceManager" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.js"/>
@@ -63,11 +66,11 @@
 		<section name="HISTORY5">
 			<item value="false" key="ignoreCase"/>
 			<item value="0" key="scope"/>
-			<item value="false" key="isWholeWord"/>
-			<item value="CONS_UIRESOURCE_TAG_SCRIPT" key="textPattern"/>
+			<item value="true" key="isWholeWord"/>
+			<item value="handleServiceTask" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
-				<item value="*.java"/>
+				<item value="*.js"/>
 			</list>
 			<list key="workingSets">
 			</list>
@@ -81,11 +84,11 @@
 		<section name="HISTORY11">
 			<item value="false" key="ignoreCase"/>
 			<item value="0" key="scope"/>
-			<item value="false" key="isWholeWord"/>
-			<item value="UIResourceScript" key="textPattern"/>
+			<item value="true" key="isWholeWord"/>
+			<item value="newFunctions" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
-				<item value="*.*"/>
+				<item value="*.java"/>
 			</list>
 			<list key="workingSets">
 			</list>
@@ -93,11 +96,11 @@
 		<section name="HISTORY8">
 			<item value="false" key="ignoreCase"/>
 			<item value="0" key="scope"/>
-			<item value="false" key="isWholeWord"/>
-			<item value="bbbb" key="textPattern"/>
+			<item value="true" key="isWholeWord"/>
+			<item value="nosliwCreateDataTypeManager" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
-				<item value="*.*"/>
+				<item value="*.js"/>
 			</list>
 			<list key="workingSets">
 			</list>
@@ -105,11 +108,11 @@
 		<section name="HISTORY9">
 			<item value="false" key="ignoreCase"/>
 			<item value="0" key="scope"/>
-			<item value="false" key="isWholeWord"/>
-			<item value="createPlaceHolderWithId" key="textPattern"/>
+			<item value="true" key="isWholeWord"/>
+			<item value="opFunctions[" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
-				<item value="*.*"/>
+				<item value="*.js"/>
 			</list>
 			<list key="workingSets">
 			</list>
@@ -117,8 +120,8 @@
 		<section name="HISTORY2">
 			<item value="false" key="ignoreCase"/>
 			<item value="0" key="scope"/>
-			<item value="false" key="isWholeWord"/>
-			<item value="nosliwLogging.debug" key="textPattern"/>
+			<item value="true" key="isWholeWord"/>
+			<item value="setRequestPostProcessors" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.js"/>
@@ -129,8 +132,8 @@
 		<section name="HISTORY3">
 			<item value="false" key="ignoreCase"/>
 			<item value="0" key="scope"/>
-			<item value="false" key="isWholeWord"/>
-			<item value="createDataByObject" key="textPattern"/>
+			<item value="true" key="isWholeWord"/>
+			<item value="addPostProcessor" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.js"/>
@@ -141,8 +144,8 @@
 		<section name="HISTORY0">
 			<item value="false" key="ignoreCase"/>
 			<item value="0" key="scope"/>
-			<item value="false" key="isWholeWord"/>
-			<item value="Learning" key="textPattern"/>
+			<item value="true" key="isWholeWord"/>
+			<item value="NosliwContextVariableEventInfo" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.js"/>
@@ -153,8 +156,8 @@
 		<section name="HISTORY1">
 			<item value="false" key="ignoreCase"/>
 			<item value="0" key="scope"/>
-			<item value="false" key="isWholeWord"/>
-			<item value="kkkk" key="textPattern"/>
+			<item value="true" key="isWholeWord"/>
+			<item value="setRequestProcessors" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.js"/>
@@ -192,7 +195,7 @@
 		</list>
 	</section>
 	<section name="SearchDialog">
-		<item value="org.eclipse.jdt.ui.JavaSearchPage" key="PREVIOUS_PAGE"/>
+		<item value="org.eclipse.search.internal.ui.text.TextSearchPage" key="PREVIOUS_PAGE"/>
 	</section>
 	<section name="org.eclipse.jdt.ui.JavaSearchResultPage">
 		<item value="1000" key="org.eclipse.jdt.search.resultpage.limit"/>

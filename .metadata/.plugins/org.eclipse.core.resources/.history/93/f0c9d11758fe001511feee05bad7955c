@@ -1,0 +1,32 @@
+package com.nosliw.expression;
+
+import java.util.Map;
+
+import com.nosliw.common.utils.HAPConstant;
+import com.nosliw.data.HAPData;
+import com.nosliw.data.HAPDataTypeManager;
+import com.nosliw.data.HAPOperand;
+import com.nosliw.data.HAPWraper;
+import com.nosliw.data.info.HAPDataTypeInfo;
+
+public class HAPOperandNewOperation extends HAPOperandOperation{
+
+	public HAPOperandNewOperation(HAPDataTypeInfo dataTypeInfo, HAPOperand[] parms, HAPDataTypeManager dataTypeMan){
+		super(null, parms, dataTypeMan);
+		this.setBaseDataTypeInfo(dataTypeInfo);
+	}
+
+	@Override
+	public int getOperandType() {return HAPConstant.CONS_EXPRESSION_OPERAND_NEWOPERATION;}
+
+	@Override
+	public HAPData execute(Map<String, HAPData> vars, Map<String, HAPWraper> wraperVars) {
+		return null;
+	}
+
+	@Override
+	public boolean isScriptRunnable(String script) {
+		return false;
+	}
+
+}

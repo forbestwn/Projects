@@ -7,6 +7,7 @@ import com.nosliw.data.HAPDataType;
 import com.nosliw.data.HAPDataTypeImp;
 import com.nosliw.data.HAPDataTypeManager;
 import com.nosliw.data.HAPDataTypeOperationsAnnotation;
+import com.nosliw.data.basic.bool.HAPBooleanOperation;
 import com.nosliw.data.info.HAPDataTypeInfo;
 import com.nosliw.data.info.HAPDataTypeInfoWithVersion;
 
@@ -16,12 +17,16 @@ public class HAPFloat extends HAPDataTypeImp{
 	
 	private HAPFloat(HAPDataTypeInfoWithVersion dataTypeInfo,
 			HAPDataType olderDataType, 
-			HAPDataTypeInfo parentDataTypeInfo, 
+			HAPDataTypeInfoWithVersion parentDataTypeInfo, 
 			HAPConfigurable configure,
 			String description,
 			HAPDataTypeManager dataTypeMan) {
 		super(dataTypeInfo, olderDataType, parentDataTypeInfo, configure, description, dataTypeMan);
-		this.setDataTypeOperations(new HAPDataTypeOperationsAnnotation(new HAPFloatOperation(dataTypeMan), dataTypeInfo, dataTypeMan));
+	}
+	
+	@Override
+	public void buildOperation(){
+		this.setDataTypeOperations(new HAPDataTypeOperationsAnnotation(new HAPFloatOperation(this.getDataTypeManager()), this.getDataTypeInfo(), this.getDataTypeManager()));
 	}
 	
 	@Override
@@ -31,7 +36,7 @@ public class HAPFloat extends HAPDataTypeImp{
 	}
 
 	@Override
-	public HAPData toData(Object value, String format) {
+	public HAPData parseLiteral(String value) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -49,7 +54,7 @@ public class HAPFloat extends HAPDataTypeImp{
 	//factory method to create data type object 
 	static public HAPFloat createDataType(HAPDataTypeInfoWithVersion dataTypeInfo, 
 										HAPDataType olderDataType, 		
-										HAPDataTypeInfo parentDataTypeInfo, 
+										HAPDataTypeInfoWithVersion parentDataTypeInfo, 
 										HAPConfigurable configures,
 										String description,
 										HAPDataTypeManager dataTypeMan){

@@ -56,7 +56,7 @@ public class HAPConstant {
 
 
 
-		public static final String CONS_DATAOPERATION_NEWDATA = "newData";
+		public static final String CONS_DATAOPERATION_NEWDATA = "new";
 		public static final String CONS_DATAOPERATION_TOPARENTTYPE = "toParentType";
 		public static final String CONS_DATAOPERATION_FROMPARENTTYPE = "fromParentType";
 		public static final String CONS_DATAOPERATION_TOVERSION = "toVersion";
@@ -64,6 +64,7 @@ public class HAPConstant {
 		public static final String CONS_DATAOPERATION_GETCHILD = "getChild";
 		public static final String CONS_DATAOPERATION_GETCHILDDATATYPE = "getChildDatatype";
 		public static final String CONS_DATAOPERATION_COMPARE = "compare";
+		public static final String CONS_DATAOPERATION_PARSELITERAL = "parseLiteral";
 
 
 
@@ -73,6 +74,7 @@ public class HAPConstant {
 		public static final int CONS_EXPRESSION_OPERAND_DATATYPEOPERATION = 4;
 		public static final int CONS_EXPRESSION_OPERAND_ATTRIBUTEOPERATION = 5;
 		public static final int CONS_EXPRESSION_OPERAND_PATHOPERATION = 6;
+		public static final int CONS_EXPRESSION_OPERAND_NEWOPERATION = 7;
 
 
 
@@ -239,6 +241,7 @@ public class HAPConstant {
 		public static final String CONS_REMOTESERVICE_LOGIN = "login";
 		public static final String CONS_REMOTESERVICE_GETUIRESOURCE = "getUIResource";
 		public static final String CONS_REMOTESERVICE_GETDATATYPES = "getDataTypes";
+		public static final String CONS_REMOTESERVICE_EXECUTEEXPRESSION = "executeExpression";
 
 
 

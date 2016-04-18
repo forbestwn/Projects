@@ -13,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.nosliw.common.configure.HAPConfigurable;
+import com.nosliw.common.resource.HAPResource;
 import com.nosliw.common.serialization.HAPStringable;
 import com.nosliw.common.strtemplate.HAPStringTemplateUtil;
 import com.nosliw.common.utils.HAPBasicUtility;
@@ -28,7 +29,7 @@ import com.nosliw.data.info.HAPDataTypeInfo;
 import com.nosliw.data.info.HAPDataTypeInfoWithVersion;
 import com.nosliw.data.utils.HAPAttributeConstant;
 
-public class HAPDataTypeManager implements HAPStringable{
+public class HAPDataTypeManager implements HAPStringable, HAPResource{
 
 	public final static String DEFAULT_CATEGARY = HAPConstant.CONS_DATATYPE_CATEGARY_SIMPLE;
 	public final static String DEFAULT_TYPE = HAPConstant.CONS_DATATYPE_TYPE_STRING;
@@ -59,6 +60,17 @@ public class HAPDataTypeManager implements HAPStringable{
 		this.loadBasicDataType();
 	}
 	
+	@Override
+	public void init() {
+		for(String key : this.m_dataTypes.keySet()){
+			HAPDataType dataType = this.m_dataTypes.get(key);
+			dataType.buildOperation();
+			//store data type operation script of file and buffer
+			this.processDataTypeOperationScript(dataType);
+			
+		}
+	}
+	
 	public HAPDataType registerDataType(HAPDataType dataType){
 		HAPDataTypeInfo dataTypeInfo = dataType.getDataTypeInfo(); 
 		String key = this.getDataTypeKey(dataTypeInfo);
@@ -71,9 +83,6 @@ public class HAPDataTypeManager implements HAPStringable{
 		}
 		types.add(dataTypeInfo.getType());
 
-		//store data type operation script of file and buffer
-		this.processDataTypeOperationScript(dataType);
-		
 		return dataType;
 	}
 	
@@ -86,10 +95,17 @@ public class HAPDataTypeManager implements HAPStringable{
 	public HAPDataType[] getAllDataTypes(){		return this.m_dataTypes.values().toArray(new HAPDataType[0]);	}
 	
 	public HAPDataType getDataType(HAPDataTypeInfo dataTypeInfo){
+		if(dataTypeInfo==null)  return null;
 		String key = this.getDataTypeKey(dataTypeInfo);
 		return this.m_dataTypes.get(key);
 	}
 
+	public HAPDataType getDataType(HAPDataTypeInfoWithVersion dataTypeInfo){
+		String key = this.getDataTypeKey(dataTypeInfo);
+		HAPDataType dataType = this.m_dataTypes.get(key);
+		return dataType.getDataTypeByVersion(dataTypeInfo.getVersionNumber());
+	}
+	
 	public HAPDataTypeInfo getDataTypeInfoByTypeName(String type){
 		for(String categary : this.getAllDataCategarys()){
 			if(this.isCategary(categary, type)){
@@ -262,6 +278,7 @@ public class HAPDataTypeManager implements HAPStringable{
 	/*
 	 * transform string to data object, according to the structure of the string, for instance: 
 	 * 		json : start with { 
+	 * 		literal : #type:categary:value
 	 * 		otherwise, treat as simple text
 	 */
 	public HAPData parseString(String text, String categary, String type){
@@ -281,7 +298,13 @@ public class HAPDataTypeManager implements HAPStringable{
 		}
 		else if(token.equals("#")){
 			//literate
-			return null;
+			int p1 = text.indexOf(HAPConstant.CONS_SEPERATOR_PART);
+			int p2 = text.indexOf(HAPConstant.CONS_SEPERATOR_PART, p1+1);
+			type = text.substring(1, p1);
+			categary = text.substring(p1+1, p2);
+			String value = text.substring(p2+1);
+			HAPDataType dataType = this.getDataType(new HAPDataTypeInfo(categary, type));
+			return dataType.toData(value, HAPConstant.CONS_SERIALIZATION_TEXT);
 		}
 		else{
 			if(categary!=null && type!=null){
@@ -311,6 +334,8 @@ public class HAPDataTypeManager implements HAPStringable{
 		return null;
 	}
 
+	public static HAPStringData createStringData(String text){	return new HAPStringData(text);	}
+	
 	@Override
 	public String toStringValue(String format) {
 		Map<String, String> jsonMap = new HashMap<String, String>();
@@ -334,4 +359,5 @@ public class HAPDataTypeManager implements HAPStringable{
 		
 		return out.toString();
 	}
+
 }

@@ -6,6 +6,7 @@ import com.nosliw.data.HAPDataTypeManager;
 import com.nosliw.data.HAPOperationInfoAnnotation;
 import com.nosliw.data.HAPScriptOperationInfoAnnotation;
 import com.nosliw.data.basic.bool.HAPBooleanData;
+import com.nosliw.data.basic.string.HAPStringData;
 
 public class HAPIntegerOperation extends HAPDataOperation{
 
@@ -26,4 +27,17 @@ public class HAPIntegerOperation extends HAPDataOperation{
 		String script = "return nosliwCreateData(parms[0].value>parms[1].value, new NosliwDataTypeInfo(\"simple\", \"boolean\"));";
 		return script;
 	}	
+
+	@HAPOperationInfoAnnotation(in = { "string:simple"}, out = "integer:simple", description = "This is new operation")
+	public HAPIntegerData new1(HAPData[] parms){
+		HAPStringData stringData = (HAPStringData)parms[0];
+		return new HAPIntegerData(Integer.valueOf(stringData.getValue()));
+	}	
+
+	@HAPScriptOperationInfoAnnotation(dependent="")
+	public String new1_javascript(){
+		String script = "return nosliwCreateData(parseInt(parms[0].value), new NosliwDataTypeInfo(\"simple\", \"integer\"));";
+		return script;
+	}	
+	
 }

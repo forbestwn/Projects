@@ -10,6 +10,7 @@ import java.util.Set;
 import com.nosliw.common.utils.HAPConstant;
 import com.nosliw.data.info.HAPDataOperationInfo;
 import com.nosliw.data.info.HAPDataTypeInfo;
+import com.nosliw.data.info.HAPDataTypeInfoWithVersion;
 
 /*
  * DataTypeOperations that all the operation infor is get from annotation of Operation Object
@@ -17,7 +18,7 @@ import com.nosliw.data.info.HAPDataTypeInfo;
  */
 public class HAPDataTypeOperationsAnnotation extends HAPDataTypeOperations{
 
-	public HAPDataTypeOperationsAnnotation(Object operationObj, HAPDataTypeInfo dataTypeInfo, HAPDataTypeManager dataTypeMan){
+	public HAPDataTypeOperationsAnnotation(Object operationObj, HAPDataTypeInfoWithVersion dataTypeInfo, HAPDataTypeManager dataTypeMan){
 		super(dataTypeInfo, dataTypeMan);
 		this.setOperationObject(operationObj);
 		this.buildOperationInfos();
@@ -46,7 +47,7 @@ public class HAPDataTypeOperationsAnnotation extends HAPDataTypeOperations{
 				    		inDataTypeInfos.add(HAPDataTypeInfo.parseDataTypeInfo(inString, this.getDataTypeInfo()));
 				    	}
 				    	
-				    	HAPDataOperationInfo opInfo = new HAPDataOperationInfo(name, inDataTypeInfos, outDataTypeInfo, op.description());
+				    	HAPDataOperationInfo opInfo = new HAPDataOperationInfo(this.getDataType(), name, inDataTypeInfos, outDataTypeInfo, op.description());
 				    	this.addDataOperationInfo(opInfo);
 				    	break;
 				    }

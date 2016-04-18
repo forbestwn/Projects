@@ -272,7 +272,7 @@
 		<definition name="CONS_SEPERATOR_SURFIX" value="_"/>
 		<definition name="CONS_SEPERATOR_PREFIX" value="_"/>
 		<definition type="space"/>
-		<definition name="CONS_DATAOPERATION_NEWDATA" value="newData"/>
+		<definition name="CONS_DATAOPERATION_NEWDATA" value="new"/>
 		<definition name="CONS_DATAOPERATION_TOPARENTTYPE" value="toParentType"/>
 		<definition name="CONS_DATAOPERATION_FROMPARENTTYPE" value="fromParentType"/>
 		<definition name="CONS_DATAOPERATION_TOVERSION" value="toVersion"/>
@@ -280,6 +280,7 @@
 		<definition name="CONS_DATAOPERATION_GETCHILD" value="getChild"/>
 		<definition name="CONS_DATAOPERATION_GETCHILDDATATYPE" value="getChildDatatype"/>
 		<definition name="CONS_DATAOPERATION_COMPARE" value="compare"/>
+		<definition name="CONS_DATAOPERATION_PARSELITERAL" value="parseLiteral"/>
 		<definition type="space"/>
 		<definition name="CONS_EXPRESSION_OPERAND_CONSTANT" value="1" type="int"/>
 		<definition name="CONS_EXPRESSION_OPERAND_VARIABLE" value="2" type="int"/>
@@ -287,6 +288,7 @@
 		<definition name="CONS_EXPRESSION_OPERAND_DATATYPEOPERATION" value="4" type="int"/>
 		<definition name="CONS_EXPRESSION_OPERAND_ATTRIBUTEOPERATION" value="5" type="int"/>
 		<definition name="CONS_EXPRESSION_OPERAND_PATHOPERATION" value="6" type="int"/>
+		<definition name="CONS_EXPRESSION_OPERAND_NEWOPERATION" value="7" type="int"/>
 		<definition type="space"/>
 		<definition name="CONS_EXPRESSION_VARIABLE_THIS" value="this"/>
 		<definition name="CONS_EXPRESSION_VARIABLE_PARENT" value="parent"/>
@@ -423,6 +425,7 @@
 		<definition name="CONS_REMOTESERVICE_LOGIN" value="login"/>
 		<definition name="CONS_REMOTESERVICE_GETUIRESOURCE" value="getUIResource"/>
 		<definition name="CONS_REMOTESERVICE_GETDATATYPES" value="getDataTypes"/>
+		<definition name="CONS_REMOTESERVICE_EXECUTEEXPRESSION" value="executeExpression"/>
 		<definition type="space"/>
 		<definition name="CONS_DATAACCESS_ENTITYSTATUS_NORMAL" value="0" type="int"/>
 		<definition name="CONS_DATAACCESS_ENTITYSTATUS_CHANGED" value="1" type="int"/>

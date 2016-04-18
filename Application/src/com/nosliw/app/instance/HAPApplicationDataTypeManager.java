@@ -49,9 +49,9 @@ public class HAPApplicationDataTypeManager extends HAPDataTypeManager{
 				String description = ele.getAttribute("description");
 
 				String parent = ele.getAttribute("parent");
-				HAPDataTypeInfo parentDataTypeInfo = null;
+				HAPDataTypeInfoWithVersion parentDataTypeInfo = null;
 				if(HAPBasicUtility.isStringNotEmpty(parent)){
-					parentDataTypeInfo = new HAPDataTypeInfo(parent);
+					parentDataTypeInfo = HAPDataTypeInfoWithVersion.parseDataTypeInfo(parent);
 				}
 				
 				String categary = ele.getAttribute("categary");
@@ -67,7 +67,7 @@ public class HAPApplicationDataTypeManager extends HAPDataTypeManager{
 					Method method = factoryClass.getMethod("createDataType", 
 															HAPDataTypeInfoWithVersion.class,
 															HAPDataType.class,
-															HAPDataTypeInfo.class,
+															HAPDataTypeInfoWithVersion.class,
 															HAPConfigurable.class,
 															String.class,
 															HAPDataTypeManager.class);

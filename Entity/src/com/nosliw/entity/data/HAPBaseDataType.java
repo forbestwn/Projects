@@ -12,7 +12,7 @@ public abstract class HAPBaseDataType extends HAPDataTypeImp{
 	HAPEntityDefinitionManager m_entityDefMan;
 	
 	protected HAPBaseDataType(HAPDataTypeInfoWithVersion dataTypeInfo,
-			HAPDataType olderDataType, HAPDataTypeInfo parentDataTypeInfo,
+			HAPDataType olderDataType, HAPDataTypeInfoWithVersion parentDataTypeInfo,
 			HAPConfigurable configures, String description,
 			HAPDataTypeManager dataTypeMan,
 			HAPEntityDefinitionManager entityDefMan) {

@@ -5,10 +5,11 @@ import com.nosliw.data.HAPDataImp;
 import com.nosliw.data.HAPDataType;
 
 public class HAPUrlData extends HAPDataImp{
-
-	public HAPUrlData(HAPDataType dataType) {
+	private String m_value;
+	
+	HAPUrlData(String value, HAPDataType dataType) {
 		super(dataType);
-		// TODO Auto-generated constructor stub
+		this.m_value = value;
 	}
 
 	@Override

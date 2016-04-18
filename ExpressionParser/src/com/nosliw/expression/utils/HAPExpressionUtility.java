@@ -3,9 +3,7 @@ package com.nosliw.expression.utils;
 import java.util.Map;
 
 import com.nosliw.common.exception.HAPServiceDataException;
-import com.nosliw.common.utils.HAPBasicUtility;
 import com.nosliw.common.utils.HAPConstant;
-import com.nosliw.common.utils.HAPNamingConversionUtility;
 import com.nosliw.data.HAPData;
 import com.nosliw.data.HAPDataTypeManager;
 import com.nosliw.data.HAPOperand;
@@ -17,11 +15,8 @@ import com.nosliw.data.basic.string.HAPStringData;
 import com.nosliw.data.utils.HAPDataErrorUtility;
 import com.nosliw.data.utils.HAPDataUtility;
 import com.nosliw.expression.HAPExpression;
-import com.nosliw.expression.HAPOperandAttribute;
 import com.nosliw.expression.HAPOperandDataOperaion;
-import com.nosliw.expression.HAPOperandDataTypeOperation;
 import com.nosliw.expression.HAPOperandPath;
-import com.nosliw.expression.HAPOperandVariable;
 
 public class HAPExpressionUtility {
 

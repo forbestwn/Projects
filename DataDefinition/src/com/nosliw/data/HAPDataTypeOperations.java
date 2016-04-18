@@ -9,24 +9,27 @@ import com.nosliw.common.exception.HAPServiceData;
 import com.nosliw.common.utils.HAPConstant;
 import com.nosliw.data.info.HAPDataOperationInfo;
 import com.nosliw.data.info.HAPDataTypeInfo;
+import com.nosliw.data.info.HAPDataTypeInfoWithVersion;
 import com.nosliw.data.utils.HAPDataErrorUtility;
 
 /*
- * store a set of operation information
+ * store a set of operation information that defined locally for this data type
  */
 public class HAPDataTypeOperations {
 	//data type for operation
-	private HAPDataTypeInfo m_dataTypeInfo;
+	private HAPDataTypeInfoWithVersion m_dataTypeInfo;
 	//operation information
 	private Map<String, HAPDataOperationInfo> m_operationInfos;
 	//operation script <opName <scriptName, script>> 
 	private Map<String, Map<String, HAPScriptOperationInfo>> m_operationScriptInfos;
-	//object to perform the operation
+	//object to provide method to implements the operation for java 
 	private Object m_operationObj;
+	
+	private HAPDataType m_dataType;
 	
 	private HAPDataTypeManager m_dataTypeMan;
 	
-	public HAPDataTypeOperations(HAPDataTypeInfo dataTypeInfo, HAPDataTypeManager dataTypeMan){
+	public HAPDataTypeOperations(HAPDataTypeInfoWithVersion dataTypeInfo, HAPDataTypeManager dataTypeMan){
 		this.m_operationInfos = new LinkedHashMap<String, HAPDataOperationInfo>();
 		this.m_operationScriptInfos = new LinkedHashMap<String, Map<String, HAPScriptOperationInfo>>();
 		this.m_dataTypeInfo = dataTypeInfo;
@@ -120,7 +123,14 @@ public class HAPDataTypeOperations {
 	
 	/****************************** Basice Information ********************************/
 	
-	public HAPDataTypeInfo getDataTypeInfo(){return this.m_dataTypeInfo;}
+	public HAPDataTypeInfoWithVersion getDataTypeInfo(){return this.m_dataTypeInfo;}
+	
+	public HAPDataType getDataType(){
+		if(this.m_dataType==null){
+			this.m_dataType = this.getDataTypeManager().getDataType(this.m_dataTypeInfo);
+		}
+		return this.m_dataType;
+	}
 	
 	public Map<String, HAPDataOperationInfo> getOperationInfos(){return this.m_operationInfos;}
 	
