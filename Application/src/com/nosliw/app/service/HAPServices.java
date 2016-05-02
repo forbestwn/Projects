@@ -1,7 +1,5 @@
 package com.nosliw.app.service;
 
-import java.util.Set;
-
 import com.nosliw.common.exception.HAPServiceData;
 import com.nosliw.data.info.HAPDataTypeInfo;
 

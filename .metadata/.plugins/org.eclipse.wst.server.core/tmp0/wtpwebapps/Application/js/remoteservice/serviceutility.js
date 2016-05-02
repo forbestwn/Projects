@@ -4,6 +4,13 @@
 var nosliwRemoteServiceUtility = function(){
 	
 	return {
+		createRemoteServiceConfigures : function(service, command){
+			var configuresObj = {};
+			configuresObj[NOSLIWATCOMMONTRIBUTECONSTANT.ATTR_SERVLETPARMS_COMMAND] = command;
+			configuresObj[NOSLIWATCOMMONTRIBUTECONSTANT.ATTR_SERVLETPARMS_SERVICE] = service;
+			return createConfigures(configuresObj);
+		},
+		
 		/*
 		 * data is serviceData.data 
 		 */

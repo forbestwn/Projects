@@ -44,12 +44,8 @@ public class HAPApplicationInstance{
 			//try to read from file in classpath : nosliw.property
 			String filename = "nosliw.properties";
     		InputStream input = HAPApplicationInstance.class.getClassLoader().getResourceAsStream(filename);
-    		if(input!=null){
-        		this.m_configure = new HAPConfigurableImp(input); 
-    		}
-    		else{
-    			this.m_configure = new HAPConfigurableImp();
-    		}
+    		if(input!=null)   this.m_configure = new HAPConfigurableImp(input); 
+    		else			this.m_configure = new HAPConfigurableImp();
 		}
 
 		this.m_logger = new HAPFileLogger(this.m_configure.getConfigurableValue(HAPConstant.CONS_APPLICATION_CONFIGURE_LOGGER));

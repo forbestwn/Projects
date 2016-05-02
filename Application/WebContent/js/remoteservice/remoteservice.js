@@ -26,10 +26,7 @@ var nosliwCreateRemoteServiceManager = function(){
 	var loc_timerProcessor = undefined;
 	
 	//create default configure object for sync task  
-	var loc_syncTaskDefaultConfigure = new NosliwConfigure({
-		service : "service",
-		command : "groupRequest",
-	});
+	var loc_syncTaskDefaultConfigure = createConfiguresBase(nosliwRemoteServiceUtility.createRemoteServiceConfigures(NOSLIWCOMMONCONSTANT.CONS_SERVICENAME_SERVICE, NOSLIWCOMMONCONSTANT.CONS_SERVICECOMMAND_GROUPREQUEST));
 	
 	//predefined sync task configure, so that we don't need to create it everytime, just get it by name
 	var loc_syncTaskConfigures = {};
@@ -47,9 +44,9 @@ var nosliwCreateRemoteServiceManager = function(){
 		if(syncTasks==undefined){
 			
 			var configureName = loc_getConfigureName(syncName);
-			var syncTaksConfigure = loc_getSyncTaskConfigureByName(configureName);
+			var syncTaksConfigure = loc_getSyncTaskConfiguresByName(configureName);
 			if(syncTaksConfigure==undefined){
-				syncTaksConfigure = loc_syncTaskDefaultConfigure.getDefaultConfigure();
+				syncTaksConfigure = loc_syncTaskDefaultConfigure.getBaseConfigures();
 			}
 			
 			syncTasks = nosliwCreateRemoteSyncTask(syncName, loc_out, syncTaksConfigure);
@@ -61,7 +58,7 @@ var nosliwCreateRemoteServiceManager = function(){
 	/*
 	 * get sync task configure by name
 	 */
-	function loc_getSyncTaskConfigureByName(name){
+	function loc_getSyncTaskConfiguresByName(name){
 		if(name==undefined)  return undefined;
 		return loc_syncTaskConfigures[name];
 	};
@@ -136,7 +133,7 @@ var nosliwCreateRemoteServiceManager = function(){
 		 * register predefined sync task configure
 		 */
 		registerSyncTaskConfigure : function(name, configure){
-			var newConfigure = loc_syncTaskDefaultConfigure.createConfigure(configure);
+			var newConfigure = loc_syncTaskDefaultConfigure.createConfigures(configure);
 			loc_syncTaskConfigures[name] = newConfigure;
 		},
 		

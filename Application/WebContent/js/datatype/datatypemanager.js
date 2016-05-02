@@ -32,7 +32,8 @@ var nosliwCreateDataTypeManager = function(){
 	};
 	
 	var loc_getRequestServiceGetDataTypes = function(dataTypeInfoArray){
-		return new NosliwServiceInfo(NOSLIWCOMMONCONSTANT.CONS_REMOTESERVICE_GETDATATYPES, {"requestArray":dataTypeInfoArray}); 
+		return new NosliwServiceInfo(NOSLIWCOMMONCONSTANT.CONS_REMOTESERVICE_GETDATATYPES, 
+				createParms().addParm(NOSLIWATCOMMONTRIBUTECONSTANT.ATTR_REQUEST_GETDATATYPES_REQUESTARRAY,dataTypeInfoArray).getParmObj());
 	};
 
 	var loc_getRequestServiceExecuteDataOperation = function(baseDataTypeInfo, operation, parms){
@@ -43,7 +44,7 @@ var nosliwCreateDataTypeManager = function(){
 	 * execute method : getDataTypes
 	 */
 	var loc_requestInfoGetDataTypes = function(requestInfo){
-		var requestArray = requestInfo.getParmData('requestArray');
+		var requestArray = requestInfo.getParmData(NOSLIWATCOMMONTRIBUTECONSTANT.ATTR_REQUEST_GETDATATYPES_REQUESTARRAY);
 
 		//find which data type is existing, which data type is new that need remote request
 		var newArray = [];
@@ -71,7 +72,7 @@ var nosliwCreateDataTypeManager = function(){
 					return existingArray;
 				}, 
 			});
-			requestInfo.setParmData("requestArray", newArray);
+			requestInfo.setParmData(NOSLIWATCOMMONTRIBUTECONSTANT.ATTR_REQUEST_GETDATATYPES_REQUESTARRAY, newArray);
 			var remoteTask = nosliwRequestUtility.getRemoteServiceTask(loc_moduleName, requestInfo);
 			return remoteTask;
 		}
@@ -193,11 +194,6 @@ var nosliwCreateDataTypeManager = function(){
 	};
 	
 	var loc_getOperationDependentDataTypeInfo = function(dataType, operation){
-		if(dataType.operationInfos[operation]==undefined){
-			var kkkk = 555;
-			kkkk++;
-		}
-		
 		var out = dataType.operationInfos[operation].dependentDataTypeInfos;
 		if(out==undefined)  out = [];
 		return out;

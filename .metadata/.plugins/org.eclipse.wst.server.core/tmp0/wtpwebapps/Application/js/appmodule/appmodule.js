@@ -79,26 +79,13 @@ var nosliwCreateAppModule = function(name, parms, parent, extendObj){
 				loc_data[name] = data;
 			},
 			
-			clearData : function(name){
-				delete loc_data[name];
-			},
+			clearData : function(name){	delete loc_data[name];	},
 	
-			command : function(name, data){
-				this.ovr_doCommand(name, data);
-			},
+			command : function(name, data){	this.ovr_doCommand(name, data);	},
 
-			trigueEvent : function(eventName, data){
-				nosliwEventUtility.triggerEvent(this, eventName, data);
-			},
+			trigueEvent : function(eventName, data, requestInfo){  nosliwEventUtility.triggerEvent(this, eventName, data, requestInfo);	},
 			
-			//ui, query, uiresource, entity
-			useResource : function(resource){
-				
-			},
-			
-			unUseResource : function(resource){
-				
-			},
+			registerEvent : function(handler, thisContext){	return	loc_eventSource.registerEventHandler(handler, thisContext);		},
 			
 	};
 
@@ -106,6 +93,7 @@ var nosliwCreateAppModule = function(name, parms, parent, extendObj){
 
 	//append resource and object life cycle method to out obj
 	loc_out = nosliwLifecycleUtility.makeResourceObject(loc_out);
+	loc_out = nosliwTypedObjectUtility.makeTypedObject(loc_out, NOSLIWCONSTANT.TYPEDOBJECT_TYPE_APPMODULE);
 
 	return loc_out;
 };

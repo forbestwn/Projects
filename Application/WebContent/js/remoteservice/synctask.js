@@ -35,14 +35,13 @@ var nosliwCreateRemoteSyncTask = function(name, remoteServiceMan, setting){
 		for(var i in loc_syncTasks){
 			serviceTaskRequests.push(loc_syncTasks[i].getRemoteServiceRequest());
 		}
-		var serviceRequests = {
-				'clientId' : 	nosliw.getClientId(),	
-				'command'	:	loc_setting.command, 
-				'parms'		:	JSON.stringify(serviceTaskRequests),
-		};
+		var serviceRequests = {};
+		serviceRequests[NOSLIWATCOMMONTRIBUTECONSTANT.ATTR_SERVLETPARMS_CLIENTID] = nosliw.getClientId();
+		serviceRequests[NOSLIWATCOMMONTRIBUTECONSTANT.ATTR_SERVLETPARMS_COMMAND] = loc_setting.getConfigure(NOSLIWATCOMMONTRIBUTECONSTANT.ATTR_SERVLETPARMS_COMMAND);
+		serviceRequests[NOSLIWATCOMMONTRIBUTECONSTANT.ATTR_SERVLETPARMS_PARMS] = JSON.stringify(serviceTaskRequests);
 	
 		$.ajax({
-			url : loc_setting.service,
+			url : loc_setting.getConfigure(NOSLIWATCOMMONTRIBUTECONSTANT.ATTR_SERVLETPARMS_SERVICE),
 			type : "POST",
 			dataType: "json",
 			data : serviceRequests,
@@ -74,7 +73,7 @@ var nosliwCreateRemoteSyncTask = function(name, remoteServiceMan, setting){
 				}
 				
 				//clear tasks
-//				loc_syncTasks = [];
+				loc_syncTasks = [];
 				//ready to process new task
 				loc_syncReady = true;
 				//process sync task again

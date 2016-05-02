@@ -23,7 +23,9 @@ var nosliwCreateUIResourceManager = function(){
 	 * get request service object for GetUIResource 
 	 */
 	var loc_getRequestServiceGetUIResource = function(name){
-		return new NosliwServiceInfo(NOSLIWCOMMONCONSTANT.CONS_REMOTESERVICE_GETUIRESOURCE, {"name":name}); 
+		var parms = {};
+		parms[NOSLIWATCOMMONTRIBUTECONSTANT.ATTR_REQUEST_GETUIRESOURCE_NAME] = name;
+		return new NosliwServiceInfo(NOSLIWCOMMONCONSTANT.CONS_REMOTESERVICE_GETUIRESOURCE, parms); 
 	};
 	
 	var loc_getRequestServiceGetUIResourceView = function(name){

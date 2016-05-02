@@ -38,6 +38,7 @@ var nosliwEventUtility = function(){
 			var listenerEventObj = loc_getEventObject(listener);
 			var that = thisContext;
 			if(that==undefined)  that = source;
+			if(eventName===undefined)  eventName = NOSLIWCONSTANT.EVENT_EVENTNAME_ALL; 
 			
 			//for event in backbone.js, the parms are different depending on the event type
 			//for "all" event, the first parm is event name

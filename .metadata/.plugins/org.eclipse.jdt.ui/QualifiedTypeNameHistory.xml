@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="com.nosliw.common.log.HAPLogger"/>
-<fullyQualifiedTypeName name="com.nosliw.app.log.FileLogger"/>
-<fullyQualifiedTypeName name="com.nosliw.app.instance.HAPApplicationClientInfo"/>
 <fullyQualifiedTypeName name="com.nosliw.data.info.HAPDataTypeInfo"/>
 <fullyQualifiedTypeName name="com.nosliw.common.utils.HAPConstant"/>
 <fullyQualifiedTypeName name="com.nosliw.data.HAPScriptOperationInfoAnnotation"/>
-<fullyQualifiedTypeName name="org.json.JSONObject"/>
 <fullyQualifiedTypeName name="java.util.Iterator"/>
 <fullyQualifiedTypeName name="com.nosliw.data.HAPData"/>
 <fullyQualifiedTypeName name="com.nosliw.common.utils.HAPXMLUtility"/>
@@ -60,4 +56,8 @@
 <fullyQualifiedTypeName name="com.nosliw.data.HAPDataType"/>
 <fullyQualifiedTypeName name="com.nosliw.data.info.HAPDataTypeInfoWithVersion"/>
 <fullyQualifiedTypeName name="com.nosliw.common.resource.HAPResource"/>
+<fullyQualifiedTypeName name="com.nosliw.uiresource.HAPAttributeConstant"/>
+<fullyQualifiedTypeName name="org.json.JSONObject"/>
+<fullyQualifiedTypeName name="com.nosliw.app.service.HAPServiceInfo"/>
+<fullyQualifiedTypeName name="com.nosliw.app.utils.HAPAttributeConstant"/>
 </qualifiedTypeNameHistroy>

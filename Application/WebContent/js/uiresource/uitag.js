@@ -34,7 +34,7 @@ var nosliwCreateUITagCommonObject = function(id, uiTag, uiResourceView, requestI
 	//store all data 
 	var loc_data = {};
 	
-	var loc_eventSource = {};
+	var loc_eventSource = undefined;
 	
 	var loc_resourceLifecycleObj = {};
 	loc_resourceLifecycleObj["NOSLIWCONSTANT.LIFECYCLE_RESOURCE_EVENT_DESTROY"] = function(){
@@ -78,6 +78,8 @@ var nosliwCreateUITagCommonObject = function(id, uiTag, uiResourceView, requestI
 		//attach view to resourve view
 		if(views!=undefined)  loc_startEle.after(views);	
 
+		loc_eventSource = nosliwCreateRequestEventSource();
+		
 		//overridden method to do sth after view is attatched to dom
 		loc_out.ovr_postInit(requestInfo);
 	};
@@ -240,9 +242,7 @@ var nosliwCreateUITagCommonObject = function(id, uiTag, uiResourceView, requestI
 		 * 		event : event name
 		 * 		data : data related with this event
 		 */
-		prv_triggerEvent : function(event, data, requestInfo){
-			nosliwRequestUtility.triggerEventWithRequest(loc_eventSource, event, data, requestInfo)
-		},
+		prv_triggerEvent : function(event, data, requestInfo){	loc_eventSource.triggerEvent(event, data, requestInfo);	},
 		
 		/*
 		 * get erro handler information
@@ -308,9 +308,7 @@ var nosliwCreateUITagCommonObject = function(id, uiTag, uiResourceView, requestI
 
 		getTagName : function(){return loc_uiTag.tagName;},
 		
-		registerEvent : function(eventName, eventHandler){
-			return nosliwRequestUtility.registerEventWithRequest(loc_eventSource, eventName, eventHandler, this);
-		},
+		registerEvent : function(eventName, eventHandler){	return loc_eventSource.registerEventHandler(eventHandler, this, eventName);	},
 	};
 	
 	//append resource and object life cycle method to out obj

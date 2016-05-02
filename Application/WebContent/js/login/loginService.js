@@ -33,10 +33,7 @@ var nosliwCreateLoginService = function(){
 	var loc_resourceLifecycleObj = {};
 	loc_resourceLifecycleObj["NOSLIWCONSTANT.LIFECYCLE_RESOURCE_EVENT_INIT"] = function(){
 		var remoteServiceMan = nosliw.getRemoteServiceManager();
-		remoteServiceMan.registerSyncTaskConfigure(loc_moduleName, {
-			service : NOSLIWCOMMONCONSTANT.CONS_SERVICENAME_LOGIN,
-			command : NOSLIWCOMMONCONSTANT.CONS_SERVICENAME_LOGIN,
-		});
+		remoteServiceMan.registerSyncTaskConfigure(loc_moduleName, nosliwRemoteServiceUtility.createRemoteServiceConfigures(NOSLIWCOMMONCONSTANT.CONS_SERVICENAME_LOGIN, NOSLIWCOMMONCONSTANT.CONS_SERVICENAME_LOGIN)); 
 	};
 	loc_resourceLifecycleObj["NOSLIWCONSTANT.LIFECYCLE_RESOURCE_EVENT_SUSPEND"] = function(){
 	};

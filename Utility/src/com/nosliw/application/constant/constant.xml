@@ -3,6 +3,32 @@
 	jsConstantFile="NOSLIWCOMMONCONSTANT"
 >
 
+	<attributes filepath="/Users/pro/Desktop/WebToApp/CoreProject/Projects/Application/src/com/nosliw/app/utils" 
+				packagename="com.nosliw.app.utils" 
+				classname="HAPAttributeConstant" >
+		<definition name="ATTR_SERVLETPARMS_COMMAND" value="command"/>
+		<definition name="ATTR_SERVLETPARMS_SERVICE" value="service"/>
+		<definition name="ATTR_SERVLETPARMS_CLIENTID" value="clientId"/>
+		<definition name="ATTR_SERVLETPARMS_PARMS" value="parms"/>
+		<definition type="space"/>
+		<definition name="ATTR_REQUEST_TYPE" value="type"/>
+		<definition name="ATTR_REQUEST_SERVICE" value="service"/>
+		<definition name="ATTR_REQUEST_MODE" value="mode"/>
+		<definition name="ATTR_REQUEST_CHILDREN" value="children"/>
+		<definition type="space"/>
+		<definition name="ATTR_SERVICE_COMMAND" value="command"/>
+		<definition name="ATTR_SERVICE_PARMS" value="parms"/>
+		<definition type="space"/>
+		<definition name="ATTR_REQUEST_GETUIRESOURCE_NAME" value="name"/>
+		<definition type="space"/>
+		<definition name="ATTR_REQUEST_GETENTITYDEFINITIONBYNAMES_NAMES" value="names"/>
+		<definition type="space"/>
+		<definition name="ATTR_REQUEST_GETDATATYPES_EXISTINGARRAY" value="existingArray"/>
+		<definition name="ATTR_REQUEST_GETDATATYPES_REQUESTARRAY" value="requestArray"/>
+		<definition type="space"/>
+		<definition name="ATTR_ENTITYNAME_ATTRIBUTENAME" value="ATTR_ENTITYNAME_ATTRIBUTENAME"/>
+	</attributes>
+
 	<attributes filepath="/Users/pro/Desktop/WebToApp/CoreProject/Projects/Common/src/com/nosliw/common/utils" 
 				packagename="com.nosliw.common.utils" 
 				classname="HAPAttributeConstant" >
@@ -426,6 +452,8 @@
 		<definition name="CONS_REMOTESERVICE_GETUIRESOURCE" value="getUIResource"/>
 		<definition name="CONS_REMOTESERVICE_GETDATATYPES" value="getDataTypes"/>
 		<definition name="CONS_REMOTESERVICE_EXECUTEEXPRESSION" value="executeExpression"/>
+		<definition name="CONS_REMOTESERVICE_GETALLENTITYDEFINITIONS" value="getAllEntityDefinitions"/>
+		<definition name="CONS_REMOTESERVICE_GETENTITYDEFINITIONBYNAMES" value="getEntityDefinitionByNames"/>
 		<definition type="space"/>
 		<definition name="CONS_DATAACCESS_ENTITYSTATUS_NORMAL" value="0" type="int"/>
 		<definition name="CONS_DATAACCESS_ENTITYSTATUS_CHANGED" value="1" type="int"/>
@@ -453,6 +481,10 @@
 
 		<definition type="space"/>
 		<definition name="CONS_SERVICENAME_LOGIN" value="login"/>
+		<definition name="CONS_SERVICENAME_SERVICE" value="service"/>
+
+		<definition type="space"/>
+		<definition name="CONS_SERVICECOMMAND_GROUPREQUEST" value="groupRequest"/>
 
 		<definition type="space"/>
 		<definition name="CONS_SCRIPTTYPE_UIRESOURCE" value="uiResource"/>

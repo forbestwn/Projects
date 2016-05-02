@@ -242,6 +242,8 @@ public class HAPConstant {
 		public static final String CONS_REMOTESERVICE_GETUIRESOURCE = "getUIResource";
 		public static final String CONS_REMOTESERVICE_GETDATATYPES = "getDataTypes";
 		public static final String CONS_REMOTESERVICE_EXECUTEEXPRESSION = "executeExpression";
+		public static final String CONS_REMOTESERVICE_GETALLENTITYDEFINITIONS = "getAllEntityDefinitions";
+		public static final String CONS_REMOTESERVICE_GETENTITYDEFINITIONBYNAMES = "getEntityDefinitionByNames";
 
 
 
@@ -274,6 +276,11 @@ public class HAPConstant {
 
 
 		public static final String CONS_SERVICENAME_LOGIN = "login";
+		public static final String CONS_SERVICENAME_SERVICE = "service";
+
+
+
+		public static final String CONS_SERVICECOMMAND_GROUPREQUEST = "groupRequest";
 
 
 

@@ -17,6 +17,7 @@ var nosliw = function(){
 	var loc_uiTagManager = undefined;
 	var loc_loadScriptManager = undefined;
 	var loc_dataTypeManager = undefined;
+	var loc_entityDefitionManager = undefined;
 	
 	var loc_construction = function(){
 		//ui tag manager is init when construction so that tag lib can be registered when system loading
@@ -75,6 +76,9 @@ var nosliw = function(){
 			loc_dataTypeManager = nosliwCreateDataTypeManager();
 			loc_dataTypeManager.init();
 			
+			loc_entityDefinitionManager = nosliwCreateEntityDefinitionManager();
+			loc_entityDefinitionManager.init();
+			
 			//login
 			loc_login({});
 		},
@@ -86,6 +90,7 @@ var nosliw = function(){
 		getUITagManager : function(){  return loc_uiTagManager;},
 		getLoadScriptManager : function(){ return loc_loadScriptManager; },
 		getDataTypeManager : function(){ return loc_dataTypeManager; },
+		getEntityDefinitionManager : function(){ return loc_entityDefinitionManager; },
 		
 		getClientId : function(){  return loc_clientId;  },
 		

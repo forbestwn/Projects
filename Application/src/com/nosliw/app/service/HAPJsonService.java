@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import com.nosliw.app.instance.HAPApplicationClientContext;
 import com.nosliw.app.instance.HAPApplicationInstance;
+import com.nosliw.app.utils.HAPAttributeConstant;
 import com.nosliw.common.exception.HAPServiceData;
 import com.nosliw.common.log.HAPLogger;
 import com.nosliw.common.utils.HAPConstant;
@@ -36,12 +37,12 @@ public class HAPJsonService {
 			
 			if(command!=null){
 				if(HAPConstant.CONS_REMOTESERVICE_GETUIRESOURCE.equals(command)){
-					String name = jsonParms.optString("name");
+					String name = jsonParms.optString(HAPAttributeConstant.ATTR_REQUEST_GETUIRESOURCE_NAME);
 					serviceData = clientContext.getUIResource(name);
 				}
 				else if(HAPConstant.CONS_REMOTESERVICE_GETDATATYPES.equals(command)){
-					JSONArray existingArray = jsonParms.optJSONArray("existingArray");
-					JSONArray requestArray = jsonParms.optJSONArray("requestArray");
+					JSONArray existingArray = jsonParms.optJSONArray(HAPAttributeConstant.ATTR_REQUEST_GETDATATYPES_EXISTINGARRAY);
+					JSONArray requestArray = jsonParms.optJSONArray(HAPAttributeConstant.ATTR_REQUEST_GETDATATYPES_REQUESTARRAY);
 
 					Set<String> existingDataTypes = new HashSet<String>(); 
 					if(existingArray!=null){
@@ -71,55 +72,32 @@ public class HAPJsonService {
 				else if(HAPConstant.CONS_REMOTESERVICE_EXECUTEEXPRESSION.equals(command)){
 					
 				}
-				else if("getAllUIResources".equals(command)){
-					logAppending = false;
-					serviceData = clientContext.getAllUIResources();
-				}
-				else if("getAllDataTypes".equals(command)){
-					logAppending = false;
-					Map<String, String> dataTypesJson = new LinkedHashMap<String, String>();
-					serviceData = clientContext.getAllDataTypes();
-				}
 				else if("getEntityDefinitionsByGroup".equals(command)){
 					String group = jsonParms.optString("group");
 					serviceData = clientContext.getEntityDefinitionsByGroup(group);
 				}
-				else if("getAllEntityDefinitions".equals(command)){
+				else if(HAPConstant.CONS_REMOTESERVICE_GETALLENTITYDEFINITIONS.equals(command)){
 					logAppending = false;
 					serviceData = clientContext.getAllEntityDefinitions();
 				}
-				else if("getEntityDefinitionByName".equals(command)){
-					String name = jsonParms.optString("name");
-					serviceData = clientContext.getEntityDefinitionByName(name);
+				else if(HAPConstant.CONS_REMOTESERVICE_GETENTITYDEFINITIONBYNAMES.equals(command)){
+					Map<String, Object> outData = new LinkedHashMap<String, Object>();
+					JSONArray names = jsonParms.optJSONArray(HAPAttributeConstant.ATTR_REQUEST_GETENTITYDEFINITIONBYNAMES_NAMES);
+					for(int i=0; i<names.length(); i++){
+						String name = names.optString(i);
+						HAPServiceData s = clientContext.getEntityDefinitionByName(name);
+						if(s.isSuccess())  outData.put(name, s.getData());
+					}
+					serviceData = HAPServiceData.createSuccessData(outData);
 				}
-				else if("startTransaction".equals(command)){
-					logData = true;
-					serviceData = clientContext.startTransaction();
-				}
-				else if("commit".equals(command)){
-					categary = "operate";
-					logData = true;
-					serviceData = clientContext.commit();
-				}
-				else if("rollback".equals(command)){
-					categary = "operate";
-					logData = true;
-					serviceData = clientContext.rollBack();
-				}
-				else if("query".equals(command)){
-					logData = true;
-					JSONObject query = new JSONObject(jsonParms.optString("query"));
-//					serviceData = clientContext.query(HAPQueryInfo.parse(query, this.getApplicationContext().getDataTypeManager()), transactionId, userContextInfo);
-				}
-				else if("remvoeQuery".equals(command)){
-					logData = true;
-				}
+				
 				else if("getEntityWrapers".equals(command)){
 					JSONArray jsonIDs = jsonParms.optJSONArray("IDs");
 					List<HAPEntityID> entityIDs = new ArrayList<HAPEntityID>();
 					for(int i=0; i<jsonIDs.length(); i++)		entityIDs.add(new HAPEntityID(jsonIDs.optString(i)));
 //					serviceData = clientContext.getEntityWrapers(entityIDs.toArray(new HAPEntityID[0]));
 				}
+				
 				else if("operate".equals(command)){
 //					categary = "operate";
 //					logData = true;
@@ -144,6 +122,41 @@ public class HAPJsonService {
 //						operations.add(operation);
 //					}
 //					serviceData = clientContext.operateEntity(operations.toArray(new HAPEntityOperationInfo[0]));
+				}
+				
+				else if("startTransaction".equals(command)){
+					logData = true;
+					serviceData = clientContext.startTransaction();
+				}
+				else if("commit".equals(command)){
+					categary = "operate";
+					logData = true;
+					serviceData = clientContext.commit();
+				}
+				else if("rollback".equals(command)){
+					categary = "operate";
+					logData = true;
+					serviceData = clientContext.rollBack();
+				}
+				
+				else if("query".equals(command)){
+					logData = true;
+					JSONObject query = new JSONObject(jsonParms.optString("query"));
+//					serviceData = clientContext.query(HAPQueryInfo.parse(query, this.getApplicationContext().getDataTypeManager()), transactionId, userContextInfo);
+				}
+				else if("remvoeQuery".equals(command)){
+					logData = true;
+				}
+
+				
+				else if("getAllUIResources".equals(command)){
+					logAppending = false;
+					serviceData = clientContext.getAllUIResources();
+				}
+				else if("getAllDataTypes".equals(command)){
+					logAppending = false;
+					Map<String, String> dataTypesJson = new LinkedHashMap<String, String>();
+					serviceData = clientContext.getAllDataTypes();
 				}
 				else if("getAttributeOptions".equals(command)){
 					HAPEntityID entityID = new HAPEntityID(jsonParms.optString("ID"));

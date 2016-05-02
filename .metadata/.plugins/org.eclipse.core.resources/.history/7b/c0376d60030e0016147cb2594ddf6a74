@@ -1,0 +1,140 @@
+/**
+ * 
+ */
+var nosliwCreateEntityDefinitionManager = function(){
+	//sync task name for remote call 
+	var loc_moduleName = "entityDefinitionManager";
+	
+	var loc_entityDefinitions = {};
+	
+	//default requester 
+	var loc_requester = new NosliwRequester(NOSLIWCONSTANT.REQUESTER_TYPE_SERVICE, loc_moduleName); 
+	
+	var loc_resourceLifecycleObj = {};
+	loc_resourceLifecycleObj["NOSLIWCONSTANT.LIFECYCLE_RESOURCE_EVENT_SUSPEND"] = function(){};
+	loc_resourceLifecycleObj["NOSLIWCONSTANT.LIFECYCLE_RESOURCE_EVENT_RESUME"] = function(){};
+	loc_resourceLifecycleObj["NOSLIWCONSTANT.LIFECYCLE_RESOURCE_EVENT_DESTROY"] = function(){};
+	loc_resourceLifecycleObj["NOSLIWCONSTANT.LIFECYCLE_RESOURCE_EVENT_DEACTIVE"] = function(){};
+	
+	var loc_out = {
+		ovr_getResourceLifecycleObject : function(){	return loc_resourceLifecycleObj;	},
+
+		getRequestInfoGetEntityDefinitionsByNames : function(namesArray, handlers, requester_parent){
+			
+		},
+
+		requestGetEntityDefinitionsByNames : function(namesArray, handlers, requester_parent){
+			var requestInfo = this.getRequestInfoGetEntityDefinitionsByNames(namesArray, handlers, requester_parent);
+			return nosliw.getRequestServiceManager().processRequest(requestInfo, true); 
+		},
+		
+		/*
+		 * request to get data type object
+		 * in dataTypeInfosArray:  an array of data type info 
+		 * out data : 
+		 * 		an array of data types
+		 * 		it includes request data types + parent data types
+		 */
+		getRequestInfoGetDataTypes : function(dataTypeInfoArray, handlers, requester_parent){
+			var service = loc_getRequestServiceGetDataTypes(dataTypeInfoArray);
+
+			var reqInfo = nosliwCreateRequestSet(service, handlers, loc_getRequesterParent(requester_parent));
+			
+			//request for loading data type info
+			var getDataTypeReqInfo = nosliwCreateServiceRequestInfoService(service, {});
+			getDataTypeReqInfo.setRequestExecuteInfo(new NosliwServiceRequestExecuteInfo(loc_requestInfoGetDataTypes, this));
+
+			//request for loading data operation script for data type
+			var dataTypeInfoArrayForScript = [];
+			for(var i in dataTypeInfoArray){
+				var dataTypeInfo = dataTypeInfoArray[i];
+				if(loc_getDataTypeOperationsScriptAllVersions(dataTypeInfo)==undefined){
+					dataTypeInfoArrayForScript.push(dataTypeInfo);
+				}
+			}
+			if(dataTypeInfoArrayForScript.length>0){
+				var scriptReqInfo = nosliw.getLoadScriptManager().getRequestInfoLoadDataTypeOperationScript(dataTypeInfoArrayForScript, {});
+				reqInfo.addRequest("loadScript", scriptReqInfo);
+			}
+			
+			reqInfo.addRequest("loadDataTypes", getDataTypeReqInfo);
+			
+			reqInfo.setRequestProcessors({
+				success : function(reqInfo, result){
+					var dataTypeArrays = result.getResult('loadDataTypes');
+					return dataTypeArrays;
+				}, 
+			});
+			
+			return reqInfo;
+		},	
+		
+		requestGetDataTypes : function(dataTypeInfoArray, handlers, requester_parent){
+			var requestInfo = this.getRequestInfoGetDataTypes(dataTypeInfoArray, handlers, requester_parent);
+			return nosliw.getRequestServiceManager().processRequest(requestInfo, true); 
+		},
+
+		/*
+		 * request to execute data operation
+		 * out data : operation result data
+		 */
+		getRequestInfoExecuteDataOperation : function(baseDataTypeInfo, operation, parms, handlers, requester_parent){
+			var service = loc_getRequestServiceExecuteDataOperation(baseDataTypeInfo, operation, parms)
+			var seqRequest = nosliwCreateRequestSequence(service, handlers, loc_getRequesterParent(requester_parent));
+			
+			var baseDataType = loc_getDataType(baseDataTypeInfo);
+			if(baseDataType!=undefined){
+				//baseDataType is loaded already, check operation dependent data type 
+				var dependentDataTypesArray = loc_getOperationDependentDataTypeInfo(baseDataType, operation);
+				var req1 = this.getRequestInfoGetDataTypes(dependentDataTypesArray, {
+					success : function(requestInfo, dataTypeArray){
+						var out = loc_executeDataOperation(baseDataTypeInfo, operation, parms);
+						if(out==undefined)  nosliwDataUtility.createEmptyData();
+						return out;
+					},
+				});
+				seqRequest.addRequest(req1);
+			}
+			else{
+				var dataTypeInfoArray = [];
+				dataTypeInfoArray.push(baseDataTypeInfo);
+				//request to get data type for base data type
+				var req1 = this.getRequestInfoGetDataTypes(dataTypeInfoArray, {
+					success : function(requestInfo, dataTypeArray){
+						//after get base data type, request to get operation dependent data type
+						var baseDataType = loc_getDataType(baseDataTypeInfo);
+						
+						var dependentDataTypesArray = loc_getOperationDependentDataTypeInfo(baseDataType, operation);
+
+						var req2 = loc_out.getRequestInfoGetDataTypes(dependentDataTypesArray, {
+							success : function(requestInfo, dataTypeArray){
+								//after get operation dependent data type, request to execute data operation
+								var out = loc_executeDataOperation(baseDataTypeInfo, operation, parms);
+								if(out==undefined)  nosliwDataUtility.createEmptyData();
+								return out;
+							},
+						});
+						return req2;
+					},
+				});
+				seqRequest.addRequest(req1);
+			}
+			
+			return seqRequest;
+		},	
+
+		requestExecuteDataOperation : function(baseDataTypeInfo, operation, parms, handlers, requester_parent){
+			var requestInfo = this.getRequestInfoExecuteDataOperation(baseDataTypeInfo, operation, parms, handlers, requester_parent);
+			return nosliw.getRequestServiceManager().processRequest(requestInfo, true); 
+		},
+				
+	};
+
+	//append resource life cycle method to out obj
+	loc_out = nosliwLifecycleUtility.makeResourceObject(loc_out, loc_moduleName);
+	
+	return loc_out;
+};
+
+
+

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.nosliw.app.instance.HAPApplicationClientInfo;
 import com.nosliw.app.instance.HAPApplicationInstance;
+import com.nosliw.app.utils.HAPAttributeConstant;
 import com.nosliw.common.exception.HAPServiceData;
 import com.nosliw.common.utils.HAPConstant;
 import com.nosliw.common.utils.HAPJsonUtility;
@@ -30,8 +31,8 @@ public class HAPLoginServlet  extends HttpServlet{
 			throws ServletException, IOException {
 		try{
 			String content = "";
-			String command = request.getParameter("command");
-			String clientId = request.getParameter("clientId");
+			String command = request.getParameter(HAPAttributeConstant.ATTR_SERVLETPARMS_COMMAND);
+			String clientId = request.getParameter(HAPAttributeConstant.ATTR_SERVLETPARMS_CLIENTID);
 			if(HAPConstant.CONS_SERVICENAME_LOGIN.equals(command)){
 				HAPApplicationClientInfo clientContextInfo = new HAPApplicationClientInfo();
 				HAPClientContext clientContext = HAPApplicationInstance.getApplicationInstantce().getClientContextManager().newClientContext(clientContextInfo);

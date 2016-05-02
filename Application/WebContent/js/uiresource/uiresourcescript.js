@@ -69,15 +69,15 @@ var nosliwCreateUIResourceScriptObject = function(scriptFacName, uiResourceView)
 			 * invoke function related with event
 			 * if function cannot find locally, then try to find out at parent resource view
 			 */
-			callEventFunction : function(funName, event, data){
+			callEventFunction : function(funName, data, info){
 				var funObj = this.prv_getLocalFunction(funName);
 				if(funObj!=undefined){
 					//if function can be found locally
-					this.prv_callLocalFunction(funName, event, data);
+					this.prv_callLocalFunction(funName, data, info);
 				}
 				else{
 					//if function cannot be found within current resource view, then try to find at parent resource view
-					if(loc_parentResourveView!=undefined)		this.prv_parentResourveView.callEventFunction(funName, event, data);
+					if(loc_parentResourveView!=undefined)		this.prv_parentResourveView.prv_getScriptObject().callEventFunction(funName, data, info);
 				}
 			},
 	};

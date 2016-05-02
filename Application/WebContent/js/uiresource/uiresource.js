@@ -70,7 +70,11 @@ var nosliwCreateUIResourceView = function(uiResource, id, parent, contextElement
 		var eventValue = eleEvent;
 		var eventName = eleEvent[NOSLIWATCOMMONTRIBUTECONSTANT.ATTR_ELEMENTEVENT_EVENT];
 		subEle.bind(eventName, function(event){
-			loc_scriptObject.callEventFunction(eventValue[NOSLIWATCOMMONTRIBUTECONSTANT.ATTR_ELEMENTEVENT_FUNCTION], event, subEle);
+			var info = {
+				event : event, 
+				element : subEle,
+			};
+			loc_scriptObject.callEventFunction(eventValue[NOSLIWATCOMMONTRIBUTECONSTANT.ATTR_ELEMENTEVENT_FUNCTION], undefined, info);
 		});
 		
 		return {
@@ -87,7 +91,12 @@ var nosliwCreateUIResourceView = function(uiResource, id, parent, contextElement
 		var eventName = tagEvent[NOSLIWATCOMMONTRIBUTECONSTANT.ATTR_ELEMENTEVENT_EVENT];
 		
 		var listener = tag.registerEvent(eventName, function(event, data, requestInfo){
-			loc_scriptObject.callEventFunction(tagEvent[NOSLIWATCOMMONTRIBUTECONSTANT.ATTR_ELEMENTEVENT_FUNCTION], event, data, tag, requestInfo);
+			var info = {
+				event : event,
+				tag : tag,
+				requestInfo: requestInfo,
+			};
+			loc_scriptObject.callEventFunction(tagEvent[NOSLIWATCOMMONTRIBUTECONSTANT.ATTR_ELEMENTEVENT_FUNCTION], data, info);
 		});
 		
 		return {
@@ -241,6 +250,18 @@ var nosliwCreateUIResourceView = function(uiResource, id, parent, contextElement
 		prv_getScriptObject : function(){return loc_scriptObject;},
 		//get the parent resource view that contain this resource view, when this resource is within tag
 		prv_getParentResourceView : function(){		return loc_parentResourveView;		},
+		//get root resource view: the resource view that don't have parent
+		prv_getRootResourceView : function(){
+			var view = this;
+			var parent = view.prv_getParentResourceView();
+			while(parent!=undefined){
+				view = parent;
+				parent = view.prv_getParentResourceView();
+			}
+			return view;
+		},
+		
+		prv_trigueEvent : function(eventName, data, requestInfo){loc_eventSource.triggerEvent(eventName, data, requestInfo); },
 		
 		prv_getTagByUIId : function(uiId){ return loc_uiTags[uiId];  },
 		
@@ -269,8 +290,11 @@ var nosliwCreateUIResourceView = function(uiResource, id, parent, contextElement
 		detachViews : function(){	loc_parentView.append(loc_getViews());		},
 
 		//trigue event from this ui resource view
-		trigueEvent : function(eventName, data, requestInfo){	loc_eventSource.triggerEvent(eventName, data, requestInfo);	},
-		registerEvent : function(handler, thisContext){		loc_eventSource.registerEventHandler(handler, thisContext);		},
+		trigueEvent : function(eventName, data, requestInfo){	
+			//for all the child resource view, it will use root resource view to trigue the event 
+			this.prv_getRootResourceView().triggerEvent(eventName, data, requestInfo); 
+		},
+		registerEvent : function(handler, thisContext){	return loc_eventSource.registerEventHandler(handler, thisContext);},
 
 		
 		//return dom element

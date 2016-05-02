@@ -19,7 +19,7 @@
 			<item value="false" key="ignoreCase"/>
 			<item value="0" key="scope"/>
 			<item value="true" key="isWholeWord"/>
-			<item value="ATTR_EXPRESSION_SCRIPTRUNNALBE" key="textPattern"/>
+			<item value="CONS_SERVICENAME_LOGIN" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.js"/>
@@ -31,7 +31,7 @@
 			<item value="false" key="ignoreCase"/>
 			<item value="0" key="scope"/>
 			<item value="true" key="isWholeWord"/>
-			<item value="nosliwDataTypeOperations" key="textPattern"/>
+			<item value="NosliwRemoteServiceSetting" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.js"/>
@@ -43,10 +43,10 @@
 			<item value="false" key="ignoreCase"/>
 			<item value="0" key="scope"/>
 			<item value="true" key="isWholeWord"/>
-			<item value="DataTypeWithVersionOperations.txt" key="textPattern"/>
+			<item value="setRequestProcessors" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
-				<item value="*.java"/>
+				<item value="*.js"/>
 			</list>
 			<list key="workingSets">
 			</list>
@@ -55,7 +55,7 @@
 			<item value="false" key="ignoreCase"/>
 			<item value="0" key="scope"/>
 			<item value="true" key="isWholeWord"/>
-			<item value="nosliwCreateRequestServiceManager" key="textPattern"/>
+			<item value="requestArray" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.js"/>
@@ -67,7 +67,7 @@
 			<item value="false" key="ignoreCase"/>
 			<item value="0" key="scope"/>
 			<item value="true" key="isWholeWord"/>
-			<item value="handleServiceTask" key="textPattern"/>
+			<item value="existingArray" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.js"/>
@@ -76,48 +76,12 @@
 			</list>
 		</section>
 		<section name="EXTENSIONS">
-			<item value="*.js" key="0"/>
-			<item value="*.java" key="1"/>
-			<item value="*.*" key="2"/>
+			<item value="*.*" key="0"/>
+			<item value="*.js" key="1"/>
+			<item value="*.java" key="2"/>
 			<item value="*" key="3"/>
 		</section>
 		<section name="HISTORY11">
-			<item value="false" key="ignoreCase"/>
-			<item value="0" key="scope"/>
-			<item value="true" key="isWholeWord"/>
-			<item value="newFunctions" key="textPattern"/>
-			<item value="false" key="isRegExSearch"/>
-			<list key="fileNamePatterns">
-				<item value="*.java"/>
-			</list>
-			<list key="workingSets">
-			</list>
-		</section>
-		<section name="HISTORY8">
-			<item value="false" key="ignoreCase"/>
-			<item value="0" key="scope"/>
-			<item value="true" key="isWholeWord"/>
-			<item value="nosliwCreateDataTypeManager" key="textPattern"/>
-			<item value="false" key="isRegExSearch"/>
-			<list key="fileNamePatterns">
-				<item value="*.js"/>
-			</list>
-			<list key="workingSets">
-			</list>
-		</section>
-		<section name="HISTORY9">
-			<item value="false" key="ignoreCase"/>
-			<item value="0" key="scope"/>
-			<item value="true" key="isWholeWord"/>
-			<item value="opFunctions[" key="textPattern"/>
-			<item value="false" key="isRegExSearch"/>
-			<list key="fileNamePatterns">
-				<item value="*.js"/>
-			</list>
-			<list key="workingSets">
-			</list>
-		</section>
-		<section name="HISTORY2">
 			<item value="false" key="ignoreCase"/>
 			<item value="0" key="scope"/>
 			<item value="true" key="isWholeWord"/>
@@ -129,11 +93,11 @@
 			<list key="workingSets">
 			</list>
 		</section>
-		<section name="HISTORY3">
+		<section name="HISTORY8">
 			<item value="false" key="ignoreCase"/>
 			<item value="0" key="scope"/>
 			<item value="true" key="isWholeWord"/>
-			<item value="addPostProcessor" key="textPattern"/>
+			<item value="NosliwConfigure" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.js"/>
@@ -141,7 +105,7 @@
 			<list key="workingSets">
 			</list>
 		</section>
-		<section name="HISTORY0">
+		<section name="HISTORY9">
 			<item value="false" key="ignoreCase"/>
 			<item value="0" key="scope"/>
 			<item value="true" key="isWholeWord"/>
@@ -153,14 +117,50 @@
 			<list key="workingSets">
 			</list>
 		</section>
+		<section name="HISTORY2">
+			<item value="false" key="ignoreCase"/>
+			<item value="0" key="scope"/>
+			<item value="true" key="isWholeWord"/>
+			<item value="ATTR_REQUEST_CHILDREN" key="textPattern"/>
+			<item value="false" key="isRegExSearch"/>
+			<list key="fileNamePatterns">
+				<item value="*.*"/>
+			</list>
+			<list key="workingSets">
+			</list>
+		</section>
+		<section name="HISTORY3">
+			<item value="false" key="ignoreCase"/>
+			<item value="0" key="scope"/>
+			<item value="true" key="isWholeWord"/>
+			<item value="ATTR_GETDATATYPES_EXISTINGARRAY" key="textPattern"/>
+			<item value="false" key="isRegExSearch"/>
+			<list key="fileNamePatterns">
+				<item value="*.*"/>
+			</list>
+			<list key="workingSets">
+			</list>
+		</section>
+		<section name="HISTORY0">
+			<item value="false" key="ignoreCase"/>
+			<item value="0" key="scope"/>
+			<item value="true" key="isWholeWord"/>
+			<item value="getEntityDefinitionByName" key="textPattern"/>
+			<item value="false" key="isRegExSearch"/>
+			<list key="fileNamePatterns">
+				<item value="*.*"/>
+			</list>
+			<list key="workingSets">
+			</list>
+		</section>
 		<section name="HISTORY1">
 			<item value="false" key="ignoreCase"/>
 			<item value="0" key="scope"/>
 			<item value="true" key="isWholeWord"/>
-			<item value="setRequestProcessors" key="textPattern"/>
+			<item value="ATTR_GETDATATYPES_REQUESTARRAY" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
-				<item value="*.js"/>
+				<item value="*.*"/>
 			</list>
 			<list key="workingSets">
 			</list>

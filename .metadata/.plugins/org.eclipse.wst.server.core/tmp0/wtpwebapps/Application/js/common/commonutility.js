@@ -20,9 +20,10 @@ nosliwCommonUtility = function(){
 		 * specificOne will override the defaultone object
 		 */
 		mergeObjects : function(defaultOne, specificOne){
+			
 			var out = {};
 			_.each(defaultOne, function(attr, name, list){
-				if(specificOne[name]==undefined){
+				if(specificOne===undefined || specificOne[name]===undefined){
 					out[name] = attr;
 				}
 				else{

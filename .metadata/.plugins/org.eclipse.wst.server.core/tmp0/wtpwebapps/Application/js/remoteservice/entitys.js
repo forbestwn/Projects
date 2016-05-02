@@ -25,7 +25,7 @@ var NosliwRemoteServiceRequest = function(serviceTask){
  * single request object
  */
 var NosliwRemoteServiceTask = function(syncName, service, handlers, requestInfo, setting){
-	this.type = NOSLIWCOMMONCONSTANT.CONS_REMOTESERVICE_TASKTYPE_NORMAL;
+	this[NOSLIWATCOMMONTRIBUTECONSTANT.ATTR_REQUEST_TYPE] = NOSLIWCOMMONCONSTANT.CONS_REMOTESERVICE_TASKTYPE_NORMAL;
 	this.syncName = syncName;
 	this.requestInfo = requestInfo;
 	this.service = service;
@@ -55,7 +55,7 @@ NosliwRemoteServiceTask.prototype = {
  * 
  */
 var NosliwRemoteServiceGroupTask = function(syncName, handlers, requestInfo, setting){
-	this.type = NOSLIWCOMMONCONSTANT.CONS_REMOTESERVICE_TASKTYPE_GROUP;
+	this[NOSLIWATCOMMONTRIBUTECONSTANT.ATTR_REQUEST_TYPE] = NOSLIWCOMMONCONSTANT.CONS_REMOTESERVICE_TASKTYPE_GROUP;
 	this.syncName = syncName;
 	this.requestInfo = requestInfo;
 	this.setting = setting;
