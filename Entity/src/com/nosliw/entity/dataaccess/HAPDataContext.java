@@ -98,6 +98,10 @@ public class HAPDataContext implements HAPStringable{
 		dataAccess.removeQuery(queryId);
 	}
 
+	public void updateQueryByResult(){
+		
+	}
+	
 	//*********************  Entity
 	/*
 	 * process request : get entitys
@@ -222,10 +226,11 @@ public class HAPDataContext implements HAPStringable{
 	 * start general transaction
 	 */
 	public HAPServiceData startTransactionRequest(){
-		HAPServiceData serviceData = HAPServiceData.createSuccessData(); 
-//				this.getCurrentDataAccess().isValidOperationTransaction(null);
+		HAPEntityOperation op = HAPEntityOperation.ENTITYOPERATION_TRANSACTION_START;
+		HAPServiceData serviceData = this.isValidOperation(op); 
 		if(serviceData.isFail())  return serviceData;
-		HAPTransaction transaction = this.startTransaction(HAPEntityOperation.ENTITYOPERATION_TRANSACTION_START);
+		
+		this.startTransaction(op);
 		return HAPServiceData.createSuccessData(new HAPOperationAllResult());
 	}
 	
@@ -337,6 +342,14 @@ public class HAPDataContext implements HAPStringable{
 		trans.init();
 		return trans;
 	}
+	
+	private HAPServiceData isValidOperation(HAPEntityOperation op){
+		HAPEntityDataAccess dataAccess = this.getCurrentDataAccess();
+//		this.getCurrentDataAccess().isValidOperationTransaction(null);
+		
+//		return HAPEntityErrorUtility.createEntityOperationInvalidTransaction(op, "", null);
+		return HAPServiceData.createSuccessData();
+	}
 
 	//*********************  Operation
 	/*
@@ -346,9 +359,9 @@ public class HAPDataContext implements HAPStringable{
 		//it is the request, so it is directly from client side, therefore, this operation is root operation
 		operation.setIsRootOperation(true);
 
-		//check if this operation is valid operation
+		//check if this operation is valid operation based on current data access
 		HAPEntityDataAccess dataAccess = this.getCurrentDataAccess();
-		HAPServiceData serviceData = dataAccess.isValidOperation(operation);
+		HAPServiceData serviceData = this.isValidOperation(operation.getOperation());
 		if(serviceData.isFail())  return serviceData;
 
 		//create a new transaction for this operation
@@ -358,14 +371,12 @@ public class HAPDataContext implements HAPStringable{
 		//if success, return all the change made by this operation
 		serviceData = transaction.operate(operation);
 		
-		boolean ifUpdateQuery = true;
+		boolean ifUpdateQuery = false;
 
 		if(serviceData.isFail()){
 			//operation failed, just rollback : return erro code without any operation
 			this.autoRollBack();
 			serviceData.setData(new HAPOperationAllResult());
-			//rollback, don't need update query
-			ifUpdateQuery = false;
 		}
 		else{
 			//operation success
@@ -383,12 +394,11 @@ public class HAPDataContext implements HAPStringable{
 				else{
 					//autocommit success: retur success data
 					serviceData = commitSData;
-					//commit success, don't need update query
-					ifUpdateQuery = false;
+					ifUpdateQuery = true;
 				}
 			}
 		}
-		if(ifUpdateQuery)	transaction.updateQueryByResult();
+		if(ifUpdateQuery)	this.updateQueryByResult();
 		
 		return serviceData;
 	}

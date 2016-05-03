@@ -272,7 +272,8 @@
 		<definition name="CONS_ERRORCODE_DATA_INVALID" value="1102" type="int"/>
 		<definition name="CONS_SERVICECODE_ENTITYOPERATION_FORWARD" value="100" type="int"/>
 		<definition name="CONS_ERRORCODE_ENTITYOPERATION_AUTOCOMMIT" value="2001" type="int"/>
-		<definition name="CONS_ERRORCODE_ENTITYOPERATION_INVALIDSCOPE" value="2002" type="int"/>
+		<definition name="CONS_ERRORCODE_ENTITYOPERATION_INVALIDTRANSACTION" value="2002" type="int"/>
+		<definition name="CONS_ERRORCODE_ENTITYOPERATION_INVALIDSCOPE" value="2003" type="int"/>
 		<definition name="CONS_ERRORCODE_REMOTESERVICE_SUSPEND" value="9000" type="int"/>
 		<definition name="CONS_ERRORCODE_REMOTESERVICE_EXCEPTION" value="5000" type="int"/>
 		<definition type="space"/>

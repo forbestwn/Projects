@@ -35,7 +35,7 @@ public class HAPEntityOperationInfo {
 	 * it is easy to be implemented for root operation
 	 * how to implemented for extended operation?? 
 	 */
-	private long m_operationId;
+	private HAPEntityOperationId m_operationId;
 	
 	/*
 	 * root operation, in most case, is the operation request from client
@@ -251,8 +251,8 @@ public class HAPEntityOperationInfo {
 		return out;
 	}
 	
-	public long getOperationId(){return this.m_operationId;}
-	public void setOperationId(long id){this.m_operationId=id;}
+	public HAPEntityOperationId getOperationId(){return this.m_operationId;}
+	public void setOperationId(HAPEntityOperationId id){this.m_operationId=id;}
 	public HAPEntityOperation getOperation(){return this.m_operation;}
 	public void setOperation(HAPEntityOperation op){this.m_operation = op;}
 	public boolean isRootOperation(){return this.m_isRootOperation;}

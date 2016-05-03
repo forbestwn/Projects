@@ -3,6 +3,7 @@ package com.nosliw.entity.utils;
 import com.nosliw.common.exception.HAPServiceData;
 import com.nosliw.common.utils.HAPConstant;
 import com.nosliw.entity.dataaccess.HAPOperationAllResult;
+import com.nosliw.entity.operation.HAPEntityOperation;
 import com.nosliw.entity.operation.HAPEntityOperationInfo;
 
 public class HAPEntityErrorUtility {
@@ -16,6 +17,12 @@ public class HAPEntityErrorUtility {
 		return out;
 	}
 
+	public static HAPServiceData createEntityOperationInvalidTransaction(HAPEntityOperation op, String message, Exception ex){
+		HAPServiceData out = HAPServiceData.createServiceData(HAPConstant.CONS_ERRORCODE_ENTITYOPERATION_INVALIDTRANSACTION, op, message);
+		out.setException(ex);
+		return out;
+	}
+	
 	/*
 	 * utility method to create error service data when auto commit return error
 	 */
