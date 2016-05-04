@@ -19,7 +19,7 @@
 			<item value="false" key="ignoreCase"/>
 			<item value="0" key="scope"/>
 			<item value="true" key="isWholeWord"/>
-			<item value="CONS_SERVICENAME_LOGIN" key="textPattern"/>
+			<item value="existingArray" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.js"/>
@@ -31,7 +31,7 @@
 			<item value="false" key="ignoreCase"/>
 			<item value="0" key="scope"/>
 			<item value="true" key="isWholeWord"/>
-			<item value="NosliwRemoteServiceSetting" key="textPattern"/>
+			<item value="CONS_SERVICENAME_LOGIN" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.js"/>
@@ -43,7 +43,7 @@
 			<item value="false" key="ignoreCase"/>
 			<item value="0" key="scope"/>
 			<item value="true" key="isWholeWord"/>
-			<item value="setRequestProcessors" key="textPattern"/>
+			<item value="NosliwContextVariableEventInfo" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.js"/>
@@ -55,10 +55,10 @@
 			<item value="false" key="ignoreCase"/>
 			<item value="0" key="scope"/>
 			<item value="true" key="isWholeWord"/>
-			<item value="requestArray" key="textPattern"/>
+			<item value="ATTR_GETDATATYPES_EXISTINGARRAY" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
-				<item value="*.js"/>
+				<item value="*.*"/>
 			</list>
 			<list key="workingSets">
 			</list>
@@ -67,7 +67,7 @@
 			<item value="false" key="ignoreCase"/>
 			<item value="0" key="scope"/>
 			<item value="true" key="isWholeWord"/>
-			<item value="existingArray" key="textPattern"/>
+			<item value="requestArray" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.js"/>
@@ -76,16 +76,16 @@
 			</list>
 		</section>
 		<section name="EXTENSIONS">
-			<item value="*.*" key="0"/>
-			<item value="*.js" key="1"/>
-			<item value="*.java" key="2"/>
+			<item value="*.java" key="0"/>
+			<item value="*.*" key="1"/>
+			<item value="*.js" key="2"/>
 			<item value="*" key="3"/>
 		</section>
 		<section name="HISTORY11">
 			<item value="false" key="ignoreCase"/>
 			<item value="0" key="scope"/>
 			<item value="true" key="isWholeWord"/>
-			<item value="setRequestPostProcessors" key="textPattern"/>
+			<item value="setRequestProcessors" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.js"/>
@@ -97,7 +97,7 @@
 			<item value="false" key="ignoreCase"/>
 			<item value="0" key="scope"/>
 			<item value="true" key="isWholeWord"/>
-			<item value="NosliwConfigure" key="textPattern"/>
+			<item value="NosliwRemoteServiceSetting" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.js"/>
@@ -109,7 +109,7 @@
 			<item value="false" key="ignoreCase"/>
 			<item value="0" key="scope"/>
 			<item value="true" key="isWholeWord"/>
-			<item value="NosliwContextVariableEventInfo" key="textPattern"/>
+			<item value="NosliwConfigure" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.js"/>
@@ -121,7 +121,7 @@
 			<item value="false" key="ignoreCase"/>
 			<item value="0" key="scope"/>
 			<item value="true" key="isWholeWord"/>
-			<item value="ATTR_REQUEST_CHILDREN" key="textPattern"/>
+			<item value="ATTR_GETDATATYPES_REQUESTARRAY" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.*"/>
@@ -133,7 +133,7 @@
 			<item value="false" key="ignoreCase"/>
 			<item value="0" key="scope"/>
 			<item value="true" key="isWholeWord"/>
-			<item value="ATTR_GETDATATYPES_EXISTINGARRAY" key="textPattern"/>
+			<item value="ATTR_REQUEST_CHILDREN" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.*"/>
@@ -145,10 +145,10 @@
 			<item value="false" key="ignoreCase"/>
 			<item value="0" key="scope"/>
 			<item value="true" key="isWholeWord"/>
-			<item value="getEntityDefinitionByName" key="textPattern"/>
+			<item value="operateRequests" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
-				<item value="*.*"/>
+				<item value="*.java"/>
 			</list>
 			<list key="workingSets">
 			</list>
@@ -157,7 +157,7 @@
 			<item value="false" key="ignoreCase"/>
 			<item value="0" key="scope"/>
 			<item value="true" key="isWholeWord"/>
-			<item value="ATTR_GETDATATYPES_REQUESTARRAY" key="textPattern"/>
+			<item value="getEntityDefinitionByName" key="textPattern"/>
 			<item value="false" key="isRegExSearch"/>
 			<list key="fileNamePatterns">
 				<item value="*.*"/>

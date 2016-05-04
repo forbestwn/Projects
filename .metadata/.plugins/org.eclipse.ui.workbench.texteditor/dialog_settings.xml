@@ -2,20 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="loc_requestInfoGetDataTypes" key="selection"/>
+		<item value="CONS_ERRORCODE_ENTITYOPERATION_AUTOCOMMIT" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
+			<item value="CONS_ERRORCODE_ENTITYOPERATION_AUTOCOMMIT"/>
+			<item value="updateQueryByResult"/>
 			<item value="loc_requestInfoGetDataTypes"/>
 			<item value="CONS_REMOTESERVICE_GETDATATYPES"/>
 			<item value="CONS_REMOTESERVICE_EXECUTEEXPRESSION"/>
 			<item value="ATTR_GETDATATYPES_EXISTINGARRAY"/>
 			<item value="service"/>
 			<item value="HAPAttributeConstant"/>
-			<item value="ATTR_SERVLETPARMS_COMMAND"/>
-			<item value="registerSyncTaskConfigure"/>
 		</list>
 		<list key="replacehistory">
 			<item value="Task."/>
