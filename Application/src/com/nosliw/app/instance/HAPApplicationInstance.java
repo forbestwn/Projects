@@ -44,7 +44,9 @@ public class HAPApplicationInstance{
 			//try to read from file in classpath : nosliw.property
 			String filename = "nosliw.properties";
     		InputStream input = HAPApplicationInstance.class.getClassLoader().getResourceAsStream(filename);
-    		if(input!=null)   this.m_configure = new HAPConfigurableImp(input); 
+    		if(input!=null){
+    			this.m_configure = new HAPConfigurableImp().importFromFile(input);
+    		}
     		else			this.m_configure = new HAPConfigurableImp();
 		}
 

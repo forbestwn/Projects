@@ -2,9 +2,9 @@ package com.nosliw.entity.definition;
 
 import java.util.Map;
 
+import com.nosliw.common.pattern.HAPNamingConversionUtility;
 import com.nosliw.common.utils.HAPBasicUtility;
 import com.nosliw.common.utils.HAPConstant;
-import com.nosliw.common.utils.HAPNamingConversionUtility;
 import com.nosliw.common.utils.HAPSegmentParser;
 import com.nosliw.data.HAPDataTypeManager;
 import com.nosliw.data.info.HAPDataTypeDefInfo;
@@ -16,7 +16,7 @@ public class HAPAttributeDefinitionContainer extends HAPAttributeDefinition{
 	//element definition
 	private HAPAttributeDefinition m_childAttrDef;
 	
-	public HAPAttributeDefinitionContainer(String name, HAPEntityDefinitionBasic entityDef, HAPDataTypeManager dataTypeMan, HAPEntityDefinitionManager entityDefMan, HAPOptionsDefinitionManager optionsMan) {
+	public HAPAttributeDefinitionContainer(String name, HAPEntityDefinitionSegment entityDef, HAPDataTypeManager dataTypeMan, HAPEntityDefinitionManager entityDefMan, HAPOptionsDefinitionManager optionsMan) {
 		super(name, entityDef, dataTypeMan, entityDefMan, optionsMan);
 	}
 
@@ -51,7 +51,7 @@ public class HAPAttributeDefinitionContainer extends HAPAttributeDefinition{
 	public void setChildAttributeDefinition(HAPAttributeDefinition attrDef){this.m_childAttrDef = attrDef;}
 	
 	@Override
-	public HAPAttributeDefinition cloneDefinition(HAPEntityDefinitionBasic entityDef)
+	public HAPAttributeDefinition cloneDefinition(HAPEntityDefinitionSegment entityDef)
 	{
 		HAPAttributeDefinitionContainer out = new HAPAttributeDefinitionContainer(this.getName(), entityDef, this.getDataTypeManager(), this.getEntityDefinitionManager(), this.getOptionsManager());
 		cloneTo(out);

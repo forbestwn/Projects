@@ -2,18 +2,18 @@ package com.nosliw.entity.definition.xmlimp;
 
 import org.w3c.dom.Element;
 
+import com.nosliw.common.pattern.HAPNamingConversionUtility;
 import com.nosliw.common.utils.HAPBasicUtility;
 import com.nosliw.common.utils.HAPConstant;
-import com.nosliw.common.utils.HAPNamingConversionUtility;
 import com.nosliw.common.utils.HAPSegmentParser;
 import com.nosliw.common.utils.HAPXMLUtility;
 import com.nosliw.data.HAPDataTypeManager;
 import com.nosliw.data.info.HAPDataTypeDefInfo;
 import com.nosliw.entity.definition.HAPAttributeDefinition;
-import com.nosliw.entity.definition.HAPEntityDefinitionBasic;
+import com.nosliw.entity.definition.HAPEntityDefinitionSegment;
 import com.nosliw.entity.expression.HAPAttributeExpression;
 import com.nosliw.entity.utils.HAPEntityNamingConversion;
-import com.nosliw.entity.validation.HAPValidationInfo;
+import com.nosliw.entity.validation.HAPValidationInfoExpression;
 import com.nosliw.expression.HAPExpression;
 import com.nosliw.expression.HAPExpressionInfo;
 
@@ -98,7 +98,7 @@ public class HAPEntityDefinitionLoaderXmlUtility {
 	private static void readRules(Element ele, HAPAttributeDefinition attrDef, HAPDataTypeManager dataTypeMan){
 		
 		//in-line rule
-		HAPValidationInfo validationExpressionInfo = readValidationExpressionInfo(ele, attrDef, dataTypeMan);
+		HAPValidationInfoExpression validationExpressionInfo = readValidationExpressionInfo(ele, attrDef, dataTypeMan);
 		if(validationExpressionInfo!=null)  attrDef.addValidationInfo(validationExpressionInfo);
 		
 		//multiple validation under "rules" tag
@@ -116,7 +116,7 @@ public class HAPEntityDefinitionLoaderXmlUtility {
 				String expression = parmEle.getAttribute(TAG_ATTRIBUTE_RULE_EXPRESSION);
 
 				HAPExpression ruleExpression = new HAPAttributeExpression(new HAPExpressionInfo(expression, null, null), attrDef, dataTypeMan);
-				HAPValidationInfo info = new HAPValidationInfo(name, ruleExpression);
+				HAPValidationInfoExpression info = new HAPValidationInfoExpression(name, ruleExpression);
 				info.setDescription(desc);
 				info.setErrorMessage(erroMsg);
 				attrDef.addValidationInfo(info);
@@ -126,7 +126,7 @@ public class HAPEntityDefinitionLoaderXmlUtility {
 		
 		//check if this rule is runnable on client side
 		attrDef.setServerValidationOnly(false);
-		for(HAPValidationInfo info : attrDef.getValidationInfos()){
+		for(HAPValidationInfoExpression info : attrDef.getValidationInfos()){
 			if(!info.getExpression().isScriptRunnable(HAPConstant.CONS_OPERATIONDEF_SCRIPT_JAVASCRIPT)){
 				attrDef.setServerValidationOnly(true);
 				break;
@@ -137,12 +137,12 @@ public class HAPEntityDefinitionLoaderXmlUtility {
 	/*
 	 * read in-line rule definition
 	 */
-	private static HAPValidationInfo readValidationExpressionInfo(Element ele, HAPAttributeDefinition attrDef, HAPDataTypeManager dataTypeMan){
-		HAPValidationInfo out = null;
+	private static HAPValidationInfoExpression readValidationExpressionInfo(Element ele, HAPAttributeDefinition attrDef, HAPDataTypeManager dataTypeMan){
+		HAPValidationInfoExpression out = null;
 		String ruleString = ele.getAttribute(TAG_ATTRIBUTE_RULE);
 		if(HAPBasicUtility.isStringNotEmpty(ruleString)){
 			HAPExpression ruleExpression = new HAPAttributeExpression(new HAPExpressionInfo(ruleString, null, null), attrDef, dataTypeMan);
-			out = new HAPValidationInfo(ruleExpression);
+			out = new HAPValidationInfoExpression(ruleExpression);
 		}
 		return out;
 	}
@@ -261,7 +261,7 @@ public class HAPEntityDefinitionLoaderXmlUtility {
 	/*
 	 * create name for attribute options
 	 */
-	public static String createOptionsName(HAPEntityDefinitionBasic entityDef, HAPAttributeDefinition attrDef){
+	public static String createOptionsName(HAPEntityDefinitionSegment entityDef, HAPAttributeDefinition attrDef){
 		return createOptionsName(entityDef.getEntityName(), attrDef.getFullName());
 	}
 

@@ -16,7 +16,7 @@ import com.nosliw.common.utils.HAPJsonUtility;
 import com.nosliw.data.HAPData;
 import com.nosliw.data.HAPWraper;
 import com.nosliw.entity.data.HAPEntityID;
-import com.nosliw.entity.data.HAPReferencePath;
+import com.nosliw.entity.data.HAPReferenceInfoAbsolute;
 import com.nosliw.entity.definition.HAPAttributeDefinition;
 import com.nosliw.entity.definition.HAPEntityDefinitionCritical;
 import com.nosliw.entity.query.HAPQueryEntityWraper;
@@ -27,7 +27,6 @@ import com.nosliw.entity.utils.HAPEntityEnvironment;
  * class that store all the information for operation
  */
 public class HAPEntityOperationInfo {
-	private static long m_idSerial = System.currentTimeMillis();
 	
 	/*
 	 * every operation has unique id
@@ -70,7 +69,7 @@ public class HAPEntityOperationInfo {
 	private List<HAPEntityOperationInfo> m_entityOperations;
 	private HAPEntityID m_entityID;
 	private String m_attributePath;
-	private HAPReferencePath m_referencePath;
+	private HAPReferenceInfoAbsolute m_referencePath;
 	private HAPData m_data;
 	private HAPWraper m_wraper;
 	private HAPEntityDefinitionCritical m_entityDefinition;
@@ -91,7 +90,7 @@ public class HAPEntityOperationInfo {
 	
 	public HAPEntityOperationInfo(){
 		this.m_parms = new LinkedHashMap<String, String>();
-		this.setId();
+		this.m_operationId = new HAPEntityOperationId();
 	}
 
 	public HAPEntityOperationInfo cloneOperationInfo(){
@@ -182,7 +181,7 @@ public class HAPEntityOperationInfo {
 		HAPEntityOperationInfo out = new HAPEntityOperationInfo();
 
 		String operationId = jsonOperation.optString(HAPAttributeConstant.ATTR_OPERATIONINFO_OPERATIONID);
-		if(HAPBasicUtility.isStringNotEmpty(operationId))  out.setOperationId(Long.parseLong(operationId));
+		if(HAPBasicUtility.isStringNotEmpty(operationId))  out.setOperationId(new HAPEntityOperationId(Long.parseLong(operationId)));
 		
 		try{
 			out.m_operation = HAPEntityOperation.getOperationByName(jsonOperation.getString(HAPAttributeConstant.ATTR_OPERATIONINFO_OPERATION));
@@ -203,7 +202,7 @@ public class HAPEntityOperationInfo {
 			if(entityIDJson!=null)		out.m_entityID = HAPEntityID.parseJson(entityIDJson);
 
 			JSONObject refPathJson = jsonOperation.optJSONObject(HAPAttributeConstant.ATTR_OPERATIONINFO_REFERENCEPATH);
-			if(refPathJson!=null) out.m_referencePath = HAPReferencePath.parseJson(refPathJson);
+			if(refPathJson!=null) out.m_referencePath = HAPReferenceInfoAbsolute.parseJson(refPathJson);
 
 			JSONObject dataJson = jsonOperation.optJSONObject(HAPAttributeConstant.ATTR_OPERATIONINFO_DATA);
 			if(dataJson!=null)  out.m_data = entityEvr.getDataTypeManager().parseJson(dataJson, null, null);
@@ -270,8 +269,8 @@ public class HAPEntityOperationInfo {
 	public void setEntityID(HAPEntityID ID){this.m_entityID=ID;}
 	public String getAttributePath(){return this.m_attributePath;}
 	public void setAttributePath(String path){this.m_attributePath=path;}
-	public HAPReferencePath getReferencePath(){return this.m_referencePath;}
-	public void setReferencePath(HAPReferencePath path){this.m_referencePath=path;}
+	public HAPReferenceInfoAbsolute getReferencePath(){return this.m_referencePath;}
+	public void setReferencePath(HAPReferenceInfoAbsolute path){this.m_referencePath=path;}
 	public HAPData getData(){return this.m_data;}
 	public void setData(HAPData data){this.m_data=data;}
 	public HAPWraper getWraper(){return this.m_wraper;}
@@ -311,13 +310,8 @@ public class HAPEntityOperationInfo {
 	public Object getExtra(){return this.m_extra;}
 	public void setExtra(Object data){this.m_extra=data;}
 	
-	private void setId(){
-		this.m_operationId = m_idSerial;
-		m_idSerial++;
-	}
-	
 	public boolean equals(HAPEntityOperationInfo info){
-		return false;
+		return this.m_operationId.equals(info);
 	}
 }
 

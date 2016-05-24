@@ -18,7 +18,15 @@ public interface HAPConfigurable {
 	public Float getFloatValue(String attr);
 	public String[] getArrayValue(String attr); 
 	
+	/*
+	 * replace variable in value with variable value
+	 */
+	public String processStringValue(String value);
+
+	public void addStringValue(String name, String value);
+
+	
 	public HAPConfigurable getConfigurableValue(String attr);
 	
-	public HAPConfigurable mergeWith(HAPConfigurable configuration);
+	public HAPConfigurable softMerge(HAPConfigurable configuration);
 }

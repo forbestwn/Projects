@@ -5,10 +5,10 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
+import com.nosliw.common.pattern.HAPNamingConversionUtility;
 import com.nosliw.common.serialization.HAPStringable;
 import com.nosliw.common.utils.HAPBasicUtility;
 import com.nosliw.common.utils.HAPJsonUtility;
-import com.nosliw.common.utils.HAPNamingConversionUtility;
 import com.nosliw.data.HAPDataTypeManager;
 import com.nosliw.data.utils.HAPAttributeConstant;
 

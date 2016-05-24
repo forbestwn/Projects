@@ -58,10 +58,9 @@ public class HAPAttributeConstant {
 
 
 
-		public static final String ATTR_ENTITYID_USERCONTEXT = "userContext";
 		public static final String ATTR_ENTITYID_ID = "id";
 		public static final String ATTR_ENTITYID_ENTITYTYPE = "entityType";
-		public static final String ATTR_ENTITYID_ATTRIBUTEPATH = "attributePath";
+		public static final String ATTR_ENTITYID_KEY = "key";
 
 
 

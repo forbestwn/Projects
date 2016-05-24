@@ -12,7 +12,7 @@ import com.nosliw.common.exception.HAPServiceData;
 import com.nosliw.entity.data.HAPDataWraper;
 import com.nosliw.entity.data.HAPDataWraperTask;
 import com.nosliw.entity.data.HAPEntityWraper;
-import com.nosliw.entity.data.HAPReferencePath;
+import com.nosliw.entity.data.HAPReferenceInfoAbsolute;
 import com.nosliw.entity.data.HAPReferenceWraper;
 import com.nosliw.entity.dataaccess.HAPEntityDataAccess;
 import com.nosliw.entity.utils.HAPEntityDataTypeUtility;

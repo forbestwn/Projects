@@ -5,13 +5,13 @@ import org.w3c.dom.Element;
 import com.nosliw.common.utils.HAPBasicUtility;
 import com.nosliw.data.HAPDataTypeManager;
 import com.nosliw.entity.definition.HAPAttributeDefinitionAtom;
-import com.nosliw.entity.definition.HAPEntityDefinitionBasic;
+import com.nosliw.entity.definition.HAPEntityDefinitionSegment;
 import com.nosliw.entity.definition.HAPEntityDefinitionManager;
 import com.nosliw.entity.options.HAPOptionsDefinitionManager;
 
 public class HAPAttributeDefinitionAtomXml extends HAPAttributeDefinitionAtom{
 
-	public HAPAttributeDefinitionAtomXml(Element ele, HAPEntityDefinitionBasic entityDefinition, HAPEntityDefinitionMeta metadata, HAPDataTypeManager dataTypeMan, HAPEntityDefinitionManager entityDefMan, HAPOptionsDefinitionManager optionsMan) {
+	public HAPAttributeDefinitionAtomXml(Element ele, HAPEntityDefinitionSegment entityDefinition, HAPEntityDefinitionMeta metadata, HAPDataTypeManager dataTypeMan, HAPEntityDefinitionManager entityDefMan, HAPOptionsDefinitionManager optionsMan) {
 		super(HAPEntityDefinitionLoaderXmlUtility.readAttributeName(ele), entityDefinition, dataTypeMan, entityDefMan, optionsMan);
 	
 		HAPEntityDefinitionLoaderXmlUtility.readCommonAttributeDefinition(ele, this, metadata, this.getDataTypeManager());

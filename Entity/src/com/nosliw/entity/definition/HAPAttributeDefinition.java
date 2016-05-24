@@ -5,11 +5,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.nosliw.common.pattern.HAPNamingConversionUtility;
 import com.nosliw.common.serialization.HAPStringable;
 import com.nosliw.common.utils.HAPBasicUtility;
 import com.nosliw.common.utils.HAPConstant;
 import com.nosliw.common.utils.HAPJsonUtility;
-import com.nosliw.common.utils.HAPNamingConversionUtility;
 import com.nosliw.common.utils.HAPSegmentParser;
 import com.nosliw.data.HAPDataTypeManager;
 import com.nosliw.data.info.HAPDataTypeDefInfo;
@@ -19,14 +19,14 @@ import com.nosliw.entity.options.HAPOptionsDefinition;
 import com.nosliw.entity.options.HAPOptionsDefinitionManager;
 import com.nosliw.entity.utils.HAPAttributeConstant;
 import com.nosliw.entity.utils.HAPEntityNamingConversion;
-import com.nosliw.entity.validation.HAPValidationInfo;
+import com.nosliw.entity.validation.HAPValidationInfoExpression;
 
 /*
  * this abstract class define all the methods to provide information for an complex entity's attribute definition
  */
 public abstract class HAPAttributeDefinition implements HAPStringable{
 	//entity definition this attribute belong to
-	private HAPEntityDefinitionBasic m_entityDefinition;
+	private HAPEntityDefinitionSegment m_entityDefinition;
 	//attribute name
 	//however, child element of container is also defined as attribute, but it has name attirbute with null value  
 	private String m_name;
@@ -49,7 +49,7 @@ public abstract class HAPAttributeDefinition implements HAPStringable{
 	private HAPOptionsDefinition m_options = null;
 	
 	//a list of validation rules defined for this attribute
-	private List<HAPValidationInfo> m_validationInfos = null;
+	private List<HAPValidationInfoExpression> m_validationInfos = null;
 	//calculated attribute which show whether the value validation is able to be done on client side
 	private boolean m_serverValidationOnly = true;
 	
@@ -57,7 +57,7 @@ public abstract class HAPAttributeDefinition implements HAPStringable{
 	private HAPOptionsDefinitionManager m_optionsMan;
 	private HAPEntityDefinitionManager m_entityDefinitionMan;
 	
-	public HAPAttributeDefinition(String name, HAPEntityDefinitionBasic entityDef, HAPDataTypeManager dataTypeMan, HAPEntityDefinitionManager entityDefMan, HAPOptionsDefinitionManager optionsMan){
+	public HAPAttributeDefinition(String name, HAPEntityDefinitionSegment entityDef, HAPDataTypeManager dataTypeMan, HAPEntityDefinitionManager entityDefMan, HAPOptionsDefinitionManager optionsMan){
 		this.m_name = name;
 		this.m_dataTypeMan = dataTypeMan;
 		this.m_entityDefinitionMan = entityDefMan;
@@ -65,7 +65,7 @@ public abstract class HAPAttributeDefinition implements HAPStringable{
 		this.m_entityDefinition = entityDef;
 		this.m_events = new ArrayList<String>();
 		this.m_description = "";
-		this.m_validationInfos = new ArrayList<HAPValidationInfo>();
+		this.m_validationInfos = new ArrayList<HAPValidationInfoExpression>();
 
 		Boolean isEmptyOnInit = this.getEntityDefinitionManager().getConfiguration().getBooleanValue(HAPConstant.CONS_CONFIGUREITEM_ENTITY_ISEMPTYONINIT);
 		if(isEmptyOnInit!=null)		this.m_isEmptyOnInit = isEmptyOnInit; 
@@ -82,7 +82,7 @@ public abstract class HAPAttributeDefinition implements HAPStringable{
 	public String getDescription(){return this.m_description;}
 	public void setDescription(String desc){this.m_description=desc;}
 
-	public HAPEntityDefinitionBasic getEntityDefinition(){return this.m_entityDefinition;}
+	public HAPEntityDefinitionSegment getEntityDefinition(){return this.m_entityDefinition;}
 
 	/*
 	 * which critical value that this attribute is defined under
@@ -90,8 +90,8 @@ public abstract class HAPAttributeDefinition implements HAPStringable{
 	public String getCriticalValue(){return this.m_criticalValue;}
 	public void setCriticalValue(String criticalValue){this.m_criticalValue=criticalValue;}
 	
-	public HAPValidationInfo[] getValidationInfos(){return this.m_validationInfos.toArray(new HAPValidationInfo[0]);}
-	public void addValidationInfo(HAPValidationInfo validationInfo){this.m_validationInfos.add(validationInfo);}
+	public HAPValidationInfoExpression[] getValidationInfos(){return this.m_validationInfos.toArray(new HAPValidationInfoExpression[0]);}
+	public void addValidationInfo(HAPValidationInfoExpression validationInfo){this.m_validationInfos.add(validationInfo);}
 
 	public void setServerValidationOnly(boolean only){this.m_serverValidationOnly=only;}
 	public boolean getServerValidationOnly(){return this.m_serverValidationOnly;}
@@ -150,7 +150,7 @@ public abstract class HAPAttributeDefinition implements HAPStringable{
 		String keyword = HAPNamingConversionUtility.getKeyword(name);
 		if(HAPConstant.CONS_ATTRIBUTE_PATH_ENTITY.equals(keyword)){
 			//"entity" key word
-			HAPEntityDefinitionBasic entityDef = this.getEntityDefinition();
+			HAPEntityDefinitionSegment entityDef = this.getEntityDefinition();
 			return entityDef.getAttributeDefinitionByPath(patSegs.getRestPath());
 		}
 		else{
@@ -185,7 +185,7 @@ public abstract class HAPAttributeDefinition implements HAPStringable{
 	
 	
 	/******************************************   Clone  *********************************************/
-	public HAPAttributeDefinition cloneDefinition(HAPEntityDefinitionBasic entityDef){
+	public HAPAttributeDefinition cloneDefinition(HAPEntityDefinitionSegment entityDef){
 		return null;
 	}
 
@@ -245,7 +245,7 @@ public abstract class HAPAttributeDefinition implements HAPStringable{
 			//if need server side validata, then do not add any rules
 			if(!this.getServerValidationOnly()){
 				List<String> validationJsons = new ArrayList<String>();
-				for(HAPValidationInfo validationInfo : this.m_validationInfos){
+				for(HAPValidationInfoExpression validationInfo : this.m_validationInfos){
 					validationJsons.add(validationInfo.toStringValue(HAPConstant.CONS_SERIALIZATION_JSON));
 				}
 				map.put(HAPAttributeConstant.ATTR_ENTITYATTRDEF_RULES, HAPJsonUtility.getArrayJson(validationJsons.toArray(new String[0])));

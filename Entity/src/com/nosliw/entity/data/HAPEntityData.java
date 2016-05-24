@@ -17,7 +17,7 @@ import com.nosliw.data.HAPDataType;
 import com.nosliw.data.info.HAPDataTypeDefInfo;
 import com.nosliw.entity.definition.HAPAttributeDefinition;
 import com.nosliw.entity.definition.HAPEntityDefinitionCritical;
-import com.nosliw.entity.definition.HAPEntityDefinitionBasic;
+import com.nosliw.entity.definition.HAPEntityDefinitionSegment;
 import com.nosliw.entity.event.HAPEvent;
 import com.nosliw.entity.operation.HAPEntityOperationFactory;
 import com.nosliw.entity.operation.HAPEntityOperationInfo;
@@ -73,7 +73,7 @@ import com.nosliw.entity.utils.HAPEntityUtility;
 public class HAPEntityData extends HAPDataImp
 {
 	private HAPEntityWraper m_wraper;						//wraper for entity
-	private HAPEntityDefinitionBasic m_entityInfo;   		//entity information for this complex entity
+	private HAPEntityDefinitionSegment m_entityInfo;   		//entity information for this complex entity
 	
 	private Map<String, String> m_internalAttributes;			//attribute values which is work out after entity in inited
 	private Map<String, HAPDataWraper> m_attributes = null;	//attribute -- ATTRIBUTE and value wraper
@@ -82,7 +82,7 @@ public class HAPEntityData extends HAPDataImp
 		super(null);
 	}
 	
-	public HAPEntityData(HAPDataType dataType, HAPEntityDefinitionBasic entityInfo){
+	public HAPEntityData(HAPDataType dataType, HAPEntityDefinitionSegment entityInfo){
 		super(dataType);
 		this.m_entityInfo = entityInfo;
 		this.m_attributes = new LinkedHashMap<String, HAPDataWraper>();
@@ -250,8 +250,8 @@ public class HAPEntityData extends HAPDataImp
 	public HAPEntityWraper getWraper(){return this.m_wraper;}
 	void setWraper(HAPEntityWraper wraper){this.m_wraper=wraper;}
 
-	void setEntityInfo(HAPEntityDefinitionBasic info){this.m_entityInfo=(HAPEntityDefinitionCritical)info.cloneDefinition();}
-	public HAPEntityDefinitionBasic getEntityInfo(){return this.m_entityInfo;}
+	void setEntityInfo(HAPEntityDefinitionSegment info){this.m_entityInfo=(HAPEntityDefinitionCritical)info.cloneDefinition();}
+	public HAPEntityDefinitionSegment getEntityInfo(){return this.m_entityInfo;}
 
 	public String[] getAttributes(){return this.m_attributes.keySet().toArray(new String[0]);}
 	public Map<String, HAPAttributeDefinition> getAttributeDefinitions(){return this.getEntityInfo().getAttributeDefinitions();} 

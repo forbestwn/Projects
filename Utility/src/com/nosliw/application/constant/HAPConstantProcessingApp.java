@@ -12,6 +12,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.nosliw.common.configure.HAPConfigurable;
+import com.nosliw.common.configure.HAPConfigurableImp;
 import com.nosliw.common.strtemplate.HAPStringTemplateUtil;
 import com.nosliw.common.utils.HAPBasicUtility;
 import com.nosliw.common.utils.HAPFileUtility;
@@ -25,13 +27,18 @@ import com.nosliw.common.utils.HAPXMLUtility;
 public class HAPConstantProcessingApp {
 	public static void main(String[] args){
 		try{
+			InputStream input = HAPFileUtility.getInputStreamOnClassPath(HAPConstantProcessingApp.class, "constantprocess.properties");
+    		HAPConfigurable configure = null;
+    		if(input!=null)  configure = new HAPConfigurableImp().importFromFile(input);
+    		else	configure = new HAPConfigurableImp();
+    		
 			InputStream configureStream = HAPFileUtility.getInputStreamOnClassPath(HAPConstantProcessingApp.class, "constant.xml");
 			DocumentBuilderFactory DOMfactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder DOMbuilder = DOMfactory.newDocumentBuilder();
 			Document doc = DOMbuilder.parse(configureStream);
 
 			Element rootEle = doc.getDocumentElement();
-			String jsPath = rootEle.getAttribute("jsPath");
+			String jsPath = configure.processStringValue(rootEle.getAttribute("jsPath"));
 			String jsAttributeFile = rootEle.getAttribute("jsAttributeFile");
 			String jsConstantFile = rootEle.getAttribute("jsConstantFile");
 			
@@ -46,7 +53,7 @@ public class HAPConstantProcessingApp {
 					attrConsInfos.add(attrInfo);
 					processJSItem(attrInfo, attributeJsonMap, attributeTypesJsonMap);
 				}
-				processJavaConstant(attrConsInfos, attrsEle.getAttribute("packagename"), attrsEle.getAttribute("classname"), attrsEle.getAttribute("filepath"));
+				processJavaConstant(attrConsInfos, attrsEle.getAttribute("packagename"), attrsEle.getAttribute("classname"), configure.processStringValue(attrsEle.getAttribute("filepath"))); 
 			}
 			//attribute json structure
 			String attrJson = HAPJsonUtility.getMapJson(attributeJsonMap, attributeTypesJsonMap);
@@ -63,7 +70,7 @@ public class HAPConstantProcessingApp {
 					consConsInfos.add(consInfo);
 					processJSItem(consInfo, constantJsonMap, constantTypesJsonMap);
 				}
-				processJavaConstant(consConsInfos, constantsEle.getAttribute("packagename"), constantsEle.getAttribute("classname"), constantsEle.getAttribute("filepath"));
+				processJavaConstant(consConsInfos, constantsEle.getAttribute("packagename"), constantsEle.getAttribute("classname"), configure.processStringValue(constantsEle.getAttribute("filepath"))); 
 			}
 			//constant json structure
 			String constantJson = HAPJsonUtility.getMapJson(constantJsonMap, constantTypesJsonMap);
@@ -75,6 +82,13 @@ public class HAPConstantProcessingApp {
 		}
 	}
 
+	private static String getFilePath(String filePath, String projectsPath){
+		if(filePath.startsWith("./")){
+			filePath = projectsPath + filePath.substring(1);
+		}
+		return filePath;
+	}
+	
 	private static void processJsonFile(String jsonContent, String filePath, String fileName){
 		String content = "var " + fileName + "=\n" + HAPJsonUtility.formatJson(jsonContent) + ";";
 		HAPFileUtility.writeFile(filePath+"/"+fileName+".js", content);

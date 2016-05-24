@@ -9,7 +9,7 @@ import com.nosliw.common.serialization.HAPStringable;
 import com.nosliw.data.HAPData;
 import com.nosliw.entity.data.HAPEntityID;
 import com.nosliw.entity.data.HAPEntityWraper;
-import com.nosliw.entity.data.HAPReferencePath;
+import com.nosliw.entity.data.HAPReferenceInfoAbsolute;
 import com.nosliw.entity.event.HAPEventListener;
 import com.nosliw.entity.operation.HAPEntityOperationInfo;
 import com.nosliw.entity.query.HAPPageInfo;
@@ -82,8 +82,8 @@ public interface HAPEntityDataAccess extends HAPEventListener, HAPStringable{
 	
 	
 	public void clearReferenceToEntity(HAPEntityID ID);
-	public void breakEntityReference(HAPReferencePath referencePath, HAPEntityID ID);
-	public void buildEntityReference(HAPReferencePath referencePath, HAPEntityID ID);
+	public void breakEntityReference(HAPReferenceInfoAbsolute referencePath, HAPEntityID ID);
+	public void buildEntityReference(HAPReferenceInfoAbsolute referencePath, HAPEntityID ID);
 	
 	
 	public void openOperationResult();
@@ -99,6 +99,9 @@ public interface HAPEntityDataAccess extends HAPEventListener, HAPStringable{
 	 */
 	public HAPOperationAllResult commit();
 	
+	public HAPServiceData preCommit();
+	public HAPServiceData postCommit();
+
 	/*
 	 * this method should be called by upper level,
 	 * it does the merge of change of upper level to this level during commitment of 

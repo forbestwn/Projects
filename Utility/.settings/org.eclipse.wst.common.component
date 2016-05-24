@@ -1,7 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
     <wb-module deploy-name="Utility">
         <wb-resource deploy-path="/" source-path="/src"/>
+        <dependent-module archiveName="Entity.jar" deploy-path="/" handle="module:/resource/Entity/Entity">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="MangoPersistent.jar" deploy-path="/" handle="module:/resource/MangoPersistent/MangoPersistent">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="DataTypeLibrary.jar" deploy-path="/" handle="module:/resource/DataTypeLibrary/DataTypeLibrary">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="ExpressionParser.jar" deploy-path="/" handle="module:/resource/ExpressionParser/ExpressionParser">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="UIResource.jar" deploy-path="/" handle="module:/resource/UIResource/UIResource">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="Common.jar" deploy-path="/" handle="module:/resource/Common/Common">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="DataDefinition.jar" deploy-path="/" handle="module:/resource/DataDefinition/DataDefinition">
             <dependency-type>uses</dependency-type>
         </dependent-module>
     </wb-module>

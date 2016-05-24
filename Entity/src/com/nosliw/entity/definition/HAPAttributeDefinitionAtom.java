@@ -17,7 +17,7 @@ public class HAPAttributeDefinitionAtom extends HAPAttributeDefinition{
 	//the mapping between critical attribute value and Entity Definition
 	private boolean m_isCritical = false;
 	
-	public HAPAttributeDefinitionAtom(String name, HAPEntityDefinitionBasic entityDef, HAPDataTypeManager dataTypeMan, HAPEntityDefinitionManager entityDefMan, HAPOptionsDefinitionManager optionsMan) {
+	public HAPAttributeDefinitionAtom(String name, HAPEntityDefinitionSegment entityDef, HAPDataTypeManager dataTypeMan, HAPEntityDefinitionManager entityDefMan, HAPOptionsDefinitionManager optionsMan) {
 		super(name, entityDef, dataTypeMan, entityDefMan, optionsMan);
 	}
 
@@ -46,7 +46,7 @@ public class HAPAttributeDefinitionAtom extends HAPAttributeDefinition{
 	
 	
 	@Override
-	public HAPAttributeDefinition cloneDefinition(HAPEntityDefinitionBasic entityDef)
+	public HAPAttributeDefinition cloneDefinition(HAPEntityDefinitionSegment entityDef)
 	{
 		HAPAttributeDefinitionAtom out = new HAPAttributeDefinitionAtom(this.getName(), entityDef, this.getDataTypeManager(), this.getEntityDefinitionManager(), this.getOptionsManager());
 		cloneTo(out);

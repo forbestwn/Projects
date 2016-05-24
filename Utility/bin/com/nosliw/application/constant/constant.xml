@@ -1,9 +1,9 @@
-<root jsPath="/Users/pro/Desktop/WebToApp/CoreProject/Projects/Application/WebContent/js/generated"
+<root jsPath="{{projectsPath}}/Application/WebContent/js/generated"
 	jsAttributeFile="NOSLIWATCOMMONTRIBUTECONSTANT"
 	jsConstantFile="NOSLIWCOMMONCONSTANT"
 >
 
-	<attributes filepath="/Users/pro/Desktop/WebToApp/CoreProject/Projects/Application/src/com/nosliw/app/utils" 
+	<attributes filepath="{{projectsPath}}/Application/src/com/nosliw/app/utils" 
 				packagename="com.nosliw.app.utils" 
 				classname="HAPAttributeConstant" >
 		<definition name="ATTR_SERVLETPARMS_COMMAND" value="command"/>
@@ -29,7 +29,7 @@
 		<definition name="ATTR_ENTITYNAME_ATTRIBUTENAME" value="ATTR_ENTITYNAME_ATTRIBUTENAME"/>
 	</attributes>
 
-	<attributes filepath="/Users/pro/Desktop/WebToApp/CoreProject/Projects/Common/src/com/nosliw/common/utils" 
+	<attributes filepath="{{projectsPath}}/Common/src/com/nosliw/common/utils" 
 				packagename="com.nosliw.common.utils" 
 				classname="HAPAttributeConstant" >
 		<definition name="ATTR_SERVICEDATA_CODE" value="code"/>
@@ -40,7 +40,7 @@
 		<definition name="ATTR_ENTITYNAME_ATTRIBUTENAME" value="ATTR_ENTITYNAME_ATTRIBUTENAME"/>
 	</attributes>
 
-	<attributes filepath="/Users/pro/Desktop/WebToApp/CoreProject/Projects/UIResource/src/com/nosliw/uiresource" 
+	<attributes filepath="{{projectsPath}}/UIResource/src/com/nosliw/uiresource" 
 				packagename="com.nosliw.uiresource" 
 				classname="HAPAttributeConstant" >
 		<definition name="ATTR_UIRESOURCECONTEXTINFO_NAME" value="name"/>
@@ -89,7 +89,7 @@
 	</attributes>
 
 
-	<attributes filepath="/Users/pro/Desktop/WebToApp/CoreProject/Projects/ExpressionParser/src/com/nosliw/expression/utils" 
+	<attributes filepath="{{projectsPath}}/ExpressionParser/src/com/nosliw/expression/utils" 
 				packagename="com.nosliw.expression.utils" 
 				classname="HAPAttributeConstant" >
 		<definition name="ATTR_OPERAND_TYPE" value="type"/>
@@ -118,7 +118,7 @@
 	</attributes>
 
 
-	<attributes filepath="/Users/pro/Desktop/WebToApp/CoreProject/Projects/DataDefinition/src/com/nosliw/data/utils" 
+	<attributes filepath="{{projectsPath}}/DataDefinition/src/com/nosliw/data/utils" 
 				packagename="com.nosliw.data.utils" 
 				classname="HAPAttributeConstant" >
 		<definition name="ATTR_DATATYPEINFO_CATEGARY" value="categary"/>
@@ -153,7 +153,7 @@
 		<definition name="ATTR_ENTITYNAME_ATTRIBUTENAME" value="ATTR_ENTITYNAME_ATTRIBUTENAME"/>
 	</attributes>
 
-	<attributes filepath="/Users/pro/Desktop/WebToApp/CoreProject/Projects/Entity/src/com/nosliw/entity/utils" 
+	<attributes filepath="{{projectsPath}}/Entity/src/com/nosliw/entity/utils" 
 				packagename="com.nosliw.entity.utils" 
 				classname="HAPAttributeConstant" >
 		<definition type="space"/>
@@ -207,10 +207,9 @@
 		<definition name="ATTR_ENTITYATTRDEF_ELEMENT" value="element"/>
 
 		<definition type="space"/>
-		<definition name="ATTR_ENTITYID_USERCONTEXT" value="userContext"/>
 		<definition name="ATTR_ENTITYID_ID" value="id"/>
 		<definition name="ATTR_ENTITYID_ENTITYTYPE" value="entityType"/>
-		<definition name="ATTR_ENTITYID_ATTRIBUTEPATH" value="attributePath"/>
+		<definition name="ATTR_ENTITYID_KEY" value="key"/>
 
 		<definition type="space"/>
 		<definition name="ATTR_DATAWRAPER_CHILDDATATYPE" value="childDataType"/>
@@ -251,7 +250,7 @@
 		<definition name="ATTR_ENTITYNAME_ATTRIBUTENAME" value="ATTR_ENTITYNAME_ATTRIBUTENAME"/>
 	</attributes>
 
-	<constants filepath="/Users/pro/Desktop/WebToApp/CoreProject/Projects/Common/src/com/nosliw/common/utils" 
+	<constants filepath="{{projectsPath}}/Common/src/com/nosliw/common/utils" 
 				packagename="com.nosliw.common.utils" 
 				classname="HAPConstant" >
 		<definition name="CONS_SERIALIZATION_JSON" value="json"/>
@@ -288,7 +287,6 @@
 		<definition type="space"/>
 		<definition name="CONS_SYMBOL_KEYWORD" value="#"/>
 		<definition name="CONS_SYMBOL_GROUP" value="@"/>
-		<definition name="CONS_SYMBOL_USERCONTEXT" value="#"/>
 		<definition name="CONS_SYMBOL_ENTITYNAME_COMMON" value=".."/>
 		<definition name="CONS_SYMBOL_ENTITYNAME_CURRENT" value="."/>
 		<definition name="CONS_SEPERATOR_ELEMENT" value=";"/>
@@ -491,6 +489,17 @@
 		<definition name="CONS_SCRIPTTYPE_UIRESOURCE" value="uiResource"/>
 		<definition name="CONS_SCRIPTTYPE_DATAOPERATIONS" value="dataOperations"/>
 		<definition name="CONS_SCRIPTTYPE_UITAGS" value="uiTags"/>
+
+		<definition type="space"/>
+		<definition name="CONS_REFERENCE_TYPE_ABSOLUTE" value="0" type="int"/>
+		<definition name="CONS_REFERENCE_TYPE_RELATIVE" value="1" type="int"/>
+
+		<definition type="space"/>
+		<definition name="CONS_PATTERN_DATATYPEINFO" value="pattern_datatypeinfo"/>
+
+		<definition type="space"/>
+		<definition name="CONS_TESTRESULT_TYPE_SUITE" value="SUITE"/>
+		<definition name="CONS_TESTRESULT_TYPE_CASE" value="CASE"/>
 
 		<definition type="space"/>
 		<definition name="CONS_CATEGARY_NAME" value="CONS_CATEGARY_NAME"/>

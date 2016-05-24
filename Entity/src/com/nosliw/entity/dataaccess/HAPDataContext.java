@@ -41,6 +41,7 @@ import com.nosliw.entity.utils.HAPEntityErrorUtility;
 
 /*
  * entity manager class that handle all type of entity managment task
+ * it is responding to one client request, store all the state related with that client
  * 		entity query
  * 		entity operation
  * 		transaction
@@ -98,19 +99,22 @@ public class HAPDataContext implements HAPStringable{
 		dataAccess.removeQuery(queryId);
 	}
 
-	public void updateQueryByResult(){
-		
+	/*
+	 * update query content based on data operation result
+	 */
+	private void updateQueryByResult(){
+		HAPEntityDataAccess dataAccess = this.getCurrentDataAccess();
+		dataAccess.updateQueryByResult();
 	}
 	
 	//*********************  Entity
 	/*
 	 * process request : get entitys
 	 */
-	public Map<String, HAPEntityWraper> getEntitysRequest(HAPEntityRequestInfo request){
+	public Map<String, HAPServiceData> getEntitysRequest(HAPEntityRequestInfo request){
 		//whether load referenced entity
 		if(request.ifLoadRelated()){
-			Set<HAPEntityID> existEntityID = new HashSet<HAPEntityID>();
-			return this.getEntitysAndRelated(request.getEntityIDs(), request, existEntityID);
+			return this.getEntitysAndRelated(request.getEntityIDs(), request, null);
 		}
 		else{
 			return this.getEntitys(request.getEntityIDs(), request);
@@ -119,19 +123,15 @@ public class HAPDataContext implements HAPStringable{
 
 	/*
 	 * get all entitys according to ID
+	 * return map ( id key   -----   serviceData: success data; fail reason to fail )
 	 */
-	private Map<String, HAPEntityWraper> getEntitys(Collection<HAPEntityID> IDs, HAPEntityRequestInfo request){
+	private Map<String, HAPServiceData> getEntitys(Collection<HAPEntityID> IDs, HAPEntityRequestInfo request){
 		HAPEntityDataAccess dataAccess = this.getCurrentDataAccess();
-		Map<String, HAPEntityWraper> out = new LinkedHashMap<String, HAPEntityWraper>();
+		Map<String, HAPServiceData> out = new LinkedHashMap<String, HAPServiceData>();
+		
 		for(HAPEntityID ID : IDs){
 			HAPServiceData dataService = dataAccess.getEntityByID(ID, request.ifKeepEntity());
-			if(dataService.isSuccess()){
-				HAPEntityWraper entityWraper = (HAPEntityWraper)dataService.getData();
-				out.put(ID.toString(), entityWraper);
-			}
-			else{
-				out.put(ID.toString(), null);
-			}
+			out.put(ID.toString(), dataService);
 		}
 		return out;
 	}
@@ -140,86 +140,33 @@ public class HAPDataContext implements HAPStringable{
 	 * get entitys by ID and their referenced entitys
 	 * 		existEntityIDs : retrieved ID, so that do not process them again
 	 */
-	private Map<String, HAPEntityWraper> getEntitysAndRelated(Collection<HAPEntityID> IDs, HAPEntityRequestInfo request, Set<HAPEntityID> existEntityIDs){
+	private Map<String, HAPServiceData> getEntitysAndRelated(Collection<HAPEntityID> IDs, HAPEntityRequestInfo request, Set<HAPEntityID> existEntityIDs){
+		
+		if(existEntityIDs==null)  existEntityIDs = new HashSet<HAPEntityID>();
+
 		HAPEntityDataAccess dataAccess = this.getCurrentDataAccess();
-		Map<String, HAPEntityWraper> out = new LinkedHashMap<String, HAPEntityWraper>();
+		Map<String, HAPServiceData> out = new LinkedHashMap<String, HAPServiceData>();
 		for(HAPEntityID ID : IDs){
 			//only process ID not in existEntityIDs
 			if(!existEntityIDs.contains(ID)){
 				//get entity by ID
 				HAPServiceData dataService = dataAccess.getEntityByID(ID, request.ifKeepEntity());
-
+				out.put(ID.toString(), dataService);
+				//add to existing IDs
+				existEntityIDs.add(ID);
 				if(dataService.isSuccess()){
 					HAPEntityWraper entityWraper = (HAPEntityWraper)dataService.getData();
-					out.put(ID.toString(), entityWraper);
-					//add to existing IDs
-					existEntityIDs.add(ID);
 
 					//get referenced entity
-					Set<HAPEntityID> childRefEntityIDs = this.getAllChildReferenceEntityID(entityWraper);
-					Map<String, HAPEntityWraper> childRefEntitys = getEntitysAndRelated(childRefEntityIDs, request, existEntityIDs);
+					Set<HAPEntityID> childRefEntityIDs = HAPEntityDataTypeUtility.getAllChildReferenceEntityID(entityWraper);
+					Map<String, HAPServiceData> childRefEntitys = getEntitysAndRelated(childRefEntityIDs, request, existEntityIDs);
 					for(String e : childRefEntitys.keySet())	out.put(e, childRefEntitys.get(e));
 				}
-				else 	out.put(ID.toString(), null);
 			}
 		}
 		return out;
 	}
 
-	/*
-	 * get all referenced entity Id 
-	 */
-	private Set<HAPEntityID> getAllChildReferenceEntityID(HAPEntityWraper entityWraper){
-		Set<HAPEntityID> out = new HashSet<HAPEntityID>();
-		
-		if(entityWraper.getEntityData()==null)	return out;
-		
-		String[] atts = entityWraper.getEntityData().getAttributes();
-		for(String attr : atts){
-			HAPDataWraper attrWraper = entityWraper.getEntityData().getAttributeValueWraper(attr);
-			if(HAPEntityDataTypeUtility.isReferenceType(attrWraper)){
-				//for reference attribute
-				if(!attrWraper.isEmpty()){
-					if(((HAPReferenceWraper)attrWraper).getIDData()!=null){
-						out.add(((HAPReferenceWraper)attrWraper).getIDData());
-					}
-				}
-			}
-			else if(HAPEntityDataTypeUtility.isContainerType(attrWraper)){
-				//for container attribute, check element type
-				HAPEntityContainerAttributeWraper containerAttr = (HAPEntityContainerAttributeWraper)attrWraper;
-				if(HAPConstant.CONS_DATATYPE_CATEGARY_REFERENCE.equals(containerAttr.getChildDataTypeDefInfo().getDataTypeInfo().getCategary())){
-					//for entity reference element 
-					HAPDataWraper[] eleWrapers = containerAttr.getContainerData().getElementWrapers();
-					for(HAPDataWraper eleWraper : eleWrapers){
-						if(HAPEntityDataTypeUtility.isReferenceType(eleWraper)){
-							if(!eleWraper.isEmpty()){
-								if(((HAPReferenceWraper)eleWraper).getIDData()!=null){
-									out.add(((HAPReferenceWraper)eleWraper).getIDData());
-								}
-							}
-						}
-					}
-				}
-				else if(HAPConstant.CONS_DATATYPE_CATEGARY_ENTITY.equals(containerAttr.getChildDataTypeDefInfo().getDataTypeInfo().getCategary())){
-					//for entity element, get all child reference for entity element
-					HAPDataWraper[] eleWrapers = containerAttr.getContainerData().getElementWrapers();
-					for(HAPDataWraper eleWraper : eleWrapers){
-						if(HAPEntityDataTypeUtility.isEntityType(eleWraper)){
-							if(!eleWraper.isEmpty()){
-								out.addAll(getAllChildReferenceEntityID((HAPEntityWraper)eleWraper));
-							}
-						}
-					}
-				}
-			}
-			else if(HAPEntityDataTypeUtility.isEntityType(attrWraper)){
-				//for entity attribute 
-				out.addAll(getAllChildReferenceEntityID((HAPEntityWraper)attrWraper));
-			}
-		}
-		return out;
-	}
 	
 	//*********************  Transaction
 	/*
@@ -242,15 +189,19 @@ public class HAPDataContext implements HAPStringable{
 		HAPTransaction trans = this.getCurrentTransaction(); 
 		if(trans!=null){
 			//preprocess, if success, then do real commitment
-			out = trans.preSubmit();
+			out = trans.preCommit();
 			if(out.isSuccess())	{
 				HAPOperationAllResult results = trans.commit();
 				//try to find new operations created because of commit, as only those new operation need to updated on client side  
 				List<HAPEntityOperationInfo> operations = trans.getFullOperations();
-				results.removeResult(operations);
+				//comment out remove duplicate operations
+				//    duplicate opeation will not cause issue on client side
+				//    we don't have unique id for operation in order to remove duplicated operation
+//				results.removeResult(operations);
 				this.removeTopTransaction();
 				out.setData(results);
 			}
+			trans.postCommit();
 		}
 		return out;
 	}
@@ -279,12 +230,13 @@ public class HAPDataContext implements HAPStringable{
 		HAPServiceData out = HAPServiceData.createFailureData();
 		HAPTransaction trans = this.getCurrentTransaction();
 		if(trans!=null){
-			out = trans.preSubmit();
+			out = trans.preCommit();
 			if(out.isSuccess())	{
 				HAPOperationAllResult result = trans.commit();
 				this.removeTopTransaction();
 				out = HAPServiceData.createSuccessData(result);
 			}
+			trans.postCommit();
 		}
 		return out;
 	}
@@ -343,6 +295,9 @@ public class HAPDataContext implements HAPStringable{
 		return trans;
 	}
 	
+	/*
+	 * check if it is valid operation based on current data access stack
+	 */
 	private HAPServiceData isValidOperation(HAPEntityOperation op){
 		HAPEntityDataAccess dataAccess = this.getCurrentDataAccess();
 //		this.getCurrentDataAccess().isValidOperationTransaction(null);
@@ -360,7 +315,6 @@ public class HAPDataContext implements HAPStringable{
 		operation.setIsRootOperation(true);
 
 		//check if this operation is valid operation based on current data access
-		HAPEntityDataAccess dataAccess = this.getCurrentDataAccess();
 		HAPServiceData serviceData = this.isValidOperation(operation.getOperation());
 		if(serviceData.isFail())  return serviceData;
 

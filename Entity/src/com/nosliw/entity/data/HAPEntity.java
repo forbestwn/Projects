@@ -15,7 +15,7 @@ import com.nosliw.entity.definition.HAPAttributeDefinitionAtom;
 import com.nosliw.entity.definition.HAPAttributeDefinition;
 import com.nosliw.entity.definition.HAPEntityDefinition;
 import com.nosliw.entity.definition.HAPEntityDefinitionCritical;
-import com.nosliw.entity.definition.HAPEntityDefinitionBasic;
+import com.nosliw.entity.definition.HAPEntityDefinitionSegment;
 import com.nosliw.entity.definition.HAPEntityDefinitionManager;
 import com.nosliw.entity.options.HAPOptionsDefinitionManager;
 
@@ -175,7 +175,7 @@ public class HAPEntity extends HAPDataTypeImp{
 		if(className==null)  className = this.getEntityDefinitionManager().getDefaultClassName();
 		HAPEntityData entity = null;
 		try {
-			Class[] conInputs = {HAPDataType.class, HAPEntityDefinitionBasic.class}; 
+			Class[] conInputs = {HAPDataType.class, HAPEntityDefinitionSegment.class}; 
 			Constructor con = Class.forName(className).getConstructor(conInputs);
 			entity = (HAPEntityData) con.newInstance(this.getEntityDefinitionManager().getEntityDataTypeByName(type), entityDef1);
 		} catch (InstantiationException e) {

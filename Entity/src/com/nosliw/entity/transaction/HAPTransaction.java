@@ -78,12 +78,8 @@ public abstract class HAPTransaction extends HAPEntityDataAccessImp{
 			this.getUnderDataAccess().submitOperation(operation);
 		}
 		
-		
 		this.getUnderDataAccess().updateQueryByResult();
 		
-//		this.mergeQuery();
-//		this.mergeReference();
-
 		underAccess.closeOperationResult();
 		return underAccess.getOperationResult();
 	}
@@ -124,8 +120,6 @@ public abstract class HAPTransaction extends HAPEntityDataAccessImp{
 				result.addResult(HAPEntityOperationFactory.createQueryUpdateOperation(this.getQueryComponent(query)));
 			}			
 		}
-		
-		
 		return result;
 	}
 	

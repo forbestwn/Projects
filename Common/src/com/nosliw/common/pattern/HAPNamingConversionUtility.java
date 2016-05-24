@@ -1,4 +1,8 @@
-package com.nosliw.common.utils;
+package com.nosliw.common.pattern;
+
+import com.nosliw.common.utils.HAPBasicUtility;
+import com.nosliw.common.utils.HAPConstant;
+import com.nosliw.common.utils.HAPSegmentParser;
 
 public class HAPNamingConversionUtility {
 

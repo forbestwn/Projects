@@ -23,7 +23,7 @@ import com.nosliw.data.HAPData;
 import com.nosliw.data.HAPDataTypeManager;
 import com.nosliw.data.info.HAPDataTypeDefInfo;
 import com.nosliw.entity.definition.HAPAttributeDefinition;
-import com.nosliw.entity.definition.HAPEntityDefinitionBasic;
+import com.nosliw.entity.definition.HAPEntityDefinitionSegment;
 import com.nosliw.entity.definition.HAPEntityDefinitionCritical;
 import com.nosliw.entity.definition.HAPEntityDefinitionLoader;
 import com.nosliw.entity.definition.HAPEntityDefinitionManager;
@@ -114,7 +114,7 @@ public class HAPEntityDefinitionLoaderXML extends HAPEntityDefinitionLoader{
 	 */
 	HAPEntityDefinitionCritical readEntityDefinition(Element element, HAPEntityDefinitionMeta metadata)
 	{
-		HAPEntityDefinitionBasic entityDefBasic = readEntityDefinitionBasic(null, element, this.getEntityDefinitionManager().getDefaultClassName(), metadata);
+		HAPEntityDefinitionSegment entityDefBasic = readEntityDefinitionBasic(null, element, this.getEntityDefinitionManager().getDefaultClassName(), metadata);
 		HAPEntityDefinitionCritical entityDef = new HAPEntityDefinitionCritical(entityDefBasic);
 
 		//read attribute
@@ -126,9 +126,9 @@ public class HAPEntityDefinitionLoaderXML extends HAPEntityDefinitionLoader{
 	/*
 	 * for read critical attributes
 	 */
-	HAPEntityDefinitionBasic readCriticalEntityDefinition(String name, Element element, HAPEntityDefinitionMeta metadata, String backupClassName)
+	HAPEntityDefinitionSegment readCriticalEntityDefinition(String name, Element element, HAPEntityDefinitionMeta metadata, String backupClassName)
 	{
-		HAPEntityDefinitionBasic entityDef = readEntityDefinitionBasic(name, element, backupClassName, metadata);
+		HAPEntityDefinitionSegment entityDef = readEntityDefinitionBasic(name, element, backupClassName, metadata);
 		readAttributes(element, entityDef, metadata);
 		return entityDef;
 	}
@@ -138,7 +138,7 @@ public class HAPEntityDefinitionLoaderXML extends HAPEntityDefinitionLoader{
 	 * entityName: if null, read from element
 	 * backupBaseClass:  if not defined in element, use this one
 	 */
-	private HAPEntityDefinitionBasic readEntityDefinitionBasic(String entityName, Element element, String backupBaseClass, HAPEntityDefinitionMeta metadata){
+	private HAPEntityDefinitionSegment readEntityDefinitionBasic(String entityName, Element element, String backupBaseClass, HAPEntityDefinitionMeta metadata){
 		String fullName = entityName;
 		if(HAPBasicUtility.isStringEmpty(entityName)){
 			String name = element.getAttribute(HAPEntityDefinitionLoaderXmlUtility.TAG_ATTRIBUTE_NAME);
@@ -164,11 +164,11 @@ public class HAPEntityDefinitionLoaderXML extends HAPEntityDefinitionLoader{
 		String className = element.getAttribute(HAPEntityDefinitionLoaderXmlUtility.TAG_ATTRIBUTE_CLASS);
 		className = HAPEntityDefinitionLoaderXmlUtility.getFullClassName(className, metadata, backupBaseClass);
 		
-		HAPEntityDefinitionBasic entityDef = new HAPEntityDefinitionBasic(fullName, className, groups, this.getEntityDefinitionManager());
+		HAPEntityDefinitionSegment entityDef = new HAPEntityDefinitionSegment(fullName, className, groups, this.getEntityDefinitionManager());
 		return entityDef;
 	}
 	
-	void readAttributes(Element element, HAPEntityDefinitionBasic entityDef, HAPEntityDefinitionMeta metadata)
+	void readAttributes(Element element, HAPEntityDefinitionSegment entityDef, HAPEntityDefinitionMeta metadata)
 	{
 		Element[] elements = HAPXMLUtility.getMultiChildElementByName(element, HAPEntityDefinitionLoaderXmlUtility.TAG_ATTRIBUTE);
 		for(Element ele : elements){
@@ -177,7 +177,7 @@ public class HAPEntityDefinitionLoaderXML extends HAPEntityDefinitionLoader{
 		}
 	}
 
-	HAPAttributeDefinition readAttribute(Element ele, HAPEntityDefinitionBasic entityDefinition, HAPEntityDefinitionMeta metadata)
+	HAPAttributeDefinition readAttribute(Element ele, HAPEntityDefinitionSegment entityDefinition, HAPEntityDefinitionMeta metadata)
 	{
 		HAPAttributeDefinition out = null;
 		
@@ -213,7 +213,7 @@ public class HAPEntityDefinitionLoaderXML extends HAPEntityDefinitionLoader{
 		return out;
 	}
 	
-	HAPOptionsDefinition readOptions(Element ele, HAPAttributeDefinition attributeDef, HAPEntityDefinitionBasic entityDefinition, HAPEntityDefinitionMeta metadata){
+	HAPOptionsDefinition readOptions(Element ele, HAPAttributeDefinition attributeDef, HAPEntityDefinitionSegment entityDefinition, HAPEntityDefinitionMeta metadata){
 		String categary = attributeDef.getDataTypeDefinitionInfo().getCategary();
 		String type = attributeDef.getDataTypeDefinitionInfo().getType();
 		
@@ -269,21 +269,21 @@ public class HAPEntityDefinitionLoaderXML extends HAPEntityDefinitionLoader{
 								HAPSegmentParser valueSegs = new HAPSegmentParser(value, HAPConstant.CONS_SEPERATOR_ELEMENT);
 								while(valueSegs.hasNext()){
 									String v = valueSegs.next();
-									HAPEntityDefinitionBasic entityDef = this.readCriticalEntityDefinition(entityDefinition.getEntityName(), optionEle, metadata, entityDefinition.getBaseClassName());
+									HAPEntityDefinitionSegment entityDef = this.readCriticalEntityDefinition(entityDefinition.getEntityName(), optionEle, metadata, entityDefinition.getBaseClassName());
 									for(String attrName : entityDef.getAttributeNames()){
 										HAPAttributeDefinition attrDef = entityDef.getAttributeDefinitionByName(attrName);
 										((HAPAttributeDefinition)attrDef).setCriticalValue(v);
 									}
-									((HAPEntityDefinitionCritical)entityDefinition).addCriticalEntity(v, entityDef);
+									((HAPEntityDefinitionCritical)entityDefinition).addCriticalEntitySegmentValue(v, entityDef);
 									optionsData.add(this.getDataTypeManager().parseString(v, categary, type));
 								}
 							}else{
-								HAPEntityDefinitionBasic entityDef = this.readCriticalEntityDefinition(entityDefinition.getEntityName(), optionEle, metadata, entityDefinition.getBaseClassName()); 
+								HAPEntityDefinitionSegment entityDef = this.readCriticalEntityDefinition(entityDefinition.getEntityName(), optionEle, metadata, entityDefinition.getBaseClassName()); 
 								for(String attrName : entityDef.getAttributeNames()){
 									HAPAttributeDefinition attrDef = entityDef.getAttributeDefinitionByName(attrName);
 									((HAPAttributeDefinition)attrDef).setCriticalValue(HAPConstant.CONS_ENTITY_CRITICALVALUE_OTHER);
 								}
-								((HAPEntityDefinitionCritical)entityDefinition).setCriticalEntityOther(entityDef);
+								((HAPEntityDefinitionCritical)entityDefinition).setCriticalEntitySegmentOther(entityDef);
 //								optionsData.add(HAPConstant.CONS_ENTITY_CRITICALVALUE_OTHER);
 								isOption = false;
 							}

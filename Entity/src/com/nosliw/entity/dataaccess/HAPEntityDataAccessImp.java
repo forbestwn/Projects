@@ -19,9 +19,9 @@ import com.nosliw.entity.data.HAPEntity;
 import com.nosliw.entity.data.HAPEntityData;
 import com.nosliw.entity.data.HAPEntityID;
 import com.nosliw.entity.data.HAPEntityWraper;
-import com.nosliw.entity.data.HAPReferencePath;
+import com.nosliw.entity.data.HAPReferenceInfoAbsolute;
 import com.nosliw.entity.definition.HAPAttributeDefinition;
-import com.nosliw.entity.definition.HAPEntityDefinitionBasic;
+import com.nosliw.entity.definition.HAPEntityDefinitionSegment;
 import com.nosliw.entity.definition.HAPEntityDefinitionManager;
 import com.nosliw.entity.event.HAPEntityClearupEvent;
 import com.nosliw.entity.event.HAPEvent;
@@ -88,7 +88,7 @@ public abstract class HAPEntityDataAccessImp implements HAPEntityDataAccess{
 		//check if valid operation within this data access
 		HAPServiceData out = this.isValidOperation(operation);
 		if(out.isSuccess()){
-			//do something before real operation, for instance, back up data for reserve operation
+			//do something before real operation, for instance, back up data for reverse operation
 			this.preOperate(operation);
 			//do real operation
 			out = this.doOperate(operation);
@@ -205,14 +205,14 @@ public abstract class HAPEntityDataAccessImp implements HAPEntityDataAccess{
 		}
 		case ENTITYOPERATION_REFERENCE_REMOVE:
 		{
-			HAPReferencePath refPath = operation.getReferencePath();
+			HAPReferenceInfoAbsolute refPath = operation.getReferencePath();
 			HAPEntityWraper entityWraper = (HAPEntityWraper)this.useEntityByID(operation.getEntityID()).getData();
 			this.getReferenceManager().removeParentReference(entityWraper.getID(), refPath.getEntityID(), refPath.getAttrPath());
 			break;
 		}
 		case ENTITYOPERATION_REFERENCE_ADD:
 		{
-			HAPReferencePath refPath = operation.getReferencePath();
+			HAPReferenceInfoAbsolute refPath = operation.getReferencePath();
 			HAPEntityWraper entityWraper = (HAPEntityWraper)this.useEntityByID(operation.getEntityID()).getData();
 			getReferenceManager().addParentReference(entityWraper.getID(), refPath.getEntityID(), refPath.getAttrPath());
 			break;
@@ -222,7 +222,7 @@ public abstract class HAPEntityDataAccessImp implements HAPEntityDataAccess{
 			HAPAttributeDefinition attrDef = operation.getAttributeDefinition();
 			HAPEntityWraper entityWraper = (HAPEntityWraper)this.useEntityByID(operation.getEntityID()).getData();
 
-			HAPEntityDefinitionBasic entityDef = entityWraper.getEntityData().getEntityInfo();
+			HAPEntityDefinitionSegment entityDef = entityWraper.getEntityData().getEntityInfo();
 			entityDef.copyAttributeDefinition(attrDef);
 
 			HAPEntity entityDataType = (HAPEntity)HAPEntityDataUtility.getEntityDataType(entityWraper.getEntityType(), this.getDataTypeManager());
@@ -237,7 +237,7 @@ public abstract class HAPEntityDataAccessImp implements HAPEntityDataAccess{
 			HAPDataWraper attrWraper = (HAPDataWraper)entityWraper.getChildWraperByPath(operation.getAttributePath()).cloneWraper();
 			operation.setExtra(attrWraper);
 
-			HAPEntityDefinitionBasic entityDef = entityWraper.getEntityData().getEntityInfo();
+			HAPEntityDefinitionSegment entityDef = entityWraper.getEntityData().getEntityInfo();
 			entityDef.removeAttributeDefinition(operation.getAttributePath());
 			
 			entityWraper.getEntityData().removeAttribute(operation.getAttributePath(), operation.getScope());
@@ -308,11 +308,17 @@ public abstract class HAPEntityDataAccessImp implements HAPEntityDataAccess{
 		this.operate(operation);
 	}
 
-	public HAPServiceData preSubmit(){
+	@Override
+	public HAPServiceData preCommit(){
 		return HAPServiceData.createSuccessData();
 	}
 	
+	@Override
+	public HAPServiceData postCommit(){
+		return HAPServiceData.createSuccessData();
+	}
 
+	
 	//********************************  Entity  Management
 	@Override
 	public HAPServiceData useEntityByID(HAPEntityID ID){
@@ -433,21 +439,21 @@ public abstract class HAPEntityDataAccessImp implements HAPEntityDataAccess{
 
 	@Override
 	public void clearReferenceToEntity(HAPEntityID entityID){
-		Set<HAPReferencePath> references = getReferenceManager().getParentReferences(entityID);
-		for(HAPReferencePath ref : references){
+		Set<HAPReferenceInfoAbsolute> references = getReferenceManager().getParentReferences(entityID);
+		for(HAPReferenceInfoAbsolute ref : references){
 			HAPEntityOperationInfo operation = HAPEntityOperationFactory.createAttributeReferenceClearOperation(ref.getEntityID(), ref.getAttrPath());
 			this.operate(operation);
 		}
 	}
 	
 	@Override
-	public void breakEntityReference(HAPReferencePath referencePath, HAPEntityID ID){
+	public void breakEntityReference(HAPReferenceInfoAbsolute referencePath, HAPEntityID ID){
 		HAPEntityOperationInfo operation = HAPEntityOperationFactory.createReferenceRemoveOperation(ID, referencePath);
 		this.operate(operation);
 	}
 		
 	@Override
-	public void buildEntityReference(HAPReferencePath referencePath, HAPEntityID ID){
+	public void buildEntityReference(HAPReferenceInfoAbsolute referencePath, HAPEntityID ID){
 		HAPEntityOperationInfo operation = HAPEntityOperationFactory.createReferenceAddOperation(ID, referencePath);
 		this.operate(operation);
 	}

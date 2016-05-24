@@ -12,7 +12,7 @@ public class HAPAttributeDefinitionEntity extends HAPAttributeDefinition{
 	//entity definition
 	private HAPEntityDefinitionCritical m_attrEntityDefinition;
 	
-	public HAPAttributeDefinitionEntity(String name,HAPEntityDefinitionBasic entityDef, HAPDataTypeManager dataTypeMan, HAPEntityDefinitionManager entityDefMan, HAPOptionsDefinitionManager optionsMan) {
+	public HAPAttributeDefinitionEntity(String name,HAPEntityDefinitionSegment entityDef, HAPDataTypeManager dataTypeMan, HAPEntityDefinitionManager entityDefMan, HAPOptionsDefinitionManager optionsMan) {
 		super(name, entityDef, dataTypeMan, entityDefMan, optionsMan);
 	}
 
@@ -24,7 +24,7 @@ public class HAPAttributeDefinitionEntity extends HAPAttributeDefinition{
 	}
 	
 	@Override
-	public HAPAttributeDefinition cloneDefinition(HAPEntityDefinitionBasic entityDef){
+	public HAPAttributeDefinition cloneDefinition(HAPEntityDefinitionSegment entityDef){
 		HAPAttributeDefinitionEntity out = new HAPAttributeDefinitionEntity(this.getName(), entityDef, this.getDataTypeManager(), this.getEntityDefinitionManager(), this.getOptionsManager());
 		cloneTo(out);
 		return out;

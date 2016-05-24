@@ -2,7 +2,7 @@ package com.nosliw.utils;
 
 import com.nosliw.entity.data.HAPDataWraper;
 import com.nosliw.entity.data.HAPEntityID;
-import com.nosliw.entity.data.HAPReferencePath;
+import com.nosliw.entity.data.HAPReferenceInfoAbsolute;
 import com.nosliw.entity.definition.HAPAttributeDefinition;
 import com.nosliw.entity.definition.HAPEntityDefinitionCritical;
 

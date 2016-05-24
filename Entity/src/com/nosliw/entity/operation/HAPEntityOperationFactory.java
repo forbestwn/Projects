@@ -2,7 +2,7 @@ package com.nosliw.entity.operation;
 
 import com.nosliw.data.HAPData;
 import com.nosliw.entity.data.HAPEntityID;
-import com.nosliw.entity.data.HAPReferencePath;
+import com.nosliw.entity.data.HAPReferenceInfoAbsolute;
 import com.nosliw.entity.definition.HAPAttributeDefinition;
 import com.nosliw.entity.query.HAPQueryComponent;
 import com.nosliw.entity.query.HAPQueryEntityWraper;
@@ -156,7 +156,7 @@ public class HAPEntityOperationFactory {
 		return out;
 	}
 	
-	static public HAPEntityOperationInfo createReferenceAddOperation(HAPEntityID entityID, HAPReferencePath referencePath){
+	static public HAPEntityOperationInfo createReferenceAddOperation(HAPEntityID entityID, HAPReferenceInfoAbsolute referencePath){
 		HAPEntityOperationInfo out = new HAPEntityOperationInfo();
 		out.setOperation(HAPEntityOperation.ENTITYOPERATION_REFERENCE_ADD);
 		out.setEntityID(entityID);
@@ -164,7 +164,7 @@ public class HAPEntityOperationFactory {
 		return out;
 	}
 
-	static public HAPEntityOperationInfo createReferenceRemoveOperation(HAPEntityID entityID, HAPReferencePath referencePath){
+	static public HAPEntityOperationInfo createReferenceRemoveOperation(HAPEntityID entityID, HAPReferenceInfoAbsolute referencePath){
 		HAPEntityOperationInfo out = new HAPEntityOperationInfo();
 		out.setOperation(HAPEntityOperation.ENTITYOPERATION_REFERENCE_REMOVE);
 		out.setEntityID(entityID);

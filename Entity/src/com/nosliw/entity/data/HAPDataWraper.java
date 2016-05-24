@@ -9,9 +9,9 @@ import java.util.Set;
 
 import com.nosliw.common.exception.HAPServiceData;
 import com.nosliw.common.exception.HAPServiceDataException;
+import com.nosliw.common.pattern.HAPNamingConversionUtility;
 import com.nosliw.common.utils.HAPBasicUtility;
 import com.nosliw.common.utils.HAPConstant;
-import com.nosliw.common.utils.HAPNamingConversionUtility;
 import com.nosliw.common.utils.HAPSegmentParser;
 import com.nosliw.data.HAPData;
 import com.nosliw.data.HAPDataTypeManager;
@@ -32,7 +32,7 @@ import com.nosliw.entity.utils.HAPAttributeConstant;
 import com.nosliw.entity.utils.HAPEntityDataTypeUtility;
 import com.nosliw.entity.utils.HAPEntityDataUtility;
 import com.nosliw.entity.utils.HAPEntityUtility;
-import com.nosliw.entity.validation.HAPValidationInfo;
+import com.nosliw.entity.validation.HAPValidationInfoExpression;
 
 /*
  * abstract class for all the wraper classes: atom, container, entity, reference
@@ -244,7 +244,7 @@ public abstract class HAPDataWraper extends HAPWraper{
 
 		public String getRootEntityAttributePath(){	return HAPEntityDataUtility.getRootEntityAttributePath(this);}
 		
-		public HAPReferencePath getReferencePath(){	return new HAPReferencePath(this.getRootEntityWraper().getID(), this.getRootEntityAttributePath());	}
+		public HAPReferenceInfoAbsolute getReferencePath(){	return new HAPReferenceInfoAbsolute(this.getRootEntityWraper().getID(), this.getRootEntityAttributePath());	}
 
 		/*
 		 * set the parent entity for this wrapper
@@ -411,7 +411,7 @@ public abstract class HAPDataWraper extends HAPWraper{
 			HAPAttributeDefinition attrDef = this.getAttributeDefinition();
 			if(attrDef==null)  return out;
 			
-			for(HAPValidationInfo validationInfo : attrDef.getValidationInfos()){
+			for(HAPValidationInfoExpression validationInfo : attrDef.getValidationInfos()){
 				try {
 					if(!HAPAttributeExpressionUtility.executeAttributeValidationExpression(validationInfo.getExpression(), this)){
 						return HAPServiceData.createFailureData(null,validationInfo.getErrorMessage());

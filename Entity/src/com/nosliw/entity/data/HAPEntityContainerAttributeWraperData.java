@@ -4,10 +4,10 @@ import java.util.LinkedHashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.nosliw.common.pattern.HAPNamingConversionUtility;
 import com.nosliw.common.utils.HAPBasicUtility;
 import com.nosliw.common.utils.HAPConstant;
 import com.nosliw.common.utils.HAPJsonUtility;
-import com.nosliw.common.utils.HAPNamingConversionUtility;
 import com.nosliw.data.HAPData;
 import com.nosliw.data.HAPDataImp;
 import com.nosliw.data.HAPDataType;

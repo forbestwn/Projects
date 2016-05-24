@@ -44,7 +44,6 @@ public class HAPConstant {
 
 		public static final String CONS_SYMBOL_KEYWORD = "#";
 		public static final String CONS_SYMBOL_GROUP = "@";
-		public static final String CONS_SYMBOL_USERCONTEXT = "#";
 		public static final String CONS_SYMBOL_ENTITYNAME_COMMON = "..";
 		public static final String CONS_SYMBOL_ENTITYNAME_CURRENT = ".";
 		public static final String CONS_SEPERATOR_ELEMENT = ";";
@@ -288,6 +287,20 @@ public class HAPConstant {
 		public static final String CONS_SCRIPTTYPE_UIRESOURCE = "uiResource";
 		public static final String CONS_SCRIPTTYPE_DATAOPERATIONS = "dataOperations";
 		public static final String CONS_SCRIPTTYPE_UITAGS = "uiTags";
+
+
+
+		public static final int CONS_REFERENCE_TYPE_ABSOLUTE = 0;
+		public static final int CONS_REFERENCE_TYPE_RELATIVE = 1;
+
+
+
+		public static final String CONS_PATTERN_DATATYPEINFO = "pattern_datatypeinfo";
+
+
+
+		public static final String CONS_TESTRESULT_TYPE_SUITE = "SUITE";
+		public static final String CONS_TESTRESULT_TYPE_CASE = "CASE";
 
 
 

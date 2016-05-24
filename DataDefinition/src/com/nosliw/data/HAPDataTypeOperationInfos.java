@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.nosliw.common.pattern.HAPNamingConversionUtility;
 import com.nosliw.common.utils.HAPConstant;
-import com.nosliw.common.utils.HAPNamingConversionUtility;
 import com.nosliw.data.info.HAPDataOperationInfo;
 import com.nosliw.data.info.HAPDataTypeInfo;
 import com.nosliw.data.utils.HAPDataOperationUtility;

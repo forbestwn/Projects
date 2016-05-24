@@ -168,7 +168,7 @@ public class HAPReferenceWraper extends HAPDataWraper{
 	protected void externalOperation(HAPEntityOperationInfo operation, HAPServiceData serviceData){
 		switch(operation.getOperation()){
 		case ENTITYOPERATION_ATTR_REFERENCE_SET:
-			HAPReferencePath refPath = this.getReferencePath(); 
+			HAPReferenceInfoAbsolute refPath = this.getReferencePath(); 
 
 			HAPEntityID entityID1 = (HAPEntityID)operation.getExtra();
 			if(entityID1!=null){

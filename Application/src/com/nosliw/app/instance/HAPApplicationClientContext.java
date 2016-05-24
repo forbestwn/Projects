@@ -122,7 +122,7 @@ public class HAPApplicationClientContext extends HAPClientContext  implements HA
 	
 	@Override
 	public HAPServiceData getEntityWrapers(HAPEntityRequestInfo requestInfo) {
-		Map<String, HAPEntityWraper> wrapers = this.getDataContext().getEntitysRequest(requestInfo); 
+		Map<String, HAPServiceData> wrapers = this.getDataContext().getEntitysRequest(requestInfo); 
 		return HAPServiceData.createSuccessData(wrapers);
 	}
 

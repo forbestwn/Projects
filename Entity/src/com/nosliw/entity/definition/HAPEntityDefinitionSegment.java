@@ -13,10 +13,33 @@ import com.nosliw.common.utils.HAPSegmentParser;
 import com.nosliw.entity.utils.HAPAttributeConstant;
 
 /*
- * this class is parent class or a component of critical entity def
- *    
+ * this class is the definition of an entity segment
+ * this segment can be used in 
+ * 		1.  base segment when define entity
+ *      2.  critical value segment when define entity
+ *      3.  entity definition for entity instance
+ * every entity type has 
+ * 	entity name, for instance : common.Parm
+ * 	group:
+ * 		group is introduced when dealing with datasource.
+ * 		because there are different type of datasoruces and system allow other type datasources are introduced into system as plugin
+ * 		for some entity, for instance Face, it has attribute typed datasource. 
+ * 		in that case, we use group to group different type of datasource under one group name
+ * 		therefore, face entity just define its attribute by group name
+ * 		one entity can belong to mutiple group
+ *  attributes, there are two type of attributes : normal and critical one
+ *  	critical attribute: when critical attribute is set to different value, the entity's attribute definition may changes. 
+ *  	The class name may change as well
+ *  	critical is in text type
+ *  class
+ *  	base class to create complex entity object
+ *		for entity with critical attribute, each critical value may has its own base class,   	
+ *  critical value:
+ *  	"" : valid critical value
+ *      null : invalid or unknown
+ *  provide method to create another entity definition based on critical attribute value
  */
-public class HAPEntityDefinitionBasic implements HAPStringable{
+public class HAPEntityDefinitionSegment implements HAPStringable{
 	//entity name
 	protected String m_entityName;  	
 	//groups this entity belong to
@@ -29,29 +52,28 @@ public class HAPEntityDefinitionBasic implements HAPStringable{
 	
 	private HAPEntityDefinitionManager m_entityDefinitionMan;
 	
-	public HAPEntityDefinitionBasic(String name, String baseClassName, Set<String> groups, HAPEntityDefinitionManager entityDefinitionMan){
-		this();
+	/*
+	 * default constructor
+	 */
+	protected HAPEntityDefinitionSegment(HAPEntityDefinitionManager entityDefinitionMan){
 		this.m_entityDefinitionMan = entityDefinitionMan;
-		if(groups!=null)		this.m_groups.addAll(groups);
-		this.m_entityName = name;
-		if(HAPBasicUtility.isStringEmpty(baseClassName))	this.m_baseClassName=this.getEntityDefinitionManager().getDefaultClassName();
-		else this.m_baseClassName = baseClassName;
-	}	
-	
-	public HAPEntityDefinitionBasic(HAPEntityDefinitionCritical def){
-		this();
-		def.cloneTo(this);
-	}
-
-	public HAPEntityDefinitionBasic(HAPEntityDefinitionBasic def){
-		this();
-		def.cloneTo(this);
-	}
-	
-	protected HAPEntityDefinitionBasic(){
 		this.m_groups = new HashSet<String>();
 		m_attributeDefs = new LinkedHashMap<String, HAPAttributeDefinition>();
+		this.m_baseClassName=this.getEntityDefinitionManager().getDefaultClassName();
 	}
+
+	public HAPEntityDefinitionSegment(String name, String baseClassName, Set<String> groups, HAPEntityDefinitionManager entityDefinitionMan){
+		this(entityDefinitionMan);
+		this.m_entityName = name;
+		if(groups!=null)		this.m_groups.addAll(groups);
+		if(!HAPBasicUtility.isStringEmpty(baseClassName))	this.m_baseClassName = baseClassName;
+	}	
+	
+	public HAPEntityDefinitionSegment(HAPEntityDefinitionSegment def){
+		this(def.getEntityDefinitionManager());
+		this.cloneFrom(def);
+	}
+	
 	
 	/******************************************   Serialization  *********************************************/
 	
@@ -93,7 +115,7 @@ public class HAPEntityDefinitionBasic implements HAPStringable{
 	 */
 	public Map<String, HAPAttributeDefinition> getAttributeDefinitions() {	return this.m_attributeDefs;}
 	
-	public void copyAttributeDefinition(HAPAttributeDefinition defin){
+	protected void copyAttributeDefinition(HAPAttributeDefinition defin){
 		HAPAttributeDefinition def1 = defin.cloneDefinition(this);
 		this.m_attributeDefs.put(def1.getName(), def1);
 	}
@@ -125,38 +147,42 @@ public class HAPEntityDefinitionBasic implements HAPStringable{
 		String attrRest = pathParser.getRestPath();
 		
 		HAPAttributeDefinition attrDef = this.getAttributeDefinitionByName(attrName);
+		if(attrDef==null)  return null;
 		if(HAPBasicUtility.isStringEmpty(attrRest))  return attrDef;
 		else return attrDef.getChildAttrByPath(attrRest);
 	}
 
 	/******************************************   Basic Information  *********************************************/
 	public String getEntityName(){return this.m_entityName;}
-//	public void setEntityName(String entityName) {this.m_entityName = entityName;}
 
 	public Set<String> getGroups() {	return this.m_groups;	}
-//	public void addGroup(String group){this.m_groups.add(group);}
 
 	/* get defined class name for this entity
 	 * if not defined, then use method getDefaultClassName in EntityDefinitionManager instead 
 	 */
 	public String getBaseClassName() {	return this.m_baseClassName;	}
-//	public void setBaseClass(String className) {this.m_baseClassName=className;}
 
 	protected HAPEntityDefinitionManager getEntityDefinitionManager(){return this.m_entityDefinitionMan;}
 	
 	/******************************************   Clone  *********************************************/
-	public HAPEntityDefinitionBasic cloneDefinition(){
-		HAPEntityDefinitionBasic out = new HAPEntityDefinitionBasic();
-		this.cloneTo(out);
+	public HAPEntityDefinitionSegment cloneDefinition(){
+		HAPEntityDefinitionSegment out = new HAPEntityDefinitionSegment(this.getEntityDefinitionManager());
+		out.cloneFrom(this);
 		return out;
 	}
 
-	protected void cloneTo(HAPEntityDefinitionBasic entityDef){
-		entityDef.m_entityDefinitionMan = this.m_entityDefinitionMan;
-		entityDef.m_entityName = this.m_entityName;
-		for(String group : this.getGroups())   entityDef.m_groups.add(group);
-		entityDef.m_baseClassName = this.getBaseClassName();
-		entityDef.m_attributeDefs.putAll(this.m_attributeDefs);
+	protected void cloneFrom(HAPEntityDefinitionSegment entityDef){
+		this.m_entityDefinitionMan = entityDef.m_entityDefinitionMan;
+		this.m_entityName = entityDef.m_entityName;
+		this.m_groups.addAll(entityDef.m_groups);
+		this.m_baseClassName = entityDef.getBaseClassName();
+		this.m_attributeDefs.putAll(entityDef.m_attributeDefs);
+	}
+
+	public HAPEntityDefinitionSegment mergeWith(HAPEntityDefinitionSegment entityDefSegment){
+		HAPEntityDefinitionSegment entityDef = this.cloneDefinition(); 
+		entityDef.m_attributeDefs.putAll(this.getAttributeDefinitions());
+		return entityDef;
 	}
 	
 	/******************************************   Loader  *********************************************/
@@ -164,6 +190,4 @@ public class HAPEntityDefinitionBasic implements HAPStringable{
 	 * method to be called after entity definition is loaded
 	 */
 	public void afterLoad(){}
-
 }
-

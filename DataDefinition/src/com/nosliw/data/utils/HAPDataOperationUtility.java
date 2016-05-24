@@ -1,9 +1,9 @@
 package com.nosliw.data.utils;
 
 import com.nosliw.common.exception.HAPServiceData;
+import com.nosliw.common.pattern.HAPNamingConversionUtility;
 import com.nosliw.common.utils.HAPBasicUtility;
 import com.nosliw.common.utils.HAPConstant;
-import com.nosliw.common.utils.HAPNamingConversionUtility;
 import com.nosliw.data.HAPData;
 import com.nosliw.data.HAPDataTypeImp;
 import com.nosliw.data.HAPDataTypeManager;
