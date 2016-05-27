@@ -4,7 +4,7 @@ import org.junit.Assert;
 
 public class HAPAssert{
 	
-	public static void assertEquals(Object expected, Object actual, HAPTestCaseResult result){
+	public static void assertEquals(Object expected, Object actual, HAPResultTestCase result){
 		try{
 			Assert.assertEquals(expected, actual);
 		}

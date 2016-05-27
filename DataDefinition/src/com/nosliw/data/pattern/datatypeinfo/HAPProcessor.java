@@ -2,7 +2,7 @@ package com.nosliw.data.pattern.datatypeinfo;
 
 import com.nosliw.common.pattern.HAPNamingConversionUtility;
 import com.nosliw.common.pattern.HAPPatternProcessor;
-import com.nosliw.common.test.HAPTestCaseResult;
+import com.nosliw.common.test.HAPResultTestCase;
 import com.nosliw.common.test.HAPAssert;
 import com.nosliw.common.utils.HAPBasicUtility;
 import com.nosliw.common.utils.HAPConstant;
@@ -35,7 +35,7 @@ public class HAPProcessor implements HAPPatternProcessor{
 
 	@Override
 	public boolean test() {
-		HAPTestCaseResult result = new HAPTestCaseResult();
+		HAPResultTestCase result = new HAPResultTestCase();
 		
 		try{
 			String testStr1 = "type"+HAPConstant.CONS_SEPERATOR_PART+"categary";

@@ -29,8 +29,11 @@ import com.nosliw.common.configure.HAPConfigurableImp;
 import com.nosliw.common.pattern.HAPPatternManager;
 import com.nosliw.common.pattern.HAPPatternProcessor;
 import com.nosliw.common.pattern.HAPPatternProcessorInfo;
+import com.nosliw.common.test.HAPResult;
 import com.nosliw.common.test.HAPTestCaseInfo;
+import com.nosliw.common.test.HAPTestDescription;
 import com.nosliw.common.test.HAPTestSuiteInfo;
+import com.nosliw.common.test.HAPTestUtility;
 import com.nosliw.common.utils.HAPFileUtility;
 
 public class HAPPatternProcessorApp {
@@ -53,11 +56,18 @@ public class HAPPatternProcessorApp {
 	           return p1.getName().compareTo(p2.getName());
 	        }
 		});
-		
-		HAPTestSuiteInfo testSuite = new HAPTestSuiteInfo("PatternProcessors", "all pattern processors");
+
+		//create root test suite
+		HAPTestSuiteInfo testSuite = new HAPTestSuiteInfo(new HAPTestDescription("PatternProcessors", "all pattern processors"));
+		//create test suite for each pattern process and add to root suite
 		for(HAPPatternProcessorInfo info : processorInfos){
-			testSuite.addTestCases(testCases);
+			HAPTestSuiteInfo testSuiteInfo = HAPTestUtility.processTestSuiteClass(info.getClassName());
+			if(testSuiteInfo!=null)			testSuite.addTest(testSuiteInfo);
 		}
+		
+		HAPResult testResult = testSuite.run(null);
+		
+		
 		
 		patternMan.getAllPatternProcesssorInfos()
 		

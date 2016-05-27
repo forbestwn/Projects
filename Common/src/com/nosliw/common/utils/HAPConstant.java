@@ -304,6 +304,11 @@ public class HAPConstant {
 
 
 
+		public static final String CONS_TEST_TYPE_SUITE = "SUITE";
+		public static final String CONS_TEST_TYPE_CASE = "CASE";
+
+
+
 		public static final String CONS_CATEGARY_NAME = "CONS_CATEGARY_NAME";
 
 

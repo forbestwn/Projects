@@ -1,37 +1,34 @@
 package com.nosliw.common.test;
 
 import com.nosliw.common.utils.HAPBasicUtility;
+import com.nosliw.common.utils.HAPConstant;
 
-public class HAPTestCaseInfo {
+public class HAPTestCaseInfo extends HAPTestInfo{
 	//information for executing the test case: class, before method, test case method, after method
 	private HAPTestCaseRuntime m_testCaseRuntime;
 	
-	private String m_name;
-	private String m_description;
-	private int m_sequence;
-	
 	public HAPTestCaseInfo(HAPTestCase testCase, HAPTestCaseRuntime testCaseRuntime){
+		super(new HAPTestDescription(testCase), testCase.sequence());
 		this.m_testCaseRuntime = testCaseRuntime;
-		this.m_name = testCase.name();
-		this.m_description = testCase.description();
-		this.m_sequence = testCase.sequence();
 		
-		if(HAPBasicUtility.isStringEmpty(this.m_name)){
+		if(HAPBasicUtility.isStringEmpty(this.getName())){
 			//for empty name, use method name instead
-			this.m_name = this.m_testCaseRuntime.getMethodName();
+			this.setName(this.m_testCaseRuntime.getMethodName());
 		}
 	}
 
-	public String getName(){ return this.m_name; }
-	public String getDescription(){  return this.m_description;  }
-	public int getSequence(){  return this.m_sequence;  }
 	
+	@Override
+	public String getType(){ return HAPConstant.CONS_TEST_TYPE_CASE; }
+
 	public HAPTestCaseRuntime getTestCaseRuntime(){
 		return this.m_testCaseRuntime;
 	}
 	
-	public HAPTestCaseResult run(HAPTestCaseResult result){
-		return this.m_testCaseRuntime.run(result);
+	@Override
+	public HAPResult run(HAPResultTestSuite parentResult){
+		HAPResultTestCase result = new HAPResultTestCase(this.getDescription());
+		result = this.m_testCaseRuntime.run(result, this.getTestEnv());
+		return this.addToParentResult(parentResult, result);
 	}
-	
 }

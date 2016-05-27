@@ -5,5 +5,5 @@ public interface HAPTestable {
 	/*
 	 * test method
 	 */
-	public HAPTestSuiteResult test(HAPTestSuiteResult parentResult);
+	public HAPResultTestSuite test(HAPResultTestSuite parentResult);
 }

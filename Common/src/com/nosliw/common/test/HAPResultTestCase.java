@@ -2,10 +2,10 @@ package com.nosliw.common.test;
 
 import com.nosliw.common.utils.HAPConstant;
 
-public class HAPTestCaseResult extends HAPTestResult{
+public class HAPResultTestCase extends HAPResult{
 
-	public HAPTestCaseResult(String name) {
-		super(name);
+	public HAPResultTestCase(HAPTestDescription testDesc) {
+		super(testDesc);
 	}
 
 	public void addException(Exception e){
@@ -16,7 +16,7 @@ public class HAPTestCaseResult extends HAPTestResult{
 		if(!b)  this.setFail();  
 	}
 	
-	public void addResult(HAPTestCaseResult result){
+	public void addResult(HAPResultTestCase result){
 		if(!result.isSuccess())  this.setFail();  
 	}
 

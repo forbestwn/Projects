@@ -502,6 +502,10 @@
 		<definition name="CONS_TESTRESULT_TYPE_CASE" value="CASE"/>
 
 		<definition type="space"/>
+		<definition name="CONS_TEST_TYPE_SUITE" value="SUITE"/>
+		<definition name="CONS_TEST_TYPE_CASE" value="CASE"/>
+
+		<definition type="space"/>
 		<definition name="CONS_CATEGARY_NAME" value="CONS_CATEGARY_NAME"/>
 	</constants>
 </root>
