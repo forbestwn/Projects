@@ -4,13 +4,15 @@ import com.nosliw.common.utils.HAPConstant;
 
 public class HAPResultTestCase extends HAPResult{
 
+	private Exception m_e;
+	
 	public HAPResultTestCase(HAPTestDescription testDesc) {
 		super(testDesc);
 	}
 
-	public void addException(Exception e){
-		this.setFail();
-	}
+	public void addException(Exception e){	this.setFail();	}
+	
+	public Exception getException(){  return m_e; }
 	
 	public void addIsScuss(boolean b){
 		if(!b)  this.setFail();  

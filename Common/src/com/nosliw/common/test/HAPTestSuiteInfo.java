@@ -12,6 +12,14 @@ public class HAPTestSuiteInfo extends HAPTestInfo{
 
 	//all child test suites
 	private List<HAPTestInfo> m_testSuitesInfos;
+
+	//indicate if this test suite info represent a real test suite or just a container of test case
+	private boolean m_isSolid = true;;
+	
+	public HAPTestSuiteInfo(){
+		this(null);
+		this.m_isSolid = false;
+	}
 	
 	public HAPTestSuiteInfo(HAPTestDescription description, HAPTestEnv testEnv){
 		this(description);
@@ -27,6 +35,8 @@ public class HAPTestSuiteInfo extends HAPTestInfo{
 	@Override
 	public String getType(){ return HAPConstant.CONS_TEST_TYPE_SUITE; }
 
+	public boolean isSolid(){ return this.m_isSolid; }
+	
 	@Override
 	public HAPResult run(HAPResultTestSuite parentResult){
 		HAPResultTestSuite result = new HAPResultTestSuite(this.getDescription());
@@ -67,11 +77,19 @@ public class HAPTestSuiteInfo extends HAPTestInfo{
 			this.m_testCasesInfos.add(test);
 			break;
 		case HAPConstant.CONS_TEST_TYPE_SUITE:
-			int index = this.m_testSuitesInfos.indexOf(test);
-			if(index==-1)		this.m_testSuitesInfos.add(test);
+			HAPTestSuiteInfo testSuite = (HAPTestSuiteInfo)test;
+			if(testSuite.isSolid()){
+				//solid test suite
+				int index = this.m_testSuitesInfos.indexOf(test);
+				if(index==-1)		this.m_testSuitesInfos.add(test);
+				else{
+					HAPTestSuiteInfo s1 = (HAPTestSuiteInfo)this.m_testSuitesInfos.get(index);
+					s1.mergeSoft((HAPTestSuiteInfo)test);
+				}
+			}
 			else{
-				HAPTestSuiteInfo s1 = (HAPTestSuiteInfo)this.m_testSuitesInfos.get(index);
-				s1.mergeSoft((HAPTestSuiteInfo)test);
+				for(HAPTestInfo t1 : testSuite.m_testCasesInfos)				this.addTest(t1);
+				for(HAPTestInfo t1 : testSuite.m_testSuitesInfos)				this.addTest(t1);
 			}
 			break;
 		}

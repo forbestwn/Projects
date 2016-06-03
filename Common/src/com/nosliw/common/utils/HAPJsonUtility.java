@@ -127,6 +127,16 @@ public class HAPJsonUtility {
 		String lastString = lastOne?"":",";
 		
 		if(value==null) return null; //out.append("\"" + attr+ "\""+": undefined" + lastString);
+		
+		if(String.class==type){
+			out.append("\"" + attr+ "\""+":\"" + value + "\""+lastString);
+		}
+		else if(Integer.class==type){
+			out.append("\"" + attr+ "\""+":" + value + ""+lastString);
+		}
+		else if(Boolean.class==type){
+			out.append("\"" + attr+ "\""+":" + value + ""+lastString);
+		}
 		else if(value.indexOf("{")==0){
 			out.append("\"" + attr+ "\""+":" + value + lastString);
 		}
@@ -134,15 +144,7 @@ public class HAPJsonUtility {
 			out.append("\"" + attr+ "\""+":" + value + lastString);
 		}
 		else{
-			if(type==null || String.class==type){
-				out.append("\"" + attr+ "\""+":\"" + value + "\""+lastString);
-			}
-			else if(Integer.class==type){
-				out.append("\"" + attr+ "\""+":" + value + ""+lastString);
-			}
-			else if(Boolean.class==type){
-				out.append("\"" + attr+ "\""+":" + value + ""+lastString);
-			}
+			out.append("\"" + attr+ "\""+":\"" + value + "\""+lastString);
 		}
 		out.append("\n");
 		return out.toString();

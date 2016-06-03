@@ -215,7 +215,7 @@ public abstract class HAPDataTypeImp implements HAPDataType{
 	
 	
 	/****************************** Configure ********************************/
-	protected String getConfigure(String name){return this.m_configures.getStringValue(name);}
+	protected String getConfigure(String name){return this.m_configures.getConfigureValue(name).getStringValue();}
 	
 	
 	/****************************** Basice Information ********************************/

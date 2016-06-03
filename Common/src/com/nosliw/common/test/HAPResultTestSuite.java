@@ -18,6 +18,14 @@ public class HAPResultTestSuite extends HAPResult{
 		this.m_testCaseResults = new ArrayList<HAPResult>();
 	}
 
+	public List<HAPResult> getChildTestSuiteResults(){
+		return this.m_testSuiteResults;
+	}
+	
+	public List<HAPResult> getChildTestCaseResults(){
+		return this.m_testCaseResults;
+	}
+	
 	public void addTestResult(HAPResult result){
 		switch(result.getType()){
 		case HAPConstant.CONS_TESTRESULT_TYPE_CASE:

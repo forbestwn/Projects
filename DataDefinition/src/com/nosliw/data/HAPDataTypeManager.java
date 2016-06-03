@@ -268,7 +268,7 @@ public class HAPDataTypeManager implements HAPStringable, HAPResource{
 	 * get temporate file location
 	 */
 	public String getTempFileLocation(){
-		String scriptLocation = this.getConfiguration().getStringValue(HAPConstant.CONS_DATATYPEMAN_SETTINGNAME_SCRIPTLOCATION);
+		String scriptLocation = this.getConfiguration().getConfigureValue(HAPConstant.CONS_DATATYPEMAN_SETTINGNAME_SCRIPTLOCATION).getStringValue();
 		return scriptLocation;
 	}
 

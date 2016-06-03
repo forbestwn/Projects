@@ -11,6 +11,7 @@ import java.util.Set;
 
 import com.nosliw.common.configure.HAPConfigurable;
 import com.nosliw.common.configure.HAPConfigurableImp;
+import com.nosliw.common.configure.HAPConfigureManager;
 import com.nosliw.common.utils.HAPBasicUtility;
 import com.nosliw.common.utils.HAPFileUtility;
 
@@ -22,20 +23,20 @@ public class HAPPatternManager {
 
 	private Map<String, HAPPatternProcessorInfo> m_processorInfos;
 	
-	private HAPConfigurable m_configure;
+	private HAPConfigurableImp m_configure;
 
 	public static HAPPatternManager getInstance(){
 		return getInstance(null);
 	}
 
-	public static HAPPatternManager getInstance(HAPConfigurable configure){
+	public static HAPPatternManager getInstance(HAPConfigurableImp configure){
 		if(m_instance==null){
 			m_instance=new HAPPatternManager(configure);
 		}
 		return m_instance;
 	}
 	
-	public HAPPatternManager(HAPConfigurable configure){
+	public HAPPatternManager(HAPConfigurableImp configure){
 		this.m_processorInfos = new LinkedHashMap<String, HAPPatternProcessorInfo>();
 		this.m_processors = new LinkedHashMap<String, HAPPatternProcessor>();
 		this.init(configure);
@@ -67,11 +68,11 @@ public class HAPPatternManager {
 		return this.m_processorInfos;
 	}
 	
-	private void init(HAPConfigurable configure){	
+	private void init(HAPConfigurableImp configure){	
 		try {
 			this.initConfigure(configure);
 			
-			String loadMode = this.getConfigure().getStringValue("loadMode");
+			String loadMode = this.getConfigure().getConfigureValue("loadMode").getStringValue();
 			if(HAPBasicUtility.isStringEmpty(loadMode)){
 				loadMode = "scan";
 			}
@@ -121,19 +122,19 @@ public class HAPPatternManager {
 	/*
 	 * final configure will be configure softMerge with default configure(from properties file)
 	 */
-	private void initConfigure(HAPConfigurable configure){
+	private void initConfigure(HAPConfigurableImp configure){
 		InputStream input = HAPFileUtility.getInputStreamOnClassPath(HAPPatternUtility.class, "patternprocess.properties");
-		if(input!=null)  m_configure = new HAPConfigurableImp().importFromFile(input);
-		else	m_configure = new HAPConfigurableImp();
+		m_configure = HAPConfigureManager.getInstance().newConfigure();
+		if(input!=null)  m_configure = m_configure.importFromFile(input);
 		
 		if(configure!=null){
 			//configure override m_configure
-			this.m_configure = configure.softMerge(this.m_configure);
+			this.m_configure = (HAPConfigurableImp)configure.softMerge(this.m_configure, true);
 		}
 	}
 	
 	private String getExportFileByConfigure(){
-		return this.getConfigure().getStringValue("exportFile");
+		return this.getConfigure().getConfigureValue("exportFile").getStringValue();
 	}
 	
 	private HAPConfigurable getConfigure(){

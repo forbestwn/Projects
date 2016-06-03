@@ -1,48 +1,37 @@
 package com.nosliw.application.pattern;
 
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Modifier;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import com.google.common.reflect.ClassPath;
-import com.nosliw.common.configure.HAPConfigurable;
 import com.nosliw.common.configure.HAPConfigurableImp;
+import com.nosliw.common.configure.HAPConfigureManager;
 import com.nosliw.common.pattern.HAPPatternManager;
-import com.nosliw.common.pattern.HAPPatternProcessor;
 import com.nosliw.common.pattern.HAPPatternProcessorInfo;
 import com.nosliw.common.test.HAPResult;
-import com.nosliw.common.test.HAPTestCaseInfo;
 import com.nosliw.common.test.HAPTestDescription;
 import com.nosliw.common.test.HAPTestSuiteInfo;
 import com.nosliw.common.test.HAPTestUtility;
+import com.nosliw.common.test.export.html.HAPTestResultExporter;
 import com.nosliw.common.utils.HAPFileUtility;
 
 public class HAPPatternProcessorApp {
 
 	public static void main(String[] args){
-		//init 
-		HAPConfigurableImp configure = new HAPConfigurableImp();
-		configure.addStringValue("loadMode", "scan");
+
+		//configure
+		HAPConfigurableImp configure = HAPConfigureManager.getInstance().newConfigure();
+		configure.addConfigureItem("loadMode", "scan");
+
+		InputStream input = HAPFileUtility.getInputStreamOnClassPath(HAPPatternProcessorApp.class, "patternprocess.properties");
+		configure.importFromFile(input);
 		
+		//prepare pattern processor
 		HAPPatternManager patternMan = HAPPatternManager.getInstance(configure);
 		Map<String, HAPPatternProcessorInfo> processorsInfoMap = patternMan.getAllPatternProcesssorInfos();
 		List<HAPPatternProcessorInfo> processorInfos = new ArrayList<HAPPatternProcessorInfo>();
@@ -66,19 +55,12 @@ public class HAPPatternProcessorApp {
 		}
 		
 		HAPResult testResult = testSuite.run(null);
-		
-		
-		
-		patternMan.getAllPatternProcesssorInfos()
-		
-		
-		for(String name : processors.keySet()){
-			boolean result = processors.get(name).test();
-			String resultStr = result ? "Pass" : "Fail";
-			System.out.println(resultStr + "    " + name);
-			System.out.println("              " + patternMan.getPatterProcessorInfo(name).getClassName());
-		}
-		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd_HH_mm_ss");
+		Date now = new Date();
+	    String subfix = sdf.format(now);
+	    subfix = "result";
+		String file = configure.getConfigureValue("testResultPath").getStringValue()+"/"+subfix+".html";
+		HAPTestResultExporter.export(testResult, file);
 	}
 
 }

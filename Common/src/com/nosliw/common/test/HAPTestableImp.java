@@ -1,12 +1,11 @@
 package com.nosliw.common.test;
 
+import com.nosliw.common.utils.HAPConstant;
+
 public class HAPTestableImp implements HAPTestable{
 
 	@Override
-	public HAPResultTestSuite test(HAPResultTestSuite parentResult){
-		HAPTestSuiteInfo testSuiteInfo = HAPTestUtility.processTestSuiteClass(this.getClass());
-		if(testSuiteInfo==null)  return null;
-		return testSuiteInfo.run(parentResult);
+	public void test(HAPResultTestCase result, HAPTestEnv testEnv) {
 	}
 
 }

@@ -296,6 +296,8 @@
 		<definition name="CONS_SEPERATOR_DETAIL" value="|"/>
 		<definition name="CONS_SEPERATOR_SURFIX" value="_"/>
 		<definition name="CONS_SEPERATOR_PREFIX" value="_"/>
+		<definition name="CONS_SEPERATOR_ARRAYSTART" value="[" type="string"/>
+		<definition name="CONS_SEPERATOR_ARRAYEND" value="]"/>
 		<definition type="space"/>
 		<definition name="CONS_DATAOPERATION_NEWDATA" value="new"/>
 		<definition name="CONS_DATAOPERATION_TOPARENTTYPE" value="toParentType"/>

@@ -3,6 +3,8 @@ package com.nosliw.data.pattern.datatypeinfo;
 import com.nosliw.common.pattern.HAPNamingConversionUtility;
 import com.nosliw.common.pattern.HAPPatternProcessor;
 import com.nosliw.common.test.HAPResultTestCase;
+import com.nosliw.common.test.HAPTestCase;
+import com.nosliw.common.test.HAPTestEnv;
 import com.nosliw.common.test.HAPAssert;
 import com.nosliw.common.utils.HAPBasicUtility;
 import com.nosliw.common.utils.HAPConstant;
@@ -33,10 +35,9 @@ public class HAPProcessor implements HAPPatternProcessor{
 		return HAPNamingConversionUtility.cascadePart(dataTypeInfo.getType(), dataTypeInfo.getCategary());
 	}
 
-	@Override
-	public boolean test() {
-		HAPResultTestCase result = new HAPResultTestCase();
-		
+	@HAPTestCase()
+	public boolean test(HAPResultTestCase result, HAPTestEnv testEnv) {
+		System.out.println("Start Data type info test.....");
 		try{
 			String testStr1 = "type"+HAPConstant.CONS_SEPERATOR_PART+"categary";
 			HAPDataTypeInfo info1 = (HAPDataTypeInfo)this.parse(testStr1, null);

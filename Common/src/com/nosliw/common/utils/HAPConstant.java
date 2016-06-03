@@ -53,6 +53,8 @@ public class HAPConstant {
 		public static final String CONS_SEPERATOR_DETAIL = "|";
 		public static final String CONS_SEPERATOR_SURFIX = "_";
 		public static final String CONS_SEPERATOR_PREFIX = "_";
+		public static final String CONS_SEPERATOR_ARRAYSTART = "[";
+		public static final String CONS_SEPERATOR_ARRAYEND = "]";
 
 
 

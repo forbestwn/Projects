@@ -43,16 +43,25 @@ public class HAPTestUtility {
 	
 	public static HAPTestSuiteInfo processTestSuiteClass(Class testSuiteClass){
 		HAPTestSuiteInfo out = null;
+		//if testSuiteClass has HAPTestSuite annotation, create a solid test suite
+		//otherwise, not a sold one, just a container of test case
 		if(testSuiteClass.isAnnotationPresent(HAPTestSuite.class)){
 			HAPTestSuite testSuite = (HAPTestSuite)testSuiteClass.getAnnotation(HAPTestSuite.class);
-			Set<HAPTestCaseInfo> testCases = HAPTestUtility.createTestCases(testSuiteClass);
 			out = new HAPTestSuiteInfo(new HAPTestDescription(testSuite.name(), testSuite.description()));
-			for(HAPTestCaseInfo testCase : testCases){
-				out.addTest(testCase);
-			}
+		}
+		else{
+			out = new HAPTestSuiteInfo();
+		}
+
+		//find all test cases within this test suite class
+		Set<HAPTestCaseInfo> testCases = HAPTestUtility.createTestCases(testSuiteClass);
+		for(HAPTestCaseInfo testCase : testCases){
+			out.addTest(testCase);
 		}
 		
-		return out;
+		//if there is not a sold test suite and has no test cases, then return null
+		if(out.isSolid() || testCases.size()>0)  return out;
+		else return null;
 	}
 	
 	/*

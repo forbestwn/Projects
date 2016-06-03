@@ -9,11 +9,12 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.nosliw.common.configure.HAPConfigurable;
 import com.nosliw.common.configure.HAPConfigurableImp;
+import com.nosliw.common.configure.HAPConfigureManager;
 import com.nosliw.common.strtemplate.HAPStringTemplateUtil;
 import com.nosliw.common.utils.HAPBasicUtility;
 import com.nosliw.common.utils.HAPFileUtility;
@@ -28,9 +29,8 @@ public class HAPConstantProcessingApp {
 	public static void main(String[] args){
 		try{
 			InputStream input = HAPFileUtility.getInputStreamOnClassPath(HAPConstantProcessingApp.class, "constantprocess.properties");
-    		HAPConfigurable configure = null;
-    		if(input!=null)  configure = new HAPConfigurableImp().importFromFile(input);
-    		else	configure = new HAPConfigurableImp();
+    		HAPConfigurableImp configure = HAPConfigureManager.getInstance().newConfigure();
+    		if(input!=null)  configure = configure.importFromFile(input);
     		
 			InputStream configureStream = HAPFileUtility.getInputStreamOnClassPath(HAPConstantProcessingApp.class, "constant.xml");
 			DocumentBuilderFactory DOMfactory = DocumentBuilderFactory.newInstance();
@@ -101,8 +101,12 @@ public class HAPConstantProcessingApp {
 	private static void processJSItem(HAPConstantInfo info, Map<String, String> valueMap, Map<String, Class> datatypeMap){
 		if("js".equals(info.skip))  return;
 		
-		if(HAPBasicUtility.isStringEmpty(info.type) || info.type.equals("string")){
+		if(HAPBasicUtility.isStringEmpty(info.type)){
 			valueMap.put(info.name, info.value);
+		}
+		else if(info.type.equals("string")){
+			valueMap.put(info.name, info.value);
+			datatypeMap.put(info.name, String.class);
 		}
 		else if(info.type.equals("int")){
 			valueMap.put(info.name, info.value);
