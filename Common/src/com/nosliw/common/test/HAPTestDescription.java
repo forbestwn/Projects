@@ -1,9 +1,11 @@
 package com.nosliw.common.test;
 
-public class HAPTestDescription {
+import com.nosliw.common.document.HAPDocumentEntity;
 
-	private String m_name;
-	private String m_description;
+public class HAPTestDescription extends HAPDocumentEntity{
+
+	public String m_name;
+	public String m_description;
 
 	public HAPTestDescription(String name, String description){
 		this.m_name = name;

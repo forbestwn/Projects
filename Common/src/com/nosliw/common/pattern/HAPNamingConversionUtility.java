@@ -6,11 +6,22 @@ import com.nosliw.common.utils.HAPSegmentParser;
 
 public class HAPNamingConversionUtility {
 
+	public static String[] splitText(String text, String token){
+		return text.split(token);
+	}
+
+	public static String cascadeTexts(String part1, String part2, String seperator){
+		if(HAPBasicUtility.isStringEmpty(part1))	part1 = "";
+		if(HAPBasicUtility.isStringEmpty(part2))	part2 = "";
+		return new StringBuffer().append(part1).append(seperator).append(part2).toString();
+	}
+	
+
 	/*
 	 * cascade two part element together
 	 */
 	public static String cascadePart(String part1, String part2){
-		return cascadeParts(part1, part2, HAPConstant.CONS_SEPERATOR_PART);
+		return cascadeTexts(part1, part2, HAPConstant.CONS_SEPERATOR_PART);
 	}
 
 	/*
@@ -24,7 +35,7 @@ public class HAPNamingConversionUtility {
 	 * cascade two detail element together
 	 */
 	public static String cascadeDetail(String detail1, String detail2){
-		return cascadeParts(detail1, detail2, HAPConstant.CONS_SEPERATOR_DETAIL);
+		return cascadeTexts(detail1, detail2, HAPConstant.CONS_SEPERATOR_DETAIL);
 	}
 
 	/*
@@ -38,7 +49,7 @@ public class HAPNamingConversionUtility {
 	 * cascade two Path element together
 	 */
 	public static String cascadePath(String path1, String path2){
-		return cascadeParts(path1, path2, HAPConstant.CONS_SEPERATOR_PATH);
+		return cascadeTexts(path1, path2, HAPConstant.CONS_SEPERATOR_PATH);
 	}
 
 	/*
@@ -46,14 +57,6 @@ public class HAPNamingConversionUtility {
 	 */
 	public static String[] parsePathInfos(String fullPath){
 		return fullPath.split(HAPConstant.CONS_SEPERATOR_PATH);
-	}
-	
-	public static String cascadeParts(String part1, String part2, String seperator){
-		if(HAPBasicUtility.isStringEmpty(part1))	return part2;
-		else if(HAPBasicUtility.isStringEmpty(part2))	return part1;
-		else{
-			return new StringBuffer().append(part1).append(seperator).append(part2).toString();
-		}
 	}
 	
 	/*

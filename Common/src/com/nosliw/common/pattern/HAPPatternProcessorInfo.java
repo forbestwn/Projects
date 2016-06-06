@@ -20,6 +20,7 @@ public class HAPPatternProcessorInfo {
 		HAPPatternProcessor out = null;
 		try {
 			out = (HAPPatternProcessor)Class.forName(this.m_className).newInstance();
+			if(this.m_name==null)  this.m_name = out.getName();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 

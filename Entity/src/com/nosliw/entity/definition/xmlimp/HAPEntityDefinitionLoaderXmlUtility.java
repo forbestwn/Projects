@@ -223,14 +223,14 @@ public class HAPEntityDefinitionLoaderXmlUtility {
 		String out = "";
 		if(name.startsWith(HAPConstant.CONS_SYMBOL_ENTITYNAME_COMMON)){
 			//".."   common prefix
-			out = HAPNamingConversionUtility.cascadeParts(HAPEntityDefinitionLoaderXML.PACKAGE_COMMON, 
+			out = HAPNamingConversionUtility.cascadeTexts(HAPEntityDefinitionLoaderXML.PACKAGE_COMMON, 
 							name.substring(HAPConstant.CONS_SYMBOL_ENTITYNAME_COMMON.length()), 
 							HAPConstant.CONS_SEPERATOR_FULLNAME);
 		}
 		else{
 			if(name.startsWith(HAPConstant.CONS_SYMBOL_ENTITYNAME_CURRENT)){
 				//"."   current metadata prefix
-				out = HAPNamingConversionUtility.cascadeParts(metadata.getNamePrefix(), 
+				out = HAPNamingConversionUtility.cascadeTexts(metadata.getNamePrefix(), 
 						name.substring(HAPConstant.CONS_SYMBOL_ENTITYNAME_CURRENT.length()), 
 						HAPConstant.CONS_SEPERATOR_FULLNAME);
 			}
@@ -252,7 +252,7 @@ public class HAPEntityDefinitionLoaderXmlUtility {
 			name = className;
 			HAPSegmentParser segs = new HAPSegmentParser(className, HAPConstant.CONS_SEPERATOR_FULLNAME);
 			if(segs.getSegmentSize()<=1){
-				name = HAPNamingConversionUtility.cascadeParts(metadata.getClassPrefix(), name, HAPConstant.CONS_SEPERATOR_FULLNAME);
+				name = HAPNamingConversionUtility.cascadeTexts(metadata.getClassPrefix(), name, HAPConstant.CONS_SEPERATOR_FULLNAME);
 			}
 		}
 		return name;
@@ -269,6 +269,6 @@ public class HAPEntityDefinitionLoaderXmlUtility {
 	 * create name for attribute options
 	 */
 	public static String createOptionsName(String entityName, String attrPath){
-		return HAPNamingConversionUtility.cascadeParts(attrPath, entityName, HAPConstant.CONS_SEPERATOR_SURFIX);
+		return HAPNamingConversionUtility.cascadeTexts(attrPath, entityName, HAPConstant.CONS_SEPERATOR_SURFIX);
 	}
 }

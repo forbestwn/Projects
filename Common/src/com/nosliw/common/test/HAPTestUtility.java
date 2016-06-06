@@ -13,7 +13,7 @@ public class HAPTestUtility {
 	public static List<HAPTestInfo> sortTestInfo(List<HAPTestInfo> testInfos){
 		Collections.sort(testInfos, new Comparator<HAPTestInfo>() {
 	        public int compare(HAPTestInfo p1, HAPTestInfo p2) {
-	        	return compare(p1, p2);
+	        	return HAPTestUtility.compare(p1, p2);
 	        }
 		});
 		return testInfos;
@@ -23,7 +23,7 @@ public class HAPTestUtility {
 	/*
 	 * compare logic used when sorting test info
 	 */
-    public static int compare(HAPTestCaseInfo p1, HAPTestCaseInfo p2) {
+    public static int compare(HAPTestInfo p1, HAPTestInfo p2) {
         int out =  Integer.valueOf(p1.getSequence()).compareTo(p2.getSequence());
         if(out==0){
         	out = p1.getName().compareTo(p2.getName());

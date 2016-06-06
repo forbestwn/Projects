@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import com.nosliw.common.pattern.variable.HAPPatternProcessorVariable;
 import com.nosliw.common.serialization.HAPStringable;
 import com.nosliw.common.utils.HAPConstant;
 import com.nosliw.common.utils.HAPJsonUtility;
@@ -20,10 +21,7 @@ public class HAPConfigurableImp  implements HAPConfigurable, HAPStringable{
 	//configure values
 	Map<String, HAPConfigureValue> m_values;
 	
-	Map<String, String> m_globalConfigures;
-	
-	private String TOKEN_VAR_START = "\\{\\{";
-	private String TOKEN_VAR_END = "\\}\\}";
+	Map<String, String> m_variables;
 	
 	/*
 	 * empty constructor
@@ -31,7 +29,7 @@ public class HAPConfigurableImp  implements HAPConfigurable, HAPStringable{
 	HAPConfigurableImp(){
 		this.m_childConfigures = new LinkedHashMap<String, HAPConfigurableImp>();
 		this.m_values = new LinkedHashMap<String, HAPConfigureValue>();
-		this.m_globalConfigures = new LinkedHashMap<String, String>();
+		this.m_variables = new LinkedHashMap<String, String>();
 	}
 
 	public HAPConfigurableImp importFromValueMap(Map<String, String> valueMap){
@@ -95,10 +93,7 @@ public class HAPConfigurableImp  implements HAPConfigurable, HAPStringable{
 	 * 		replace variable place holder with variable value
 	 */
 	public String processStringValue(String value){
-		for(String var : this.m_globalConfigures.keySet()){
-			value = value.replaceAll(TOKEN_VAR_START+var+TOKEN_VAR_END, this.m_globalConfigures.get(var));
-		}
-		return value;
+		return (String)new HAPPatternProcessorVariable().parse(value, this.m_variables);
 	}
 	
 	private void addStringValue(String name, String value) {
@@ -209,7 +204,8 @@ public class HAPConfigurableImp  implements HAPConfigurable, HAPStringable{
 	private HAPConfigureValue getChildConfigureValue(String childName){ return this.m_values.get(childName);  }
 	private Map<String, HAPConfigurableImp> getChildConfigurables(){return this.m_childConfigures;}
 	private Map<String, HAPConfigureValue> getChildConfigureValues(){ return this.m_values;  }
-	private void addGlobalValue(String name, String value){		this.m_globalConfigures.put(name, value);	}
+	public void addGlobalValue(String name, String value){		this.m_variables.put(name, value);	}
+	public Map<String, String> getGlobalVaribles(){ return this.m_variables; }
 	private void addChildConfigure(String name, HAPConfigurableImp configure){  this.m_childConfigures.put(name, configure); }
 	private void addChildConfigureValue(String name, HAPConfigureValue value){ this.m_values.put(name, value); }
 	private void addChildConfigureValue(String name, String value){ this.addChildConfigureValue(name, new HAPConfigureValueString(value)); }
@@ -217,8 +213,8 @@ public class HAPConfigurableImp  implements HAPConfigurable, HAPStringable{
 	@Override
 	public HAPConfigurable clone(){
 		HAPConfigurableImp out = new HAPConfigurableImp();
-		for(String name : this.m_globalConfigures.keySet()){
-			out.m_globalConfigures.put(name, this.m_globalConfigures.get(name));
+		for(String name : this.m_variables.keySet()){
+			out.m_variables.put(name, this.m_variables.get(name));
 		}
 		
 		for(String name : this.getChildConfigurables().keySet()){
@@ -238,7 +234,7 @@ public class HAPConfigurableImp  implements HAPConfigurable, HAPStringable{
 	public String toStringValue(String format) {
 		Map<String, String> jsonMap = new LinkedHashMap<String, String>();
 		
-		jsonMap.put("variables", HAPJsonUtility.getMapObjectJson(this.m_globalConfigures));
+		jsonMap.put("variables", HAPJsonUtility.getMapObjectJson(this.m_variables));
 		jsonMap.put("childValues", HAPJsonUtility.getMapObjectJson(this.getChildConfigureValues()));
 		jsonMap.put("childConfigurables", HAPJsonUtility.getMapObjectJson(this.getChildConfigurables()));
 		return HAPJsonUtility.getMapJson(jsonMap);

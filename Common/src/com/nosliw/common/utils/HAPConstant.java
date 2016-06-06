@@ -55,6 +55,8 @@ public class HAPConstant {
 		public static final String CONS_SEPERATOR_PREFIX = "_";
 		public static final String CONS_SEPERATOR_ARRAYSTART = "[";
 		public static final String CONS_SEPERATOR_ARRAYEND = "]";
+		public static final String CONS_SEPERATOR_VARSTART = "{{";
+		public static final String CONS_SEPERATOR_VAREND = "}}";
 
 
 
@@ -298,6 +300,7 @@ public class HAPConstant {
 
 
 		public static final String CONS_PATTERN_DATATYPEINFO = "pattern_datatypeinfo";
+		public static final String CONS_PATTERN_VARIABLE = "pattern_variable";
 
 
 

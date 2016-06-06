@@ -17,7 +17,15 @@ public class HAPTestCaseInfo extends HAPTestInfo{
 		}
 	}
 
-	
+	@Override
+	public void postInit(){
+		if(this.getTestEnv()!=null){
+			//update description info: update variable place holder
+			this.getDescription().updateDocument(this.getTestEnv().getGlobalVariables());
+		}
+		this.setInited();
+	}
+
 	@Override
 	public String getType(){ return HAPConstant.CONS_TEST_TYPE_CASE; }
 
@@ -27,6 +35,7 @@ public class HAPTestCaseInfo extends HAPTestInfo{
 	
 	@Override
 	public HAPResult run(HAPResultTestSuite parentResult){
+		if(!this.inited())  this.postInit();
 		HAPResultTestCase result = new HAPResultTestCase(this.getDescription());
 		result = this.m_testCaseRuntime.run(result, this.getTestEnv());
 		return this.addToParentResult(parentResult, result);

@@ -298,6 +298,8 @@
 		<definition name="CONS_SEPERATOR_PREFIX" value="_"/>
 		<definition name="CONS_SEPERATOR_ARRAYSTART" value="[" type="string"/>
 		<definition name="CONS_SEPERATOR_ARRAYEND" value="]"/>
+		<definition name="CONS_SEPERATOR_VARSTART" value="{{" type="string"/>
+		<definition name="CONS_SEPERATOR_VAREND" value="}}" type="string"/>
 		<definition type="space"/>
 		<definition name="CONS_DATAOPERATION_NEWDATA" value="new"/>
 		<definition name="CONS_DATAOPERATION_TOPARENTTYPE" value="toParentType"/>
@@ -498,6 +500,7 @@
 
 		<definition type="space"/>
 		<definition name="CONS_PATTERN_DATATYPEINFO" value="pattern_datatypeinfo"/>
+		<definition name="CONS_PATTERN_VARIABLE" value="pattern_variable"/>
 
 		<definition type="space"/>
 		<definition name="CONS_TESTRESULT_TYPE_SUITE" value="SUITE"/>

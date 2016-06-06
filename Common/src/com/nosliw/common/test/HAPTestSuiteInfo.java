@@ -16,20 +16,26 @@ public class HAPTestSuiteInfo extends HAPTestInfo{
 	//indicate if this test suite info represent a real test suite or just a container of test case
 	private boolean m_isSolid = true;;
 	
+	public HAPTestSuiteInfo(HAPTestDescription description, HAPTestEnv testEnv){
+		super(description, -1, testEnv);
+		this.m_testCasesInfos = new ArrayList<HAPTestInfo>();
+		this.m_testSuitesInfos = new ArrayList<HAPTestInfo>();
+	}
+
 	public HAPTestSuiteInfo(){
 		this(null);
 		this.m_isSolid = false;
 	}
 	
-	public HAPTestSuiteInfo(HAPTestDescription description, HAPTestEnv testEnv){
-		this(description);
-		this.setTestEnv(testEnv);
+	public HAPTestSuiteInfo(HAPTestDescription description){
+		this(description, null);
 	}
 
-	public HAPTestSuiteInfo(HAPTestDescription description){
-		super(description, -1);
-		this.m_testCasesInfos = new ArrayList<HAPTestInfo>();
-		this.m_testSuitesInfos = new ArrayList<HAPTestInfo>();
+	@Override
+	public void postInit(){
+		for(HAPTestInfo testInfo : this.m_testCasesInfos)   testInfo.postInit();
+		for(HAPTestInfo testInfo : this.m_testSuitesInfos)  testInfo.postInit();
+		this.setInited();
 	}
 
 	@Override
@@ -39,6 +45,8 @@ public class HAPTestSuiteInfo extends HAPTestInfo{
 	
 	@Override
 	public HAPResult run(HAPResultTestSuite parentResult){
+		if(!this.inited())  this.postInit();
+		
 		HAPResultTestSuite result = new HAPResultTestSuite(this.getDescription());
 		
 		HAPTestUtility.sortTestInfo(this.m_testSuitesInfos);

@@ -15,6 +15,8 @@ import com.nosliw.common.pattern.HAPPatternManager;
 import com.nosliw.common.pattern.HAPPatternProcessorInfo;
 import com.nosliw.common.test.HAPResult;
 import com.nosliw.common.test.HAPTestDescription;
+import com.nosliw.common.test.HAPTestEnv;
+import com.nosliw.common.test.HAPTestManager;
 import com.nosliw.common.test.HAPTestSuiteInfo;
 import com.nosliw.common.test.HAPTestUtility;
 import com.nosliw.common.test.export.html.HAPTestResultExporter;
@@ -47,7 +49,8 @@ public class HAPPatternProcessorApp {
 		});
 
 		//create root test suite
-		HAPTestSuiteInfo testSuite = new HAPTestSuiteInfo(new HAPTestDescription("PatternProcessors", "all pattern processors"));
+		HAPTestEnv testEnv = HAPTestManager.getInstance().createTestEnv();
+		HAPTestSuiteInfo testSuite = new HAPTestSuiteInfo(new HAPTestDescription("PatternProcessors", "all pattern processors"), testEnv);
 		//create test suite for each pattern process and add to root suite
 		for(HAPPatternProcessorInfo info : processorInfos){
 			HAPTestSuiteInfo testSuiteInfo = HAPTestUtility.processTestSuiteClass(info.getClassName());
