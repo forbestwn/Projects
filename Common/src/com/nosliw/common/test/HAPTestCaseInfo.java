@@ -21,7 +21,7 @@ public class HAPTestCaseInfo extends HAPTestInfo{
 	public void postInit(){
 		if(this.getTestEnv()!=null){
 			//update description info: update variable place holder
-			this.getDescription().updateDocument(this.getTestEnv().getGlobalVariables());
+			this.getTestEnv().updateDocument(this.getDescription());
 		}
 		this.setInited();
 	}

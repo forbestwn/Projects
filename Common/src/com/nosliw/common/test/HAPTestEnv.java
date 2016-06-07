@@ -3,6 +3,8 @@ package com.nosliw.common.test;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.nosliw.common.document.HAPDocumentEntity;
+
 /*
  * test enviroment data
  * it is created at test suite level
@@ -30,8 +32,19 @@ public class HAPTestEnv {
 		return this.m_globalVars;
 	}
 	
+	public void updateDocument(HAPDocumentEntity docEntity){
+		docEntity.updateDocument(this.m_globalVars);
+	}
 	
 	public HAPTestEnv softMerge(HAPTestEnv testEnv){
-		return testEnv;
+		HAPTestEnv out = testEnv.clone();
+		out.m_globalVars.putAll(this.m_globalVars);
+		return out;
+	}
+	
+	public HAPTestEnv clone(){
+		HAPTestEnv out = new HAPTestEnv();
+		out.m_globalVars.putAll(this.m_globalVars);
+		return out;
 	}
 }
