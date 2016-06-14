@@ -1,6 +1,6 @@
 package com.nosliw.data.basic.string;
 
-import com.nosliw.common.configure.HAPConfigurable;
+import com.nosliw.common.configure.HAPConfiguration;
 import com.nosliw.common.exception.HAPServiceData;
 import com.nosliw.common.utils.HAPConstant;
 import com.nosliw.data.HAPData;
@@ -20,7 +20,7 @@ public class HAPString extends HAPDataTypeImp{
 	private HAPString(HAPDataTypeInfoWithVersion dataTypeInfo, 
 					HAPDataType olderDataType, 
 					HAPDataTypeInfoWithVersion parentDataTypeInfo, 
-					HAPConfigurable configure,
+					HAPConfiguration configure,
 					String description,
 					HAPDataTypeManager dataTypeMan) {
 		super(dataTypeInfo, olderDataType, parentDataTypeInfo, configure, description, dataTypeMan);
@@ -56,7 +56,7 @@ public class HAPString extends HAPDataTypeImp{
 	static public HAPString createDataType(HAPDataTypeInfoWithVersion dataTypeInfo, 
 										HAPDataType olderDataType, 		
 										HAPDataTypeInfoWithVersion parentDataTypeInfo, 
-										HAPConfigurable configures,
+										HAPConfiguration configures,
 										String description,
 										HAPDataTypeManager dataTypeMan){
 		if(HAPString.dataType==null){

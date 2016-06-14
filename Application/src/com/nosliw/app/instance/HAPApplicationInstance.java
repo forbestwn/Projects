@@ -3,8 +3,8 @@ package com.nosliw.app.instance;
 import java.io.InputStream;
 
 import com.nosliw.app.log.HAPFileLogger;
-import com.nosliw.common.configure.HAPConfigurable;
-import com.nosliw.common.configure.HAPConfigurableImp;
+import com.nosliw.common.configure.HAPConfiguration;
+import com.nosliw.common.configure.HAPConfigureImp;
 import com.nosliw.common.log.HAPLogger;
 import com.nosliw.common.utils.HAPConstant;
 import com.nosliw.data.HAPDataTypeManager;
@@ -29,13 +29,13 @@ public class HAPApplicationInstance{
 	
 	private HAPApplicationQueryDefinitionManager m_queryDefMan;
 	
-	private HAPConfigurable m_configure;
+	private HAPConfiguration m_configure;
 	
 	private HAPApplicationClientContextManager m_clientContextMan;
 	
 	private HAPLogger m_logger;
 	
-	private HAPApplicationInstance(HAPConfigurable configure){
+	private HAPApplicationInstance(HAPConfiguration configure){
 		if(configure!=null){
 			//if input is not null, use it as configure
 			this.m_configure = configure;
@@ -45,9 +45,9 @@ public class HAPApplicationInstance{
 			String filename = "nosliw.properties";
     		InputStream input = HAPApplicationInstance.class.getClassLoader().getResourceAsStream(filename);
     		if(input!=null){
-    			this.m_configure = new HAPConfigurableImp().importFromFile(input);
+    			this.m_configure = new HAPConfigureImp().importFromFile(input);
     		}
-    		else			this.m_configure = new HAPConfigurableImp();
+    		else			this.m_configure = new HAPConfigureImp();
 		}
 
 		this.m_logger = new HAPFileLogger(this.m_configure.getConfigurableValue(HAPConstant.CONS_APPLICATION_CONFIGURE_LOGGER));

@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
-import com.nosliw.common.configure.HAPConfigurable;
+import com.nosliw.common.configure.HAPConfiguration;
 import com.nosliw.common.exception.HAPServiceData;
 import com.nosliw.common.serialization.HAPStringable;
 import com.nosliw.common.utils.HAPConstant;
@@ -58,7 +58,7 @@ public class HAPDataContext implements HAPStringable{
 	//data access component stack for transaction
 	private Stack<HAPTransaction> m_transactions;
 
-	private HAPConfigurable m_configure;
+	private HAPConfiguration m_configure;
 	private HAPDataTypeManager m_dataTypeMan; 
 	private HAPEntityDefinitionManager m_entityDefMan; 
 	private HAPQueryDefinitionManager m_queryDefMan;
@@ -66,7 +66,7 @@ public class HAPDataContext implements HAPStringable{
 	
 	public HAPDataContext(HAPDataContextInfo dataContextInfo,
 						HAPEntityPersistent persistant, 
-						HAPConfigurable configure,
+						HAPConfiguration configure,
 						HAPDataTypeManager dataTypeMan, 
 						HAPEntityDefinitionManager entityDefMan, 
 						HAPQueryDefinitionManager queryDefMan,
@@ -395,7 +395,7 @@ public class HAPDataContext implements HAPStringable{
 	public HAPEntityDefinitionManager getEntityDefinitionManager(){return this.m_entityDefMan;}
 	public HAPOptionsDefinitionManager getOptionsManager(){return this.m_optionsDefMan;}
 	public HAPQueryDefinitionManager getQueryDefinitionManager(){return this.m_queryDefMan;}
-	protected HAPConfigurable getConfigure(){ return this.m_configure; }
+	protected HAPConfiguration getConfigure(){ return this.m_configure; }
 	public HAPDataContextInfo getDataContextInfo(){ return this.m_dataContextInfo; }
 	
 	@Override

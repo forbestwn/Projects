@@ -7,7 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.nosliw.app.utils.HAPApplicationUtility;
-import com.nosliw.common.configure.HAPConfigurable;
+import com.nosliw.common.configure.HAPConfiguration;
 import com.nosliw.common.utils.HAPFileUtility;
 import com.nosliw.data.HAPDataTypeManager;
 import com.nosliw.entity.definition.HAPEntityDefinitionManager;
@@ -19,7 +19,7 @@ public class HAPApplicationQueryDefinitionManager extends HAPQueryDefinitionMana
 	private HAPDataTypeManager m_dataTypeMan; 
 	private HAPEntityDefinitionManager m_entityDefMan;
 	
-	public HAPApplicationQueryDefinitionManager(HAPConfigurable configure, HAPDataTypeManager dataTypeMan, HAPEntityDefinitionManager entityDefMan) {
+	public HAPApplicationQueryDefinitionManager(HAPConfiguration configure, HAPDataTypeManager dataTypeMan, HAPEntityDefinitionManager entityDefMan) {
 		super(configure);
 		
 		List<String> fileNames = HAPApplicationUtility.getFileNames(configure);

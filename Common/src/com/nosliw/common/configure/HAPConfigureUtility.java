@@ -1,5 +1,9 @@
 package com.nosliw.common.configure;
 
+import java.io.InputStream;
+
+import com.nosliw.common.utils.HAPFileUtility;
+
 public class HAPConfigureUtility {
 
 	private static String KEY_VARIABLE_GLOBAL = "global";
@@ -13,5 +17,10 @@ public class HAPConfigureUtility {
 		}
 	}
 	
-
+	public HAPConfigureImp createConfigurationFromFile(String fileName){
+		HAPConfigureImp out = new HAPConfigureImp();
+		InputStream input = HAPFileUtility.getInputStreamOnClassPath(HAPConfigureImp.class, "global.properties");
+		if(input!=null)  out.importFromFile(input);
+		return out;
+	}
 }

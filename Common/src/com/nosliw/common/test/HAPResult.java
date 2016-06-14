@@ -15,7 +15,7 @@ public abstract class HAPResult {
 		return this.m_testDescription;
 	}
 	
-	public String getName(){  return this.getTestDescription().getName(); }
+	public String getName(){  return this.getTestDescription().getStringValue(HAPTestDescription.ATTR_NAME); }
 
 	public boolean isSuccess(){	return this.m_result;	}
 	protected void setFail(){  this.m_result = false; }

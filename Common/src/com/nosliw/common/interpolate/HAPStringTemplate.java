@@ -1,4 +1,4 @@
-package com.nosliw.common.strtemplate;
+package com.nosliw.common.interpolate;
 
 import java.io.File;
 import java.io.InputStream;

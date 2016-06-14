@@ -1,6 +1,6 @@
 package com.nosliw.app.instance;
 
-import com.nosliw.common.configure.HAPConfigurable;
+import com.nosliw.common.configure.HAPConfiguration;
 import com.nosliw.data.HAPDataTypeManager;
 import com.nosliw.entity.dataaccess.HAPClientContext;
 import com.nosliw.entity.dataaccess.HAPClientContextInfo;
@@ -15,7 +15,7 @@ import com.nosliw.entity.query.HAPQueryDefinitionManager;
 
 public class HAPApplicationClientContextManager extends HAPClientContextManager{
 
-	public HAPApplicationClientContextManager(HAPConfigurable configures,
+	public HAPApplicationClientContextManager(HAPConfiguration configures,
 			HAPDataTypeManager dataTypeMan, 
 			HAPEntityDefinitionManager entityDefMan, 
 			HAPQueryDefinitionManager queryDefMan,

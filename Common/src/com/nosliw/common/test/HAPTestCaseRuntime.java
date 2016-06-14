@@ -26,26 +26,37 @@ public class HAPTestCaseRuntime {
 		return this.m_testCaseMethod.getName();
 	}
 	
-	public HAPResultTestCase run(HAPResultTestCase result, HAPTestEnv testEnv){
+	public Object getBaseObject(HAPTestEnv testEnv){
+		Object out = null;
 		try{
-			Object object = this.m_testCaseClass.newInstance();
+			out = this.m_testCaseClass.newInstance();
 			if(this.m_testCaseBeforeMethods!=null){
 				for(Method method : this.m_testCaseBeforeMethods){
-					method.invoke(object, testEnv);
+					method.invoke(out, testEnv);
 				}
 			}
-
-			this.m_testCaseMethod.invoke(object, result, testEnv);
-			
-			if(this.m_testCaseAfterMethods!=null){
-				for(Method method : this.m_testCaseAfterMethods){
-					method.invoke(object, testEnv);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		testEnv.setBaseObject(out);
+		return out;
+	}
+	
+	public HAPResultTestCase run(HAPResultTestCase result, HAPTestEnv testEnv){
+		try{
+			Object object = this.getBaseObject(testEnv); 
+			if(object!=null){
+				if(this.m_testCaseAfterMethods!=null){
+					for(Method method : this.m_testCaseAfterMethods){
+						method.invoke(object, testEnv);
+					}
 				}
 			}
 		}catch(Exception e){
+			e.printStackTrace();
 			result.addException(e);
 		}
-		
 		return result;
 	}
 }

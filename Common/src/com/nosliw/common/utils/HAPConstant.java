@@ -57,6 +57,8 @@ public class HAPConstant {
 		public static final String CONS_SEPERATOR_ARRAYEND = "]";
 		public static final String CONS_SEPERATOR_VARSTART = "{{";
 		public static final String CONS_SEPERATOR_VAREND = "}}";
+		public static final String CONS_SEPERATOR_EXPRESSIONSTART = "${";
+		public static final String CONS_SEPERATOR_EXPRESSIONEND = "}";
 
 
 
@@ -299,11 +301,6 @@ public class HAPConstant {
 
 
 
-		public static final String CONS_PATTERN_DATATYPEINFO = "pattern_datatypeinfo";
-		public static final String CONS_PATTERN_VARIABLE = "pattern_variable";
-
-
-
 		public static final String CONS_TESTRESULT_TYPE_SUITE = "SUITE";
 		public static final String CONS_TESTRESULT_TYPE_CASE = "CASE";
 
@@ -311,6 +308,10 @@ public class HAPConstant {
 
 		public static final String CONS_TEST_TYPE_SUITE = "SUITE";
 		public static final String CONS_TEST_TYPE_CASE = "CASE";
+
+
+
+		public static final String CONS_CONFIGURATION_DEFAULTBASE = "default";
 
 
 

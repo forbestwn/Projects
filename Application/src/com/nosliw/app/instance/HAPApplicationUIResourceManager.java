@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.nosliw.app.utils.HAPApplicationUtility;
-import com.nosliw.common.configure.HAPConfigurable;
+import com.nosliw.common.configure.HAPConfiguration;
 import com.nosliw.common.utils.HAPFileUtility;
 import com.nosliw.data.HAPDataTypeManager;
 import com.nosliw.uiresource.HAPUIResource;
@@ -28,7 +28,7 @@ public class HAPApplicationUIResourceManager extends HAPUIResourceManager{
 		return out;
 	}
 	
-	public HAPApplicationUIResourceManager(HAPConfigurable configuration, HAPDataTypeManager dataTypeMan) {
+	public HAPApplicationUIResourceManager(HAPConfiguration configuration, HAPDataTypeManager dataTypeMan) {
 		super(configuration, dataTypeMan);
 
 		this.m_mode = configuration.getStringValue("mode");
@@ -39,9 +39,9 @@ public class HAPApplicationUIResourceManager extends HAPUIResourceManager{
 		else{
 			//normal mode, load everything during init
 			//load all the ui resource file
-			HAPConfigurable config = configuration.getConfigurableValue("loader");
+			HAPConfiguration config = configuration.getConfigurableValue("loader");
 			for(String name : config.getConfigureItems()){
-				HAPConfigurable loaderConfig = config.getConfigurableValue(name);
+				HAPConfiguration loaderConfig = config.getConfigurableValue(name);
 				if(name.equals("file")){
 					List<String> resourceFiles = new ArrayList<String>();
 					

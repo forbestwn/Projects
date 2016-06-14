@@ -1,6 +1,6 @@
 package com.nosliw.data.basic.number;
 
-import com.nosliw.common.configure.HAPConfigurable;
+import com.nosliw.common.configure.HAPConfiguration;
 import com.nosliw.common.exception.HAPServiceData;
 import com.nosliw.common.utils.HAPConstant;
 import com.nosliw.data.HAPData;
@@ -21,7 +21,7 @@ public class HAPInteger extends HAPDataTypeImp{
 	private HAPInteger(HAPDataTypeInfoWithVersion dataTypeInfo,
 					HAPDataType olderDataType, 
 					HAPDataTypeInfoWithVersion parentDataTypeInfo, 
-					HAPConfigurable configure,
+					HAPConfiguration configure,
 					String description,
 					HAPDataTypeManager dataTypeMan) {
 		super(dataTypeInfo, olderDataType, parentDataTypeInfo, configure, description, dataTypeMan);
@@ -60,7 +60,7 @@ public class HAPInteger extends HAPDataTypeImp{
 	static public HAPInteger createDataType(HAPDataTypeInfoWithVersion dataTypeInfo, 
 										HAPDataType olderDataType, 		
 										HAPDataTypeInfoWithVersion parentDataTypeInfo, 
-										HAPConfigurable configures,
+										HAPConfiguration configures,
 										String description,
 										HAPDataTypeManager dataTypeMan){
 		if(HAPInteger.dataType==null){

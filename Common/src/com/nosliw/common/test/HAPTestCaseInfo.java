@@ -20,6 +20,9 @@ public class HAPTestCaseInfo extends HAPTestInfo{
 	@Override
 	public void postInit(){
 		if(this.getTestEnv()!=null){
+			//set base object to used when updating document info
+			this.m_testCaseRuntime.getBaseObject(this.getTestEnv());
+
 			//update description info: update variable place holder
 			this.getTestEnv().updateDocument(this.getDescription());
 		}

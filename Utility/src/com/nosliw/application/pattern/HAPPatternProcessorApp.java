@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.nosliw.common.configure.HAPConfigurableImp;
+import com.nosliw.common.configure.HAPConfigureImp;
 import com.nosliw.common.configure.HAPConfigureManager;
 import com.nosliw.common.pattern.HAPPatternManager;
 import com.nosliw.common.pattern.HAPPatternProcessorInfo;
@@ -20,6 +20,7 @@ import com.nosliw.common.test.HAPTestManager;
 import com.nosliw.common.test.HAPTestSuiteInfo;
 import com.nosliw.common.test.HAPTestUtility;
 import com.nosliw.common.test.export.html.HAPTestResultExporter;
+import com.nosliw.common.utils.HAPConstant;
 import com.nosliw.common.utils.HAPFileUtility;
 
 public class HAPPatternProcessorApp {
@@ -27,7 +28,7 @@ public class HAPPatternProcessorApp {
 	public static void main(String[] args){
 
 		//configure
-		HAPConfigurableImp configure = HAPConfigureManager.getInstance().newConfigure();
+		HAPConfigureImp configure = HAPConfigureManager.getInstance().createConfigureWithBaseName(HAPConstant.CONS_CONFIGURATION_DEFAULTBASE);
 		configure.addConfigureItem("loadMode", "scan");
 
 		InputStream input = HAPFileUtility.getInputStreamOnClassPath(HAPPatternProcessorApp.class, "patternprocess.properties");

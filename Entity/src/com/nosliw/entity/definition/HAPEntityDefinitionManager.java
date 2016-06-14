@@ -7,7 +7,7 @@ import java.util.Set;
 
 import org.json.JSONObject;
 
-import com.nosliw.common.configure.HAPConfigurable;
+import com.nosliw.common.configure.HAPConfiguration;
 import com.nosliw.common.serialization.HAPStringable;
 import com.nosliw.common.utils.HAPConstant;
 import com.nosliw.common.utils.HAPJsonUtility;
@@ -43,18 +43,18 @@ public class HAPEntityDefinitionManager implements HAPStringable{
 	private Map<String, HAPDataType> m_entityDataTypes;  
 	
 	//we can configure the behavior of manager
-	private HAPConfigurable m_configures;
+	private HAPConfiguration m_configures;
 	
 	private HAPDataTypeManager m_dataTypeMan;
 	private HAPOptionsDefinitionManager m_optionsMan;
 	
-	public HAPEntityDefinitionManager(HAPConfigurable configuration, HAPDataTypeManager dataTypeMan, HAPOptionsDefinitionManager optionsMan){
+	public HAPEntityDefinitionManager(HAPConfiguration configuration, HAPDataTypeManager dataTypeMan, HAPOptionsDefinitionManager optionsMan){
 		this.m_dataTypeMan = dataTypeMan;
 		this.m_configures = configuration;
 		this.init();
 	}
 
-	public HAPConfigurable getConfiguration(){return this.m_configures;}
+	public HAPConfiguration getConfiguration(){return this.m_configures;}
 	
 	public void init(){
 		this.m_entityDefinitions = new LinkedHashMap<String, HAPEntityDefinitionCritical>();

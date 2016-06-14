@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.nosliw.app.utils.HAPApplicationUtility;
-import com.nosliw.common.configure.HAPConfigurable;
+import com.nosliw.common.configure.HAPConfiguration;
 import com.nosliw.data.HAPDataTypeManager;
 import com.nosliw.entity.definition.HAPEntityDefinitionLoader;
 import com.nosliw.entity.definition.HAPEntityDefinitionManager;
@@ -15,13 +15,13 @@ import com.nosliw.entity.options.HAPOptionsDefinitionManager;
 
 public class HAPApplicationEntityDefinitionManager extends HAPEntityDefinitionManager{
 
-	public HAPApplicationEntityDefinitionManager(HAPConfigurable configuration,
+	public HAPApplicationEntityDefinitionManager(HAPConfiguration configuration,
 			HAPDataTypeManager dataTypeMan, HAPOptionsDefinitionManager optionsMan) {
 		super(configuration, dataTypeMan, optionsMan);
 		
-		HAPConfigurable config = configuration.getConfigurableValue("loader");
+		HAPConfiguration config = configuration.getConfigurableValue("loader");
 		for(String name : config.getConfigureItems()){
-			HAPConfigurable loaderConfig = config.getConfigurableValue(name);
+			HAPConfiguration loaderConfig = config.getConfigurableValue(name);
 			if(name.equals("xml")){
 				List<InputStream> xmlFiles = new ArrayList<InputStream>();
 				

@@ -13,7 +13,9 @@ import com.nosliw.common.document.HAPDocumentEntity;
  */
 public class HAPTestEnv {
 
-	Map<String, String> m_globalVars;
+	private Map<String, String> m_globalVars;
+	
+	private Object m_baseObj;
 	
 	public HAPTestEnv(Map<String, String> globalVars){
 		if(globalVars!=null){
@@ -28,12 +30,12 @@ public class HAPTestEnv {
 		this(null);
 	}
 
-	public Map<String, String> getGlobalVariables(){
-		return this.m_globalVars;
-	}
+	public Map<String, String> getGlobalVariables(){	return this.m_globalVars;	}
+	public Object getBaseObject(){  return this.m_baseObj; }
+	public void setBaseObject(Object obj){  this.m_baseObj = obj; }
 	
 	public void updateDocument(HAPDocumentEntity docEntity){
-		docEntity.updateDocument(this.m_globalVars);
+		docEntity.updateDocument(this.m_globalVars, this.m_baseObj);
 	}
 	
 	public HAPTestEnv softMerge(HAPTestEnv testEnv){

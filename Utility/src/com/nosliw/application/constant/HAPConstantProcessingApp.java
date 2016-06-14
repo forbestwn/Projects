@@ -9,14 +9,15 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.nosliw.common.configure.HAPConfigurableImp;
+import com.nosliw.common.configure.HAPConfigureImp;
 import com.nosliw.common.configure.HAPConfigureManager;
-import com.nosliw.common.strtemplate.HAPStringTemplateUtil;
+import com.nosliw.common.interpolate.HAPInterpolateUtility;
+import com.nosliw.common.interpolate.HAPStringTemplateUtil;
 import com.nosliw.common.utils.HAPBasicUtility;
+import com.nosliw.common.utils.HAPConstant;
 import com.nosliw.common.utils.HAPFileUtility;
 import com.nosliw.common.utils.HAPJsonUtility;
 import com.nosliw.common.utils.HAPXMLUtility;
@@ -29,7 +30,7 @@ public class HAPConstantProcessingApp {
 	public static void main(String[] args){
 		try{
 			InputStream input = HAPFileUtility.getInputStreamOnClassPath(HAPConstantProcessingApp.class, "constantprocess.properties");
-    		HAPConfigurableImp configure = HAPConfigureManager.getInstance().newConfigure();
+    		HAPConfigureImp configure = HAPConfigureManager.getInstance().createConfigureWithBaseName(HAPConstant.CONS_CONFIGURATION_DEFAULTBASE);
     		if(input!=null)  configure = configure.importFromFile(input);
     		
 			InputStream configureStream = HAPFileUtility.getInputStreamOnClassPath(HAPConstantProcessingApp.class, "constant.xml");
@@ -38,7 +39,7 @@ public class HAPConstantProcessingApp {
 			Document doc = DOMbuilder.parse(configureStream);
 
 			Element rootEle = doc.getDocumentElement();
-			String jsPath = configure.processStringValue(rootEle.getAttribute("jsPath"));
+			String jsPath = HAPInterpolateUtility.interpolate(rootEle.getAttribute("jsPath"), configure); 
 			String jsAttributeFile = rootEle.getAttribute("jsAttributeFile");
 			String jsConstantFile = rootEle.getAttribute("jsConstantFile");
 			

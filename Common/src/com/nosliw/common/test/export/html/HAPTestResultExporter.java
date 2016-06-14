@@ -5,10 +5,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.nosliw.common.strtemplate.HAPStringTemplateUtil;
+import com.nosliw.common.erro.HAPErrorUtility;
+import com.nosliw.common.interpolate.HAPStringTemplateUtil;
 import com.nosliw.common.test.HAPResult;
 import com.nosliw.common.test.HAPResultTestCase;
 import com.nosliw.common.test.HAPResultTestSuite;
+import com.nosliw.common.test.HAPTestDescription;
+import com.nosliw.common.test.HAPTestItem;
 import com.nosliw.common.utils.HAPConstant;
 import com.nosliw.common.utils.HAPFileUtility;
 
@@ -41,10 +44,36 @@ public class HAPTestResultExporter {
 		InputStream templateStream = HAPFileUtility.getInputStreamOnClassPath(HAPTestResultExporter.class, "TestCaseResult.txt");
 		Map<String, String> parms = new LinkedHashMap<String, String>();
 		parms.put("testName", testCaseResult.getName());
-		parms.put("testDescription", testCaseResult.getTestDescription().getDescription());
+		parms.put("testDescription", testCaseResult.getTestDescription().getStringValue(HAPTestDescription.ATTR_DESCRIPTION));
 		parms.put("testResult", String.valueOf(testCaseResult.isSuccess()));
-		if(testCaseResult.getException()==null) 		parms.put("testException", "");
-		else parms.put("testException", testCaseResult.getException().getStackTrace().toString());
+		
+		//exceptions
+		if(testCaseResult.getExceptions()==null || testCaseResult.getExceptions().size()==0) 		parms.put("testExceptions", "");
+		else{
+			StringBuffer exceptionsStr = new StringBuffer();
+			for(Exception e : testCaseResult.getExceptions()){
+				InputStream exceptionStream = HAPFileUtility.getInputStreamOnClassPath(HAPTestResultExporter.class, "TestException.txt");
+				Map<String, String> exceptionParms = new LinkedHashMap<String, String>();
+				exceptionParms.put("testException", HAPErrorUtility.log(e));
+				exceptionsStr.append(HAPStringTemplateUtil.getStringValue(exceptionStream, exceptionParms));
+			}
+			parms.put("testExceptions", exceptionsStr.toString());
+		}
+		
+		//test items
+		if(testCaseResult.getTestItems()==null || testCaseResult.getTestItems().size()==0)   parms.put("testItems", "");
+		else{
+			StringBuffer itemsStr = new StringBuffer();
+			for(HAPTestItem testItem : testCaseResult.getTestItems()){
+				InputStream itemStream = HAPFileUtility.getInputStreamOnClassPath(HAPTestResultExporter.class, "TestItem.txt");
+				Map<String, String> testItemParms = new LinkedHashMap<String, String>();
+				testItemParms.put("testItemResult", String.valueOf(testItem.isSuccess()));
+				testItemParms.put("testItemDescription", testItem.getDescription().log());
+				itemsStr.append(HAPStringTemplateUtil.getStringValue(itemStream, testItemParms));
+			}
+			parms.put("testItems", itemsStr.toString());
+		}
+		
 		return HAPStringTemplateUtil.getStringValue(templateStream, parms);
 	}
 	
@@ -52,7 +81,7 @@ public class HAPTestResultExporter {
 		InputStream templateStream = HAPFileUtility.getInputStreamOnClassPath(HAPTestResultExporter.class, "TestSuiteResult.txt");
 		Map<String, String> parms = new LinkedHashMap<String, String>();
 		parms.put("testName", testSuiteResult.getName());
-		parms.put("testDescription", testSuiteResult.getTestDescription().getDescription());
+		parms.put("testDescription", testSuiteResult.getTestDescription().getStringValue(HAPTestDescription.ATTR_DESCRIPTION));
 		parms.put("testResult", String.valueOf(testSuiteResult.isSuccess()));
 
 		StringBuffer childSuiteStr = new StringBuffer();

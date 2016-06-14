@@ -1,23 +1,17 @@
 package com.nosliw.data;
 
 import com.nosliw.common.pattern.HAPNamingConversionUtility;
-import com.nosliw.common.pattern.HAPPatternProcessor;
+import com.nosliw.common.pattern.HAPPatternProcessorImp;
 import com.nosliw.common.test.HAPResultTestCase;
 import com.nosliw.common.test.HAPTestCase;
 import com.nosliw.common.test.HAPTestEnv;
-import com.nosliw.common.test.HAPTestItem;
 import com.nosliw.common.test.HAPTestItemDescription;
 import com.nosliw.common.test.HAPAssert;
 import com.nosliw.common.utils.HAPBasicUtility;
 import com.nosliw.common.utils.HAPConstant;
 import com.nosliw.data.info.HAPDataTypeInfo;
 
-public class HAPPatternProcessorDataTypeInfo implements HAPPatternProcessor{
-
-	@Override
-	public String getName() {
-		return HAPConstant.CONS_PATTERN_DATATYPEINFO;
-	}
+public class HAPPatternProcessorDataTypeInfo extends HAPPatternProcessorImp{
 
 	@Override
 	public Object parse(String text, Object data) {
@@ -40,76 +34,52 @@ public class HAPPatternProcessorDataTypeInfo implements HAPPatternProcessor{
 		return HAPNamingConversionUtility.cascadeTexts(dataTypeInfo.getType(), dataTypeInfo.getCategary(), HAPConstant.CONS_SEPERATOR_PART);
 	}
 
-	@HAPTestCase(description="DataTypeInfo:  type{{CONS_SEPERATOR_PART}}categary, ")
-	public void dataTypeInfo(HAPResultTestCase result, HAPTestEnv testEnv) {
-		String input;
-		String output;
-		
-		input = "type"+HAPConstant.CONS_SEPERATOR_PART+"categary";
-		output = input;
-		this.testItem(new HAPTestItemDescriptionImp(input, "type", "categary", output), result, testEnv);
+	@HAPTestCase(name="${getName()}", description="type{{CONS_SEPERATOR_PART}}categary, ")
+	public void test(HAPResultTestCase result, HAPTestEnv testEnv) {
+		//prepare test items
+		HAPTestItemDescriptionImp[] testItems = {
+				new HAPTestItemDescriptionImp(this, "type"+HAPConstant.CONS_SEPERATOR_PART+"categary", "type", "categary","type"+ HAPConstant.CONS_SEPERATOR_PART+"categary"),
+				new HAPTestItemDescriptionImp(this, HAPConstant.CONS_SEPERATOR_PART+"categary", null, "categary", HAPConstant.CONS_SEPERATOR_PART+"categary"),
+				new HAPTestItemDescriptionImp(this, "type"+HAPConstant.CONS_SEPERATOR_PART, "type", null, "type"+HAPConstant.CONS_SEPERATOR_PART),
+				new HAPTestItemDescriptionImp(this, "type", "type", null, "type"+HAPConstant.CONS_SEPERATOR_PART),
+				new HAPTestItemDescriptionImp(this, null, null, null, ""+HAPConstant.CONS_SEPERATOR_PART+""),
+				new HAPTestItemDescriptionImp(this, "", null, null, ""+HAPConstant.CONS_SEPERATOR_PART+""),
+		};
 
-		input = HAPConstant.CONS_SEPERATOR_PART+"categary";
-		output = input;
-		this.testItem(new HAPTestItemDescriptionImp(input, null, "categary", output), result, testEnv);
-		
-		input = "type"+HAPConstant.CONS_SEPERATOR_PART;
-		output = input;
-		this.testItem(new HAPTestItemDescriptionImp(input, "type", null, output), result, testEnv);
-		
-		input = "type";
-		output = "type"+HAPConstant.CONS_SEPERATOR_PART;
-		this.testItem(new HAPTestItemDescriptionImp(input, "type", null, output), result, testEnv);
-
-		input = null;
-		output = ""+HAPConstant.CONS_SEPERATOR_PART+"";
-		this.testItem(new HAPTestItemDescriptionImp(input, null, null, output), result, testEnv);
-
-		input = "";
-		output = ""+HAPConstant.CONS_SEPERATOR_PART+"";
-		this.testItem(new HAPTestItemDescriptionImp(input, null, null, output), result, testEnv);
+		for(HAPTestItemDescriptionImp testItem : testItems){
+			testItem.test(result, testEnv);
+		}
 	}
 	
-	/*
-	 * run test item
-	 */
-	private void testItem(HAPTestItemDescriptionImp testItem, HAPResultTestCase result, HAPTestEnv testEnv){
-		//update variable placeholder
-		testEnv.updateDocument(testItem);
-		HAPResultTestCase temp = new HAPResultTestCase(null);
-		try{
-			HAPDataTypeInfo dataTypeInfo = (HAPDataTypeInfo)this.parse(testItem.m_input, null);
-			String dataTypeInfoCompse = this.compose(dataTypeInfo, null);
-			HAPAssert.assertEquals(dataTypeInfoCompse, testItem.m_output, result);
-			HAPAssert.assertEquals(dataTypeInfo.getType(), testItem.m_outType, result);
-			HAPAssert.assertEquals(dataTypeInfo.getCategary(), testItem.m_outCategary, result);
-		}
-		catch(Exception e){
-			e.printStackTrace();
-			temp.addException(e);
-		}
-		temp.addTestLog(new HAPTestItem(testItem, temp.isSuccess()));
-		result.importResult(temp);
-	}
-
 	/*
 	 * test item description
 	 */
 	class HAPTestItemDescriptionImp extends HAPTestItemDescription{
-		public HAPTestItemDescriptionImp(String input, String type, String categary, String output){
-			this.m_input = input;
-			this.m_outType = type;
-			this.m_outCategary = categary;
-			this.m_output = output;
+		public final static String ATTR_OUTTYPE = "outType";
+		public final static String ATTR_OUTCATEGARY = "outCategary";
+		
+		private HAPPatternProcessorDataTypeInfo m_testObj;
+		
+		public HAPTestItemDescriptionImp(HAPPatternProcessorDataTypeInfo testObj, String input, String type, String categary, String output){
+			this.setInput(input);
+			this.setOutput(output);
+			this.setValue(ATTR_OUTTYPE, type);
+			this.setValue(ATTR_OUTCATEGARY, categary);
+			this.m_testObj = testObj;
 		}
 		
-		public String m_input;
-		public String m_output;
-		public String m_outCategary;
-		public String m_outType;
 		@Override
 		public String log() {
-			return this.m_input + "----->" + "type:" + this.m_outType + "  /  " + "categary" +  this.m_outCategary;
+			return this.getInputStr() + "----->" + "type:" + this.getStringValue(ATTR_OUTTYPE) + "  /  " + "categary:" +  this.getStringValue(ATTR_OUTCATEGARY);
+		}
+		
+		@Override
+		public void doTest(HAPResultTestCase testResult, HAPTestEnv testEnv){
+			HAPDataTypeInfo dataTypeInfo = (HAPDataTypeInfo)m_testObj.parse(this.getInputStr(), null);
+			String dataTypeInfoCompse = m_testObj.compose(dataTypeInfo, null);
+			HAPAssert.assertEquals(dataTypeInfoCompse, this.getOputputStr(), testResult);
+			HAPAssert.assertEquals(dataTypeInfo.getType(), this.getValue(HAPTestItemDescriptionImp.ATTR_OUTTYPE), testResult);
+			HAPAssert.assertEquals(dataTypeInfo.getCategary(), this.getValue(HAPTestItemDescriptionImp.ATTR_OUTCATEGARY), testResult);
 		}
 	}
 }

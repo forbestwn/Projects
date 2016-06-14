@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.nosliw.common.configure.HAPConfigurable;
+import com.nosliw.common.configure.HAPConfiguration;
 import com.nosliw.common.exception.HAPServiceData;
 import com.nosliw.common.utils.HAPConstant;
 import com.nosliw.entity.data.HAPEntityID;
@@ -25,7 +25,7 @@ public abstract class HAPTransaction extends HAPEntityDataAccessImp{
 	//all operations
 	private List<HAPEntityOperationInfo> m_fullOperations;
 	
-	public HAPTransaction(HAPConfigurable configure, HAPEntityDataAccess access, HAPDataContext dataContext){
+	public HAPTransaction(HAPConfiguration configure, HAPEntityDataAccess access, HAPDataContext dataContext){
 		super(configure, access, dataContext);
 		this.m_rootOperations = new ArrayList<HAPEntityOperationInfo>();
 		this.m_fullOperations = new ArrayList<HAPEntityOperationInfo>();

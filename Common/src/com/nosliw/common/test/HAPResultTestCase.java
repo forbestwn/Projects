@@ -33,7 +33,7 @@ public class HAPResultTestCase extends HAPResult{
 		this.m_testItems.addAll(result.m_testItems);
 	}
 
-	public void addTestLog(HAPTestItem testItem){
+	public void addTestItem(HAPTestItem testItem){
 		this.m_testItems.add(testItem);
 		Boolean isSuccess = testItem.isSuccess();
 		if(isSuccess!=null){
@@ -41,7 +41,7 @@ public class HAPResultTestCase extends HAPResult{
 		}
 	}
 	
-	public List<HAPTestItem> getTestLogs(){ return this.m_testItems; }
+	public List<HAPTestItem> getTestItems(){ return this.m_testItems; }
 	
 	@Override
 	public String getType() {

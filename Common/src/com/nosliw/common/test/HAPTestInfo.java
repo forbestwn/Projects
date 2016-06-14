@@ -39,8 +39,8 @@ public abstract class HAPTestInfo{
 	public int getId(){ return this.m_id; }
 	public HAPTestDescription getDescription(){  return this.m_description; }
 	public int getSequence(){  return this.m_sequence;  }
-	public String getName(){ return this.getDescription().getName(); }
-	protected void setName(String name){ this.getDescription().setName(name); }
+	public String getName(){ return this.getDescription().getStringValue(HAPTestDescription.ATTR_NAME); }
+	protected void setName(String name){ this.getDescription().setValue(HAPTestDescription.ATTR_NAME, name);}
 	public boolean inited(){ return this.m_inited; }
 	protected void setInited(){  this.m_inited = true; }
 	
@@ -72,7 +72,7 @@ public abstract class HAPTestInfo{
 	public boolean equals(Object obj){
 		if(obj instanceof HAPTestInfo){
 			HAPTestInfo t = (HAPTestInfo)obj;
-			return HAPBasicUtility.isEquals(this.getType(), t.getType()) && HAPBasicUtility.isEquals(this.getDescription().getName(), t.getDescription().getName());
+			return HAPBasicUtility.isEquals(this.getType(), t.getType()) && HAPBasicUtility.isEquals(this.getName(), t.getName());
 		}
 		else return false;
 	}

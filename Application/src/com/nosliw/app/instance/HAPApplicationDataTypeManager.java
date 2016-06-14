@@ -13,8 +13,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.nosliw.common.configure.HAPConfigurable;
-import com.nosliw.common.configure.HAPConfigurableImp;
+import com.nosliw.common.configure.HAPConfiguration;
+import com.nosliw.common.configure.HAPConfigureImp;
 import com.nosliw.common.utils.HAPBasicUtility;
 import com.nosliw.common.utils.HAPXMLUtility;
 import com.nosliw.data.HAPDataType;
@@ -24,7 +24,7 @@ import com.nosliw.data.info.HAPDataTypeInfoWithVersion;
 
 public class HAPApplicationDataTypeManager extends HAPDataTypeManager{
 
-	public HAPApplicationDataTypeManager(HAPConfigurable configure){
+	public HAPApplicationDataTypeManager(HAPConfiguration configure){
 		super(configure);
 		String[] libs = configure.getArrayValue("libs");
 		for(String lib : libs){
@@ -68,7 +68,7 @@ public class HAPApplicationDataTypeManager extends HAPDataTypeManager{
 															HAPDataTypeInfoWithVersion.class,
 															HAPDataType.class,
 															HAPDataTypeInfoWithVersion.class,
-															HAPConfigurable.class,
+															HAPConfiguration.class,
 															String.class,
 															HAPDataTypeManager.class);
 					HAPDataType dataType = (HAPDataType)method.invoke(null,
@@ -89,8 +89,8 @@ public class HAPApplicationDataTypeManager extends HAPDataTypeManager{
 		} 
 	}
 	
-	private HAPConfigurable readConfigure(Element versionEle){
-		HAPConfigurable out = null;
+	private HAPConfiguration readConfigure(Element versionEle){
+		HAPConfiguration out = null;
 		Element parmsEle = HAPXMLUtility.getFirstChildElementByName(versionEle, "parms");
 		if(parmsEle!=null){
 			Map<String, Object> parmMap = new LinkedHashMap<String, Object>();
@@ -98,7 +98,7 @@ public class HAPApplicationDataTypeManager extends HAPDataTypeManager{
 			for(Element parmEle : parmEles){
 				parmMap.put(parmEle.getAttribute("name"), parmEle.getAttribute("value"));
 			}
-			out = new HAPConfigurableImp(parmMap);
+			out = new HAPConfigureImp(parmMap);
 		}
 		return out;
 	}

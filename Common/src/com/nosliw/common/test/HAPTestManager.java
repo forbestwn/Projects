@@ -1,12 +1,13 @@
 package com.nosliw.common.test;
 
-import com.nosliw.common.configure.HAPConfigurableImp;
+import com.nosliw.common.configure.HAPConfigureImp;
 import com.nosliw.common.configure.HAPConfigureManager;
+import com.nosliw.common.utils.HAPConstant;
 
 public class HAPTestManager {
 	private static HAPTestManager m_instance;
 
-	private static HAPConfigurableImp m_configure;
+	private static HAPConfigureImp m_configure;
 	
 	//id seed
 	private int m_id;
@@ -18,7 +19,7 @@ public class HAPTestManager {
 	public static HAPTestManager getInstance(){
 		if(m_instance==null){
 			m_instance = new HAPTestManager();
-			m_configure = HAPConfigureManager.getInstance().newConfigure();
+			m_configure = HAPConfigureManager.getInstance().createConfigureWithBaseName(HAPConstant.CONS_CONFIGURATION_DEFAULTBASE);
 		}
 		return m_instance;
 	}

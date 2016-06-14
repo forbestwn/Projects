@@ -1,6 +1,6 @@
 package com.nosliw.data.library.image.v100;
 
-import com.nosliw.common.configure.HAPConfigurable;
+import com.nosliw.common.configure.HAPConfiguration;
 import com.nosliw.common.exception.HAPServiceData;
 import com.nosliw.data.HAPData;
 import com.nosliw.data.HAPDataType;
@@ -15,7 +15,7 @@ public class HAPImage extends HAPDataTypeImp{
 	private HAPImage(HAPDataTypeInfoWithVersion dataTypeInfo, 
 					HAPDataType olderDataType, 
 					HAPDataTypeInfoWithVersion parentDataTypeInfo, 
-					HAPConfigurable configure,
+					HAPConfiguration configure,
 					String description,
 					HAPDataTypeManager dataTypeMan) {
 		super(dataTypeInfo, olderDataType, parentDataTypeInfo, configure, description, dataTypeMan);
@@ -46,7 +46,7 @@ public class HAPImage extends HAPDataTypeImp{
 	static public HAPImage createDataType(HAPDataTypeInfoWithVersion dataTypeInfo, 
 			HAPDataType olderDataType, 		
 			HAPDataTypeInfoWithVersion parentDataTypeInfo, 
-			HAPConfigurable configures,
+			HAPConfiguration configures,
 			String description,
 			HAPDataTypeManager dataTypeMan){
 		return new HAPImage(dataTypeInfo, olderDataType, parentDataTypeInfo, configures, description, dataTypeMan);

@@ -6,7 +6,7 @@ import org.bson.types.ObjectId;
 import com.mongodb.BasicDBObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import com.nosliw.common.configure.HAPConfigurable;
+import com.nosliw.common.configure.HAPConfiguration;
 import com.nosliw.common.utils.HAPConstant;
 import com.nosliw.entity.data.HAPEntityID;
 import com.nosliw.entity.data.HAPEntityWraper;
@@ -19,7 +19,7 @@ public class HAPPersistentDataAccess extends HAPEntityPersistent{
 
 	private MongoDatabase m_database;
 	
-	public HAPPersistentDataAccess(HAPConfigurable configure) {
+	public HAPPersistentDataAccess(HAPConfiguration configure) {
 		super(configure);
 	}
 

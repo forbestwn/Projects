@@ -1,10 +1,10 @@
 package com.nosliw.entity.dataaccess;
 
-import com.nosliw.common.configure.HAPConfigurable;
+import com.nosliw.common.configure.HAPConfiguration;
 
 public abstract class HAPEntityPersistent extends HAPEntityDataAccessImp{
 
-	public HAPEntityPersistent(HAPConfigurable configure) {
+	public HAPEntityPersistent(HAPConfiguration configure) {
 		super(configure, null, null);
 	}
 

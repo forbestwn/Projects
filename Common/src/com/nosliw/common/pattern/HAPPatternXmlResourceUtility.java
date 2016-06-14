@@ -38,7 +38,7 @@ public class HAPPatternXmlResourceUtility {
 		} catch (Exception e) {    
 			e.printStackTrace();
 		}
-		return null;
+		return out;
 	}
 	
 	public static void exportProcessorInfos(Set<HAPPatternProcessorInfo> processors, OutputStream outputSteam){
@@ -101,7 +101,7 @@ public class HAPPatternXmlResourceUtility {
 		HAPPatternProcessorInfo processorInfo = new HAPPatternProcessorInfo();
 		String name = ele.getAttribute("name");
 		processorInfo.setName(name);
-		String className = ele.getAttribute("className");
+		String className = ele.getAttribute("classname");
 		processorInfo.setClassName(className);
 		return processorInfo;
 	}

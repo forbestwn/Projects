@@ -5,19 +5,19 @@ import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.nosliw.common.configure.HAPConfigurable;
-import com.nosliw.common.strtemplate.HAPStringTemplate;
+import com.nosliw.common.configure.HAPConfiguration;
+import com.nosliw.common.interpolate.HAPStringTemplate;
 import com.nosliw.common.utils.HAPFileUtility;
 
 public class HAPUITagManager {
 
 	private Map<String, HAPUITagInfo> m_uiTags;
 	
-	private HAPConfigurable m_configure;
+	private HAPConfiguration m_configure;
 	
 	private HAPStringTemplate m_strTemplate;
 	
-	public HAPUITagManager(HAPConfigurable configure){
+	public HAPUITagManager(HAPConfiguration configure){
 		this.m_configure = configure;
 		this.m_uiTags = new LinkedHashMap<String, HAPUITagInfo>();
 
@@ -44,7 +44,7 @@ public class HAPUITagManager {
 		return tagScript;
 	}
 	
-	protected HAPConfigurable getConfigure(){
+	protected HAPConfiguration getConfigure(){
 		return this.m_configure;
 	}
 }

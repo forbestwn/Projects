@@ -1,6 +1,6 @@
 package com.nosliw.data.basic.floa;
 
-import com.nosliw.common.configure.HAPConfigurable;
+import com.nosliw.common.configure.HAPConfiguration;
 import com.nosliw.common.exception.HAPServiceData;
 import com.nosliw.data.HAPData;
 import com.nosliw.data.HAPDataType;
@@ -18,7 +18,7 @@ public class HAPFloat extends HAPDataTypeImp{
 	private HAPFloat(HAPDataTypeInfoWithVersion dataTypeInfo,
 			HAPDataType olderDataType, 
 			HAPDataTypeInfoWithVersion parentDataTypeInfo, 
-			HAPConfigurable configure,
+			HAPConfiguration configure,
 			String description,
 			HAPDataTypeManager dataTypeMan) {
 		super(dataTypeInfo, olderDataType, parentDataTypeInfo, configure, description, dataTypeMan);
@@ -55,7 +55,7 @@ public class HAPFloat extends HAPDataTypeImp{
 	static public HAPFloat createDataType(HAPDataTypeInfoWithVersion dataTypeInfo, 
 										HAPDataType olderDataType, 		
 										HAPDataTypeInfoWithVersion parentDataTypeInfo, 
-										HAPConfigurable configures,
+										HAPConfiguration configures,
 										String description,
 										HAPDataTypeManager dataTypeMan){
 		if(HAPFloat.dataType==null){

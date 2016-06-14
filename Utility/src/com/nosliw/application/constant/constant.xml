@@ -300,6 +300,8 @@
 		<definition name="CONS_SEPERATOR_ARRAYEND" value="]"/>
 		<definition name="CONS_SEPERATOR_VARSTART" value="{{" type="string"/>
 		<definition name="CONS_SEPERATOR_VAREND" value="}}" type="string"/>
+		<definition name="CONS_SEPERATOR_EXPRESSIONSTART" value="${" type="string"/>
+		<definition name="CONS_SEPERATOR_EXPRESSIONEND" value="}" type="string"/>
 		<definition type="space"/>
 		<definition name="CONS_DATAOPERATION_NEWDATA" value="new"/>
 		<definition name="CONS_DATAOPERATION_TOPARENTTYPE" value="toParentType"/>
@@ -499,16 +501,15 @@
 		<definition name="CONS_REFERENCE_TYPE_RELATIVE" value="1" type="int"/>
 
 		<definition type="space"/>
-		<definition name="CONS_PATTERN_DATATYPEINFO" value="pattern_datatypeinfo"/>
-		<definition name="CONS_PATTERN_VARIABLE" value="pattern_variable"/>
-
-		<definition type="space"/>
 		<definition name="CONS_TESTRESULT_TYPE_SUITE" value="SUITE"/>
 		<definition name="CONS_TESTRESULT_TYPE_CASE" value="CASE"/>
 
 		<definition type="space"/>
 		<definition name="CONS_TEST_TYPE_SUITE" value="SUITE"/>
 		<definition name="CONS_TEST_TYPE_CASE" value="CASE"/>
+
+		<definition type="space"/>
+		<definition name="CONS_CONFIGURATION_DEFAULTBASE" value="default"/>
 
 		<definition type="space"/>
 		<definition name="CONS_CATEGARY_NAME" value="CONS_CATEGARY_NAME"/>

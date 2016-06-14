@@ -3,14 +3,14 @@ package com.nosliw.app.instance;
 import java.io.File;
 import java.util.Set;
 
-import com.nosliw.common.configure.HAPConfigurable;
+import com.nosliw.common.configure.HAPConfiguration;
 import com.nosliw.common.utils.HAPFileUtility;
 import com.nosliw.uiresource.HAPUITagInfo;
 import com.nosliw.uiresource.HAPUITagManager;
 
 public class HAPApplicationUITagManager extends HAPUITagManager{
 
-	HAPApplicationUITagManager(HAPConfigurable configure) {
+	HAPApplicationUITagManager(HAPConfiguration configure) {
 		super(configure);
 		
 		String tagLibPath = configure.getStringValue("libs.path");

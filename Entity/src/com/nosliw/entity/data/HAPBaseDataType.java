@@ -1,6 +1,6 @@
 package com.nosliw.entity.data;
 
-import com.nosliw.common.configure.HAPConfigurable;
+import com.nosliw.common.configure.HAPConfiguration;
 import com.nosliw.data.HAPDataType;
 import com.nosliw.data.HAPDataTypeImp;
 import com.nosliw.data.HAPDataTypeManager;
@@ -13,7 +13,7 @@ public abstract class HAPBaseDataType extends HAPDataTypeImp{
 	
 	protected HAPBaseDataType(HAPDataTypeInfoWithVersion dataTypeInfo,
 			HAPDataType olderDataType, HAPDataTypeInfoWithVersion parentDataTypeInfo,
-			HAPConfigurable configures, String description,
+			HAPConfiguration configures, String description,
 			HAPDataTypeManager dataTypeMan,
 			HAPEntityDefinitionManager entityDefMan) {
 		super(dataTypeInfo, olderDataType, parentDataTypeInfo, configures, description,

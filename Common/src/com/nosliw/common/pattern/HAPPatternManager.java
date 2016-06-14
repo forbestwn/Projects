@@ -9,11 +9,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.nosliw.common.configure.HAPConfigurable;
-import com.nosliw.common.configure.HAPConfigurableImp;
+import com.nosliw.common.configure.HAPConfiguration;
+import com.nosliw.common.configure.HAPConfigureImp;
 import com.nosliw.common.configure.HAPConfigureManager;
 import com.nosliw.common.utils.HAPBasicUtility;
-import com.nosliw.common.utils.HAPFileUtility;
 
 public class HAPPatternManager {
 
@@ -23,20 +22,20 @@ public class HAPPatternManager {
 
 	private Map<String, HAPPatternProcessorInfo> m_processorInfos;
 	
-	private HAPConfigurableImp m_configure;
+	private HAPConfigureImp m_configure;
 
 	public static HAPPatternManager getInstance(){
 		return getInstance(null);
 	}
 
-	public static HAPPatternManager getInstance(HAPConfigurableImp configure){
+	public static HAPPatternManager getInstance(HAPConfigureImp configure){
 		if(m_instance==null){
 			m_instance=new HAPPatternManager(configure);
 		}
 		return m_instance;
 	}
 	
-	public HAPPatternManager(HAPConfigurableImp configure){
+	public HAPPatternManager(HAPConfigureImp configure){
 		this.m_processorInfos = new LinkedHashMap<String, HAPPatternProcessorInfo>();
 		this.m_processors = new LinkedHashMap<String, HAPPatternProcessor>();
 		this.init(configure);
@@ -68,7 +67,7 @@ public class HAPPatternManager {
 		return this.m_processorInfos;
 	}
 	
-	private void init(HAPConfigurableImp configure){	
+	private void init(HAPConfigureImp configure){	
 		try {
 			this.initConfigure(configure);
 			
@@ -122,14 +121,15 @@ public class HAPPatternManager {
 	/*
 	 * final configure will be configure softMerge with default configure(from properties file)
 	 */
-	private void initConfigure(HAPConfigurableImp configure){
-		InputStream input = HAPFileUtility.getInputStreamOnClassPath(HAPPatternUtility.class, "patternprocess.properties");
-		m_configure = HAPConfigureManager.getInstance().newConfigure();
-		if(input!=null)  m_configure = m_configure.importFromFile(input);
-		
+	private void initConfigure(HAPConfigureImp configure){
+		this.m_configure = HAPConfigureManager.getInstance().createConfigureFromFileWithBaseName("patternprocess.properties", HAPPatternManager.class, null);
+//		InputStream input = HAPFileUtility.getInputStreamOnClassPath(HAPPatternUtility.class, "patternprocess.properties");
+//		m_configure = HAPConfigureManager.getInstance().createConfigureWithBaseName("configure");
+//		if(input!=null)  m_configure = m_configure.importFromFile(input);
+//		
 		if(configure!=null){
 			//configure override m_configure
-			this.m_configure = (HAPConfigurableImp)configure.softMerge(this.m_configure, true);
+			this.m_configure = (HAPConfigureImp)configure.softMerge(this.m_configure, true);
 		}
 	}
 	
@@ -137,7 +137,7 @@ public class HAPPatternManager {
 		return this.getConfigure().getConfigureValue("exportFile").getStringValue();
 	}
 	
-	private HAPConfigurable getConfigure(){
+	private HAPConfiguration getConfigure(){
 		return this.m_configure;
 	}
 }

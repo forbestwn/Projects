@@ -3,7 +3,7 @@ package com.nosliw.entity.dataaccess;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.nosliw.common.configure.HAPConfigurable;
+import com.nosliw.common.configure.HAPConfiguration;
 import com.nosliw.common.serialization.HAPStringable;
 import com.nosliw.data.HAPDataTypeManager;
 import com.nosliw.entity.definition.HAPEntityDefinitionManager;
@@ -16,14 +16,14 @@ public abstract class HAPClientContextManager implements HAPStringable{
 	
 	protected Map<String, HAPClientContext> m_clientContexts;
 	
-	private HAPConfigurable m_configures;
+	private HAPConfiguration m_configures;
 
 	private HAPDataTypeManager m_dataTypeMan; 
 	private HAPEntityDefinitionManager m_entityDefMan; 
 	private HAPQueryDefinitionManager m_queryDefMan;
 	private HAPOptionsDefinitionManager m_optionsDefMan;
 	
-	public HAPClientContextManager(HAPConfigurable configures,
+	public HAPClientContextManager(HAPConfiguration configures,
 							HAPDataTypeManager dataTypeMan, 
 							HAPEntityDefinitionManager entityDefMan, 
 							HAPQueryDefinitionManager queryDefMan,
@@ -79,5 +79,5 @@ public abstract class HAPClientContextManager implements HAPStringable{
 	protected HAPEntityDefinitionManager getEntityDefinitionManager() {  return this.m_entityDefMan;	}
 	protected HAPQueryDefinitionManager getQueryDefinitionManager() { return this.m_queryDefMan; }
 	protected HAPOptionsDefinitionManager getOptionsManager() { return this.m_optionsDefMan;	}
-	protected HAPConfigurable getConfigure(){ return this.m_configures; }
+	protected HAPConfiguration getConfigure(){ return this.m_configures; }
 }
