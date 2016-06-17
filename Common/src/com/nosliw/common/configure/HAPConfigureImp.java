@@ -17,11 +17,15 @@ import com.nosliw.common.utils.HAPSegmentParser;
 
 public class HAPConfigureImp  implements HAPConfiguration, HAPStringable{
 	//child configure nested
-	Map<String, HAPConfigureImp> m_childConfigures;
+	private Map<String, HAPConfigureImp> m_childConfigures;
 	//configure values
-	Map<String, HAPConfigureValue> m_values;
+	private Map<String, HAPConfigureValue> m_values;
 	
-	Map<String, String> m_variables;
+	//all variables used to replace placeholders
+	private Map<String, String> m_variables;
+	
+	//the parent configure
+	private HAPConfigureImp m_parent = null;
 	
 	/*
 	 * empty constructor
@@ -32,26 +36,13 @@ public class HAPConfigureImp  implements HAPConfiguration, HAPStringable{
 		this.m_variables = new LinkedHashMap<String, String>();
 	}
 
-	public HAPConfigureImp importFromValueMap(Map<String, String> valueMap){
+	HAPConfigureImp importFromValueMap(Map<String, String> valueMap){
 		for(String name : valueMap.keySet()){
-			this.addStringValue(name, valueMap.get(name));
+			this.addConfigureItem(name, valueMap.get(name));
 		}
 		return this;
 	}
-	
-	public void addConfigureItem(String name, String value){
-		value = processStringValue(value);
-		String isGlobalVar = HAPConfigureUtility.isGlobalVariable(name);
-		if(isGlobalVar==null){
-			//normal configure
-			this.addStringValue(name, value);
-		}
-		else{
-			//global variable definition
-			this.addGlobalValue(isGlobalVar, value);
-		}
-	}
-	
+
 	/*
 	 * read configure items from property as file
 	 */
@@ -65,6 +56,20 @@ public class HAPConfigureImp  implements HAPConfiguration, HAPStringable{
 		return this;
 	}
 		
+
+	public void addConfigureItem(String name, String value){
+		value = processStringValue(value);
+		String isGlobalVar = HAPConfigureUtility.isGlobalVariable(name);
+		if(isGlobalVar==null){
+			//normal configure
+			this.addStringValue(name, value);
+		}
+		else{
+			//global variable definition
+			this.addGlobalValue(isGlobalVar, value);
+		}
+	}
+	
 	/*
 	 * read configure items from property as inputstream
 	 */
@@ -88,6 +93,7 @@ public class HAPConfigureImp  implements HAPConfiguration, HAPStringable{
 		}		
 	}
 
+	
 	/*
 	 * process string value
 	 * 		replace variable place holder with variable value
@@ -101,7 +107,7 @@ public class HAPConfigureImp  implements HAPConfiguration, HAPStringable{
 		if(nameSegs.getSegmentSize()>1){
 			//if name have path structure, then have configurable nested
 			String childName = nameSegs.next();
-			HAPConfigureImp childConf = (HAPConfigureImp)this.getChildConfigurable(childName);
+			HAPConfigureImp childConf = (HAPConfigureImp)this.getChildConfigure(childName);
 			if(childConf==null){
 				childConf = new HAPConfigureImp();
 				this.addChildConfigure(childName, childConf);
@@ -110,6 +116,42 @@ public class HAPConfigureImp  implements HAPConfiguration, HAPStringable{
 		}
 		else{
 			this.addChildConfigureValue(name, value);
+		}
+	}
+
+	@Override
+	public HAPConfiguration cloneChildConfigure(String attr) {	
+		HAPConfigureImp out = null;
+		int index = attr.indexOf(HAPConstant.CONS_SEPERATOR_PATH);
+		if(index==-1){
+			//single
+			out = this.getChildConfigure(attr);	
+		}
+		else{
+			//multiple path
+			HAPConfigureImp subConf = this.getChildConfigure(attr.substring(0, index));
+			if(subConf==null)   return null;
+			out = (HAPConfigureImp)subConf.cloneChildConfigure(attr.substring(index+1));
+		}
+		if(out!=null){
+			//add global variable to output configure
+			out.getGlobalVaribles().putAll(this.getGlobalVaribles());
+		}
+		return out;
+	}
+	
+	@Override
+	public HAPConfigureValue getConfigureValue(String attr){  
+		int index = attr.indexOf(HAPConstant.CONS_SEPERATOR_PATH);
+		if(index==-1){
+			//single
+			return this.getChildConfigureValue(attr);	
+		}
+		else{
+			//multiple path
+			HAPConfiguration subConf = this.getChildConfigure(attr.substring(0, index));
+			if(subConf==null)   return null;
+			else	return subConf.getConfigureValue(attr.substring(index+1));
 		}
 	}
 
@@ -137,7 +179,7 @@ public class HAPConfigureImp  implements HAPConfiguration, HAPStringable{
 		if(configuration==null)  return;
 		//merge child configurs
 		for(String attr : configuration.getChildConfigurables().keySet()){
-			HAPConfigureImp configure = this.getChildConfigurable(attr);
+			HAPConfigureImp configure = this.getChildConfigure(attr);
 			HAPConfigureImp mergeConfigure = configuration.getChildConfigurables().get(attr);
 			if(configure!=null)			configure.softMerge(mergeConfigure);
 			else			this.addChildConfigure(attr, (HAPConfigureImp)mergeConfigure.clone());
@@ -157,7 +199,7 @@ public class HAPConfigureImp  implements HAPConfiguration, HAPStringable{
 		if(configuration==null)  return;
 		//merge child configurs
 		for(String attr : configuration.getChildConfigurables().keySet()){
-			HAPConfigureImp configure = this.getChildConfigurable(attr);
+			HAPConfigureImp configure = this.getChildConfigure(attr);
 			HAPConfigureImp mergeConfigure = configuration.getChildConfigurables().get(attr);
 			if(configure!=null)			configure.hardMerge(mergeConfigure);
 			else			this.addChildConfigure(attr, (HAPConfigureImp)mergeConfigure.clone());
@@ -171,36 +213,7 @@ public class HAPConfigureImp  implements HAPConfiguration, HAPStringable{
 		}
 	}
 
-	public HAPConfiguration getConfigurable(String attr) {	
-		int index = attr.indexOf(HAPConstant.CONS_SEPERATOR_PATH);
-		if(index==-1){
-			//single
-			return this.getChildConfigurable(attr);	
-		}
-		else{
-			//multiple path
-			HAPConfigureImp subConf = this.getChildConfigurable(attr.substring(0, index));
-			if(subConf==null)   return null;
-			else	return subConf.getConfigurable(attr.substring(index+1));
-		}
-	}
-	
-	@Override
-	public HAPConfigureValue getConfigureValue(String attr){  
-		int index = attr.indexOf(HAPConstant.CONS_SEPERATOR_PATH);
-		if(index==-1){
-			//single
-			return this.getChildConfigureValue(attr);	
-		}
-		else{
-			//multiple path
-			HAPConfiguration subConf = this.getChildConfigurable(attr.substring(0, index));
-			if(subConf==null)   return null;
-			else	return subConf.getConfigureValue(attr.substring(index+1));
-		}
-	}
-
-	private HAPConfigureImp getChildConfigurable(String childName){return this.m_childConfigures.get(childName);}
+	private HAPConfigureImp getChildConfigure(String childName){return this.m_childConfigures.get(childName);}
 	private HAPConfigureValue getChildConfigureValue(String childName){ return this.m_values.get(childName);  }
 	private Map<String, HAPConfigureImp> getChildConfigurables(){return this.m_childConfigures;}
 	private Map<String, HAPConfigureValue> getChildConfigureValues(){ return this.m_values;  }

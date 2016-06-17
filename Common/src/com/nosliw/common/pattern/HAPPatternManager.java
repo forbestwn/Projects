@@ -22,8 +22,6 @@ public class HAPPatternManager {
 
 	private Map<String, HAPPatternProcessorInfo> m_processorInfos;
 	
-	private HAPConfigureImp m_configure;
-
 	public static HAPPatternManager getInstance(){
 		return getInstance(null);
 	}

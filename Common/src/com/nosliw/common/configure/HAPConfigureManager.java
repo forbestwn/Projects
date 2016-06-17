@@ -30,46 +30,22 @@ public class HAPConfigureManager {
 	public void registerConfigureBase(String name, HAPConfigureImp configureBase){
 		this.m_baseConfigures.put(name, configureBase);
 	}
+
+	/*
+	 * create brand new configure (empty configure)
+	 */
+	public HAPConfigureImp newConfigure(){	return new HAPConfigureImp();	}
 	
 	/*
-	 * factory method to create configuration object
-	 * base: whether to create base configure
+	 * factory method to create configuration object from base
 	 */
-	public HAPConfigureImp createConfigureWithBaseName(String base){
-		HAPConfigureImp out = null;
-		if(base!=null){
-			out = (HAPConfigureImp)m_baseConfigures.get(base).clone();
-		}
-		else{
-			out = new HAPConfigureImp();
-		}
+	public HAPConfigureImp createConfigure(){
+		HAPConfigureImp out = (HAPConfigureImp)this.getDefaultBaseConfigure().clone();
 		return out;
 	}
 
-	public HAPConfigureImp createConfigureFromFileWithBaseConfigure(String file, Class pathClass, HAPConfigureImp baseConfigure){
-		HAPConfigureImp out = null;
-		if(baseConfigure!=null)  out = (HAPConfigureImp)baseConfigure.clone();
-		else out = new HAPConfigureImp();
-		
-		InputStream input = HAPFileUtility.getInputStreamOnClassPath(pathClass, file);
-		if(input!=null)  out.importFromFile(input);
-		return out;
-	}
-
-	/*
-	 * factory method to create configuration object from property file
-	 * file: property file name
-	 * pathClass: class package to looking for the file
-	 * base: whether to create base configure
-	 */
-	public HAPConfigureImp createConfigureFromFileWithBaseName(String file, Class pathClass, String base){
-		HAPConfigureImp out = new HAPConfigureImp();
-		InputStream input = HAPFileUtility.getInputStreamOnClassPath(pathClass, file);
-		if(input!=null)  out.importFromFile(input);
-
-		//merge with base configure
-		out.softMerge(this.getBaseConfigure(base), false);
-		return out;
+	private HAPConfigureImp getDefaultBaseConfigure(){
+		return this.getBaseConfigure(HAPConstant.CONS_CONFIGURATION_DEFAULTBASE);
 	}
 	
 	private HAPConfigureImp getBaseConfigure(String name){

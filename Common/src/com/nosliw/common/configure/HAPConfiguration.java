@@ -7,6 +7,7 @@ package com.nosliw.common.configure;
 public interface HAPConfiguration {
 
 	public HAPConfigureValue getConfigureValue(String attr);  
+	public HAPConfiguration cloneChildConfigure(String name);
 	
 	public HAPConfiguration softMerge(HAPConfiguration configuration, boolean ifNewConf);
 	public HAPConfiguration hardMerge(HAPConfiguration configuration, boolean ifNewConf);
