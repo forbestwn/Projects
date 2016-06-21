@@ -9,32 +9,109 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import com.nosliw.common.interpolate.HAPExpressionProcessor;
+import com.nosliw.common.interpolate.HAPInterpolateOutput;
+import com.nosliw.common.interpolate.HAPInterpolateUtility;
 import com.nosliw.common.interpolate.HAPPatternProcessorDocVariable;
 import com.nosliw.common.serialization.HAPStringable;
 import com.nosliw.common.utils.HAPConstant;
 import com.nosliw.common.utils.HAPJsonUtility;
 import com.nosliw.common.utils.HAPSegmentParser;
 
-public class HAPConfigureImp  implements HAPConfiguration, HAPStringable{
+/*
+ * node for tree structure configuration
+ * configuration has two type of value: configure value and variable value
+ * 		configure value has tree structure: every configure is identified by path
+ * 		variable value has no tree structure, it is identified by single name
+ * configure value cannot refered to another configure, 
+ * configure value can only refer to variable value	
+ * 		in that case, configure search the variable name within its own scope
+ * 		if not found, then search the variable name within parent scrope
+ * 	when clone a configure from a child configure, the variables in new configure are all the variables from child configure to root parent configure by variable in child override parent
+ *  for party that use this configure, variable within this configure root can also be a configure item
+ *  so that when a party get configure value from configure
+ *  	it search within configure first
+ *  	if not found, then search within variables in root configure 
+ */
+public class HAPConfigureImp extends HAPConfigureItem implements HAPConfiguration, HAPStringable{
+	private String m_startToken = HAPConstant.CONS_SEPERATOR_VARSTART;
+	private String m_endToken = HAPConstant.CONS_SEPERATOR_VAREND;
+	
 	//child configure nested
 	private Map<String, HAPConfigureImp> m_childConfigures;
 	//configure values
-	private Map<String, HAPConfigureValue> m_values;
+	private Map<String, HAPConfigureValueString> m_values;
 	
-	//all variables used to replace placeholders
-	private Map<String, String> m_variables;
-	
-	//the parent configure
-	private HAPConfigureImp m_parent = null;
+	//all variables within this configur node
+	private Map<String, HAPVariableValue> m_variables;
 	
 	/*
 	 * empty constructor
 	 */
 	HAPConfigureImp(){
 		this.m_childConfigures = new LinkedHashMap<String, HAPConfigureImp>();
-		this.m_values = new LinkedHashMap<String, HAPConfigureValue>();
-		this.m_variables = new LinkedHashMap<String, String>();
+		this.m_values = new LinkedHashMap<String, HAPConfigureValueString>();
+		this.m_variables = new LinkedHashMap<String, HAPVariableValue>();
 	}
+	
+	/*
+	 * resolve resolvable item (configure value or variable value)
+	 */
+	void resolveInternal(HAPResolvableConfigureItem resolvableItem, final boolean resursive){
+		final HAPConfigureImp that = this;
+		HAPInterpolateOutput interpolateOut = HAPInterpolateUtility.process(resolvableItem.getRawString(), this, this.m_startToken, this.m_endToken, new HAPExpressionProcessor(){
+			@Override
+			public String process(String expression, Object object) {
+				HAPConfigureImp configure = (HAPConfigureImp)object;
+				//through variable
+				HAPVariableValue value = configure.getVariableValue(expression);
+				if(value==null)  return null;
+				else{
+					//found variable
+					if(value.resolved())  return value.getResolvedString();
+					else{
+						if(resursive){
+							value.getParent().resolveInternal(value, resursive);
+							if(value.resolved())  return value.getResolvedString();
+							else return null;
+						}
+						else{
+							return null;
+						}
+					}
+				}
+			}
+		});
+		
+	}
+
+	public String resolve(String content){
+		return null;
+	}
+	
+
+	/*
+	 * get variable value according to its name
+	 * if value does not exits in current configure scope, try to search in parent scope
+	 */
+	private HAPVariableValue getVariableValue(String name){
+		HAPVariableValue out = this.m_variables.get(name);
+		if(out==null){
+			HAPConfigureImp parent = this.getParent();
+			if(parent!=null){
+				//if not find in current scope, try to find in parent
+				out = parent.getVariableValue(name);
+			}
+		}
+		return out;
+	}
+
+
+	String resolveThroughConfigure(String content, boolean resursive){
+		return null;
+	}
+	
+	
 
 	HAPConfigureImp importFromValueMap(Map<String, String> valueMap){
 		for(String name : valueMap.keySet()){
@@ -56,20 +133,6 @@ public class HAPConfigureImp  implements HAPConfiguration, HAPStringable{
 		return this;
 	}
 		
-
-	public void addConfigureItem(String name, String value){
-		value = processStringValue(value);
-		String isGlobalVar = HAPConfigureUtility.isGlobalVariable(name);
-		if(isGlobalVar==null){
-			//normal configure
-			this.addStringValue(name, value);
-		}
-		else{
-			//global variable definition
-			this.addGlobalValue(isGlobalVar, value);
-		}
-	}
-	
 	/*
 	 * read configure items from property as inputstream
 	 */
@@ -92,6 +155,25 @@ public class HAPConfigureImp  implements HAPConfiguration, HAPStringable{
 			this.addConfigureItem(name, value);
 		}		
 	}
+
+	
+	public void addConfigureItem(String name, String value){
+		value = processStringValue(value);
+		String isGlobalVar = HAPConfigureUtility.isGlobalVariable(name);
+		if(isGlobalVar==null){
+			//normal configure
+			this.addStringValue(name, value);
+		}
+		else{
+			//global variable definition
+			this.addGlobalValue(isGlobalVar, value);
+		}
+	}
+	
+	public void addGlobalValue(String name, String value){		this.m_variables.put(name, value);	}
+
+	
+
 
 	
 	/*
@@ -217,7 +299,6 @@ public class HAPConfigureImp  implements HAPConfiguration, HAPStringable{
 	private HAPConfigureValue getChildConfigureValue(String childName){ return this.m_values.get(childName);  }
 	private Map<String, HAPConfigureImp> getChildConfigurables(){return this.m_childConfigures;}
 	private Map<String, HAPConfigureValue> getChildConfigureValues(){ return this.m_values;  }
-	public void addGlobalValue(String name, String value){		this.m_variables.put(name, value);	}
 	public Map<String, String> getGlobalVaribles(){ return this.m_variables; }
 	private void addChildConfigure(String name, HAPConfigureImp configure){  this.m_childConfigures.put(name, configure); }
 	private void addChildConfigureValue(String name, HAPConfigureValue value){ this.m_values.put(name, value); }
