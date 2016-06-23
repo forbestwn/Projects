@@ -11,5 +11,10 @@ public class HAPVariableValue extends HAPResolvableConfigureItem{
 		
 	}
 
+	@Override
+	String getType() {
+		return HAPConfigureItem.VARIABLE;
+	}
+
 	
 }
