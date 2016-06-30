@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.nosliw.common.configure.HAPConfiguration;
+import com.nosliw.common.configure.HAPConfigure;
 import com.nosliw.common.exception.HAPServiceData;
 import com.nosliw.common.interpolate.HAPStringTemplateUtil;
 import com.nosliw.common.utils.HAPConstant;
@@ -50,7 +50,7 @@ public abstract class HAPDataTypeImp implements HAPDataType{
 	private HAPDataTypeImp m_newerDataType;
 	
 	//we can configure the behavior of data type
-	private HAPConfiguration m_configures;
+	private HAPConfigure m_configures;
 
 	//store all the operation information for this data type(local, available, new)
 	private HAPDataTypeOperationInfos m_operationInfos;
@@ -60,7 +60,7 @@ public abstract class HAPDataTypeImp implements HAPDataType{
 	protected HAPDataTypeImp(HAPDataTypeInfoWithVersion dataTypeInfo,        
 							HAPDataType olderDataType, 		
 							HAPDataTypeInfoWithVersion parentDataTypeInfo, 
-							HAPConfiguration configures,
+							HAPConfigure configures,
 							String description,
 							HAPDataTypeManager dataTypeMan){
 		super();

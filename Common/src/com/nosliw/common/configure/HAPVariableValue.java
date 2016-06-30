@@ -16,5 +16,9 @@ public class HAPVariableValue extends HAPResolvableConfigureItem{
 		return HAPConfigureItem.VARIABLE;
 	}
 
-	
+	public HAPVariableValue clone(){
+		HAPVariableValue out = new HAPVariableValue(null);
+		out.cloneFrom(this);
+		return out;
+	}
 }

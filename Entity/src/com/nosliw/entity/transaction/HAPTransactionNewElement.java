@@ -2,7 +2,7 @@ package com.nosliw.entity.transaction;
 
 import java.util.Set;
 
-import com.nosliw.common.configure.HAPConfiguration;
+import com.nosliw.common.configure.HAPConfigure;
 import com.nosliw.common.exception.HAPServiceData;
 import com.nosliw.common.utils.HAPConstant;
 import com.nosliw.entity.data.HAPEntityID;
@@ -13,7 +13,7 @@ import com.nosliw.entity.operation.HAPEntityOperationInfo;
 
 public class HAPTransactionNewElement extends HAPTransaction{
 	
-	public HAPTransactionNewElement(HAPConfiguration configure, HAPEntityDataAccess access, HAPDataContext dataContext) {
+	public HAPTransactionNewElement(HAPConfigure configure, HAPEntityDataAccess access, HAPDataContext dataContext) {
 		super(configure, access, dataContext);
 		this.setOperationScope(HAPConstant.CONS_ENTITYOPERATION_SCOPE_ENTITY);
 	}

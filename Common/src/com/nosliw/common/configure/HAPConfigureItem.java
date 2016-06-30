@@ -1,6 +1,8 @@
 package com.nosliw.common.configure;
 
-abstract class HAPConfigureItem {
+import com.nosliw.common.serialization.HAPStringable;
+
+abstract class HAPConfigureItem implements HAPStringable{
 
 	public static final String CONFIGURE = "CONFIGURE";
 	public static final String VALUE = "VALUE";
@@ -21,5 +23,5 @@ abstract class HAPConfigureItem {
 	}
 	
 	abstract String getType();
-	public abstract HAPConfigureItem clone();
+	
 }

@@ -3,15 +3,15 @@ package com.nosliw.entity.query;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.nosliw.common.configure.HAPConfiguration;
+import com.nosliw.common.configure.HAPConfigure;
 
 public class HAPQueryDefinitionManager {
 
 	Map<String, HAPQueryDefinition> m_queryDefinitions;
 	
-	HAPConfiguration m_configure;
+	HAPConfigure m_configure;
 	
-	public HAPQueryDefinitionManager(HAPConfiguration configure){
+	public HAPQueryDefinitionManager(HAPConfigure configure){
 		this.m_configure = configure;
 		this.m_queryDefinitions = new LinkedHashMap<String, HAPQueryDefinition>();
 	}

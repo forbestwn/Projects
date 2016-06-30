@@ -12,12 +12,10 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.nosliw.common.configure.HAPConfigureImp;
-import com.nosliw.common.configure.HAPConfigureManager;
+import com.nosliw.common.configure.HAPConfigurableImp;
 import com.nosliw.common.interpolate.HAPInterpolateUtility;
 import com.nosliw.common.interpolate.HAPStringTemplateUtil;
 import com.nosliw.common.utils.HAPBasicUtility;
-import com.nosliw.common.utils.HAPConstant;
 import com.nosliw.common.utils.HAPFileUtility;
 import com.nosliw.common.utils.HAPJsonUtility;
 import com.nosliw.common.utils.HAPXMLUtility;
@@ -26,20 +24,20 @@ import com.nosliw.common.utils.HAPXMLUtility;
  * Utiltiy application that create constant java class and javascript file according to the constant definitions in configure file
  * With this application, all the constants in other application can be defined in one place and used in multiple places : server side and client side
  */
-public class HAPConstantProcessingApp {
-	public static void main(String[] args){
+public class HAPConstantProcessingApp extends HAPConfigurableImp{
+	protected HAPConstantProcessingApp() {
+		super("constantprocess.properties", null);
+	}
+
+	public void process(){
 		try{
-			InputStream input = HAPFileUtility.getInputStreamOnClassPath(HAPConstantProcessingApp.class, "constantprocess.properties");
-    		HAPConfigureImp configure = HAPConfigureManager.getInstance().createConfigureWithBaseName(HAPConstant.CONS_CONFIGURATION_DEFAULTBASE);
-    		if(input!=null)  configure = configure.importFromFile(input);
-    		
 			InputStream configureStream = HAPFileUtility.getInputStreamOnClassPath(HAPConstantProcessingApp.class, "constant.xml");
 			DocumentBuilderFactory DOMfactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder DOMbuilder = DOMfactory.newDocumentBuilder();
 			Document doc = DOMbuilder.parse(configureStream);
 
 			Element rootEle = doc.getDocumentElement();
-			String jsPath = HAPInterpolateUtility.interpolate(rootEle.getAttribute("jsPath"), configure); 
+			String jsPath = HAPInterpolateUtility.interpolate(rootEle.getAttribute("jsPath"), this.getConfiguration()); 
 			String jsAttributeFile = rootEle.getAttribute("jsAttributeFile");
 			String jsConstantFile = rootEle.getAttribute("jsConstantFile");
 			
@@ -54,7 +52,7 @@ public class HAPConstantProcessingApp {
 					attrConsInfos.add(attrInfo);
 					processJSItem(attrInfo, attributeJsonMap, attributeTypesJsonMap);
 				}
-				processJavaConstant(attrConsInfos, attrsEle.getAttribute("packagename"), attrsEle.getAttribute("classname"), configure.processStringValue(attrsEle.getAttribute("filepath"))); 
+				processJavaConstant(attrConsInfos, attrsEle.getAttribute("packagename"), attrsEle.getAttribute("classname"), HAPInterpolateUtility.interpolate(attrsEle.getAttribute("filepath"), this.getConfiguration())); 
 			}
 			//attribute json structure
 			String attrJson = HAPJsonUtility.getMapJson(attributeJsonMap, attributeTypesJsonMap);
@@ -71,7 +69,7 @@ public class HAPConstantProcessingApp {
 					consConsInfos.add(consInfo);
 					processJSItem(consInfo, constantJsonMap, constantTypesJsonMap);
 				}
-				processJavaConstant(consConsInfos, constantsEle.getAttribute("packagename"), constantsEle.getAttribute("classname"), configure.processStringValue(constantsEle.getAttribute("filepath"))); 
+				processJavaConstant(consConsInfos, constantsEle.getAttribute("packagename"), constantsEle.getAttribute("classname"), HAPInterpolateUtility.interpolate(constantsEle.getAttribute("filepath"), this.getConfiguration())); 
 			}
 			//constant json structure
 			String constantJson = HAPJsonUtility.getMapJson(constantJsonMap, constantTypesJsonMap);
@@ -82,15 +80,15 @@ public class HAPConstantProcessingApp {
 			e.printStackTrace();
 		}
 	}
-
-	private static String getFilePath(String filePath, String projectsPath){
+	
+	private String getFilePath(String filePath, String projectsPath){
 		if(filePath.startsWith("./")){
 			filePath = projectsPath + filePath.substring(1);
 		}
 		return filePath;
 	}
 	
-	private static void processJsonFile(String jsonContent, String filePath, String fileName){
+	private void processJsonFile(String jsonContent, String filePath, String fileName){
 		String content = "var " + fileName + "=\n" + HAPJsonUtility.formatJson(jsonContent) + ";";
 		HAPFileUtility.writeFile(filePath+"/"+fileName+".js", content);
 		
@@ -99,7 +97,7 @@ public class HAPConstantProcessingApp {
 	/*
 	 * process constant definition and create jason map and type map
 	 */
-	private static void processJSItem(HAPConstantInfo info, Map<String, String> valueMap, Map<String, Class> datatypeMap){
+	private void processJSItem(HAPConstantInfo info, Map<String, String> valueMap, Map<String, Class> datatypeMap){
 		if("js".equals(info.skip))  return;
 		
 		if(HAPBasicUtility.isStringEmpty(info.type)){
@@ -120,7 +118,7 @@ public class HAPConstantProcessingApp {
 	/*
 	 * process a list of constant and save them to java class
 	 */
-	private static String processJavaConstant(List<HAPConstantInfo> values, String packageName, String className, String filePath){
+	private String processJavaConstant(List<HAPConstantInfo> values, String packageName, String className, String filePath){
 
 		Map<String, String> attrJavaTemplateParms = new LinkedHashMap<String, String>();
 		
@@ -145,7 +143,7 @@ public class HAPConstantProcessingApp {
 	/*
 	 * process individual constant def
 	 */
-	private static String getJavaItem(HAPConstantInfo info){
+	private String getJavaItem(HAPConstantInfo info){
 		String out = "";
 		if(HAPBasicUtility.isStringEmpty(info.type) || info.type.equals("string")){
 			out = "		public static final String " + info.name + " = \"" + info.value + "\";\n";
@@ -158,4 +156,10 @@ public class HAPConstantProcessingApp {
 		}
 		return out;
 	}
+	
+	public static void main(String[] args){
+		HAPConstantProcessingApp app = new HAPConstantProcessingApp();
+		app.process();
+	}
+
 }

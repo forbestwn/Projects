@@ -58,21 +58,14 @@ public class HAPConfigureValueString extends HAPResolvableConfigureItem implemen
 		return this.m_stringArrays;
 	}
 	
-	public HAPConfigureValue clone(){
-		return new HAPConfigureValueString(this.getValue());
-	}
-
-	@Override
-	public String toStringValue(String format) {
-		return this.getValue();
-	}
-	
-	@Override
-	public String toString(){
-		return this.getValue();
-	}
-
 	@Override
 	protected void setResolvedContent(String resolvedContent) {	}
 
+	public HAPConfigureValueString clone(){
+		HAPConfigureValueString out = new HAPConfigureValueString(this.getValue());
+		out.cloneFrom(this);
+		out.m_stringArrays = this.m_stringArrays.clone();
+		return out;
+	}
+	
 }

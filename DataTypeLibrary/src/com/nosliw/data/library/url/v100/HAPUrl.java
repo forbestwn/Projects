@@ -1,6 +1,6 @@
 package com.nosliw.data.library.url.v100;
 
-import com.nosliw.common.configure.HAPConfiguration;
+import com.nosliw.common.configure.HAPConfigure;
 import com.nosliw.common.exception.HAPServiceData;
 import com.nosliw.data.HAPData;
 import com.nosliw.data.HAPDataType;
@@ -17,7 +17,7 @@ public class HAPUrl extends HAPDataTypeImp{
 	private HAPUrl(HAPDataTypeInfoWithVersion dataTypeInfo, 
 					HAPDataType olderDataType, 
 					HAPDataTypeInfoWithVersion parentDataTypeInfo, 
-					HAPConfiguration configure,
+					HAPConfigure configure,
 					String description,
 					HAPDataTypeManager dataTypeMan) {
 		super(dataTypeInfo, olderDataType, parentDataTypeInfo, configure, description, dataTypeMan);
@@ -62,7 +62,7 @@ public class HAPUrl extends HAPDataTypeImp{
 	static public HAPUrl createDataType(HAPDataTypeInfoWithVersion dataTypeInfo, 
 			HAPDataType olderDataType, 		
 			HAPDataTypeInfoWithVersion parentDataTypeInfo, 
-			HAPConfiguration configures,
+			HAPConfigure configures,
 			String description,
 			HAPDataTypeManager dataTypeMan){
 		return new HAPUrl(dataTypeInfo, olderDataType, parentDataTypeInfo, configures, description, dataTypeMan);

@@ -13,7 +13,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.nosliw.common.configure.HAPConfiguration;
+import com.nosliw.common.configure.HAPConfigure;
 import com.nosliw.common.configure.HAPConfigureImp;
 import com.nosliw.common.utils.HAPBasicUtility;
 import com.nosliw.common.utils.HAPXMLUtility;
@@ -24,7 +24,7 @@ import com.nosliw.data.info.HAPDataTypeInfoWithVersion;
 
 public class HAPApplicationDataTypeManager extends HAPDataTypeManager{
 
-	public HAPApplicationDataTypeManager(HAPConfiguration configure){
+	public HAPApplicationDataTypeManager(HAPConfigure configure){
 		super(configure);
 		String[] libs = configure.getArrayValue("libs");
 		for(String lib : libs){
@@ -68,7 +68,7 @@ public class HAPApplicationDataTypeManager extends HAPDataTypeManager{
 															HAPDataTypeInfoWithVersion.class,
 															HAPDataType.class,
 															HAPDataTypeInfoWithVersion.class,
-															HAPConfiguration.class,
+															HAPConfigure.class,
 															String.class,
 															HAPDataTypeManager.class);
 					HAPDataType dataType = (HAPDataType)method.invoke(null,
@@ -89,8 +89,8 @@ public class HAPApplicationDataTypeManager extends HAPDataTypeManager{
 		} 
 	}
 	
-	private HAPConfiguration readConfigure(Element versionEle){
-		HAPConfiguration out = null;
+	private HAPConfigure readConfigure(Element versionEle){
+		HAPConfigure out = null;
 		Element parmsEle = HAPXMLUtility.getFirstChildElementByName(versionEle, "parms");
 		if(parmsEle!=null){
 			Map<String, Object> parmMap = new LinkedHashMap<String, Object>();

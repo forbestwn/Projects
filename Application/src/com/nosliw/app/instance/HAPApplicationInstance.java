@@ -3,7 +3,7 @@ package com.nosliw.app.instance;
 import java.io.InputStream;
 
 import com.nosliw.app.log.HAPFileLogger;
-import com.nosliw.common.configure.HAPConfiguration;
+import com.nosliw.common.configure.HAPConfigure;
 import com.nosliw.common.configure.HAPConfigureImp;
 import com.nosliw.common.log.HAPLogger;
 import com.nosliw.common.utils.HAPConstant;
@@ -29,13 +29,13 @@ public class HAPApplicationInstance{
 	
 	private HAPApplicationQueryDefinitionManager m_queryDefMan;
 	
-	private HAPConfiguration m_configure;
+	private HAPConfigure m_configure;
 	
 	private HAPApplicationClientContextManager m_clientContextMan;
 	
 	private HAPLogger m_logger;
 	
-	private HAPApplicationInstance(HAPConfiguration configure){
+	private HAPApplicationInstance(HAPConfigure configure){
 		if(configure!=null){
 			//if input is not null, use it as configure
 			this.m_configure = configure;

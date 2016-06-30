@@ -54,19 +54,21 @@ public class HAPConfigureManager {
 	
 	private void initDefaultBase(){
 		//import global variables
-		HAPConfigureImp rootConfigure = this.createConfigureFromFileWithBaseName("global.properties", HAPConfigureManager.class, null);
-		this.registerConfigureBase(HAPConstant.CONS_CONFIGURATION_DEFAULTBASE, rootConfigure);
+		HAPConfigureImp baseConfigure = this.newConfigure();
+		baseConfigure.importFromProperty("global.properties", this.getClass());
 		
 		//import from constant
 		Field[] declaredFields = HAPConstant.class.getDeclaredFields();
 		for (Field field : declaredFields) {
 		    if (java.lang.reflect.Modifier.isStatic(field.getModifiers())) {
 		    	try {
-		    		rootConfigure.addGlobalValue(field.getName(), field.get(HAPConstant.class).toString());
+		    		baseConfigure.addVariableValue(field.getName(), field.get(HAPConstant.class).toString());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 		    }
 		}
+
+		this.registerConfigureBase(HAPConstant.CONS_CONFIGURATION_DEFAULTBASE, baseConfigure);
 	}
 }

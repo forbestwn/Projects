@@ -10,17 +10,17 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import com.nosliw.common.configure.HAPConfiguration;
+import com.nosliw.common.configure.HAPConfigure;
 import com.nosliw.common.log.HAPLogger;
 import com.nosliw.common.utils.HAPBasicUtility;
 
 public class HAPFileLogger implements HAPLogger{
 
-	private HAPConfiguration m_configure;
+	private HAPConfigure m_configure;
 	
 	private String m_logPath;
 	
-	public HAPFileLogger(HAPConfiguration configure){
+	public HAPFileLogger(HAPConfigure configure){
 		this.m_configure = configure;
 	}
 	

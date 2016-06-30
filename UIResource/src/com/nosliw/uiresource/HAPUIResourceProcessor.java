@@ -19,7 +19,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
-import com.nosliw.common.configure.HAPConfiguration;
+import com.nosliw.common.configure.HAPConfigure;
 import com.nosliw.common.interpolate.HAPStringTemplateUtil;
 import com.nosliw.common.utils.HAPBasicUtility;
 import com.nosliw.common.utils.HAPConstant;
@@ -38,14 +38,14 @@ public class HAPUIResourceProcessor {
 	//for creating ui id
 	private int m_idIndex;
 	//configuration object
-	private HAPConfiguration m_setting;
+	private HAPConfigure m_setting;
 	//current ui resource 
 	private HAPUIResource m_resource = null;
 	
 	private HAPDataTypeManager m_dataTypeMan;
 	private HAPUIResourceManager m_uiResourceMan;
 	
-	public HAPUIResourceProcessor(HAPConfiguration setting, HAPDataTypeManager dataTypeMan, HAPUIResourceManager uiResourceMan){
+	public HAPUIResourceProcessor(HAPConfigure setting, HAPDataTypeManager dataTypeMan, HAPUIResourceManager uiResourceMan){
 		this.m_uiResourceMan = uiResourceMan;
 		this.m_dataTypeMan = dataTypeMan;
 		this.m_idIndex = 1;

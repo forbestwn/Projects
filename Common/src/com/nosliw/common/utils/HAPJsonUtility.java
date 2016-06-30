@@ -137,10 +137,10 @@ public class HAPJsonUtility {
 		else if(Boolean.class==type){
 			out.append("\"" + attr+ "\""+":" + value + ""+lastString);
 		}
-		else if(value.indexOf("{")==0){
+		else if(isObject(value)){
 			out.append("\"" + attr+ "\""+":" + value + lastString);
 		}
-		else if(value.indexOf("[")==0){
+		else if(isArray(value)){
 			out.append("\"" + attr+ "\""+":" + value + lastString);
 		}
 		else{
@@ -171,6 +171,16 @@ public class HAPJsonUtility {
 		return out.toString();
 	}
 
+	private static boolean isArray(String value){
+		String value1 = value.trim();
+		return value1.indexOf("[")==0 && value1.trim().lastIndexOf("]")==value1.trim().length()-1;
+	}
+	
+	private static boolean isObject(String value){
+		String value1 = value.trim();
+		return value1.indexOf("{")==0 && value1.lastIndexOf("}")==value1.trim().length()-1;
+	}
+	
 	public static String formatJson(String jsonString){
 		try{
 //			JsonReader reader = new JsonReader(new StringReader(jsonString));

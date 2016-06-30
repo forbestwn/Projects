@@ -35,7 +35,8 @@ public class HAPInterpolateUtility {
 	}
 	
 	public static String interpolate(String text, HAPConfigureImp configure){
-		return (String)HAPPatternManager.getInstance().getPatternProcessor(HAPPatternProcessorDocVariable.class.getName()).parse(text, configure.getGlobalVaribles());
+		HAPInterpolateOutput out = (HAPInterpolateOutput)HAPPatternManager.getInstance().getPatternProcessor(HAPPatternProcessorDocVariable.class.getName()).parse(text, configure);
+		return out.getOutput();
 	}
 	
 }

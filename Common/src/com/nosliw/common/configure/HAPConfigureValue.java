@@ -2,7 +2,7 @@ package com.nosliw.common.configure;
 
 import com.nosliw.common.serialization.HAPStringable;
 
-public interface HAPConfigureValue extends HAPStringable{
+public interface HAPConfigureValue{
 
 	public String getStringValue();
 

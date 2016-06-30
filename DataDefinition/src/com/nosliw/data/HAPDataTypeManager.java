@@ -12,7 +12,7 @@ import java.util.Set;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.nosliw.common.configure.HAPConfiguration;
+import com.nosliw.common.configure.HAPConfigure;
 import com.nosliw.common.interpolate.HAPStringTemplateUtil;
 import com.nosliw.common.resource.HAPResource;
 import com.nosliw.common.serialization.HAPStringable;
@@ -49,9 +49,9 @@ public class HAPDataTypeManager implements HAPStringable, HAPResource{
 	private Map<String, String> m_dataTypeOperationScripts;
 	
 	//configure info
-	private HAPConfiguration m_configures;
+	private HAPConfigure m_configures;
 
-	public HAPDataTypeManager(HAPConfiguration configures){
+	public HAPDataTypeManager(HAPConfigure configures){
 		this.m_configures = configures;
 		
 		this.m_dataTypes = new LinkedHashMap<String, HAPDataType>();
@@ -262,7 +262,7 @@ public class HAPDataTypeManager implements HAPStringable, HAPResource{
 	
 	
 	/****************************** configure ********************************/
-	public HAPConfiguration getConfiguration(){return this.m_configures;}
+	public HAPConfigure getConfiguration(){return this.m_configures;}
 	
 	/*
 	 * get temporate file location

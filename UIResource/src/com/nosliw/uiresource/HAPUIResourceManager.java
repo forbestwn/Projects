@@ -3,7 +3,7 @@ package com.nosliw.uiresource;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.nosliw.common.configure.HAPConfiguration;
+import com.nosliw.common.configure.HAPConfigure;
 import com.nosliw.common.configure.HAPConfigureImp;
 import com.nosliw.common.serialization.HAPStringable;
 import com.nosliw.common.utils.HAPConstant;
@@ -17,11 +17,11 @@ public class HAPUIResourceManager implements HAPStringable{
 	
 	private Map<String, String> m_uiResourceScripts;
 	
-	private HAPConfiguration m_setting;
+	private HAPConfigure m_setting;
 	
 	private HAPDataTypeManager m_dataTypeMan;
 	
-	public HAPUIResourceManager(HAPConfiguration setting, HAPDataTypeManager dataTypeMan) {
+	public HAPUIResourceManager(HAPConfigure setting, HAPDataTypeManager dataTypeMan) {
 		this.m_dataTypeMan = dataTypeMan;
 		this.m_uiResource = new LinkedHashMap<String, HAPUIResource>();
 		this.m_uiResourceScripts = new LinkedHashMap<String, String>();
@@ -86,6 +86,6 @@ public class HAPUIResourceManager implements HAPStringable{
 	public String toString(){ return this.toStringValue(HAPConstant.CONS_SERIALIZATION_JSON); }
 
 	protected HAPDataTypeManager getDataTypeManager(){	return this.m_dataTypeMan;	}
-	protected HAPConfiguration getConfiguration(){ return this.m_setting; }
+	protected HAPConfigure getConfiguration(){ return this.m_setting; }
 	
 }

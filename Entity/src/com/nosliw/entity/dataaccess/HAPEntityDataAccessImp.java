@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.nosliw.common.configure.HAPConfiguration;
+import com.nosliw.common.configure.HAPConfigure;
 import com.nosliw.common.exception.HAPServiceData;
 import com.nosliw.common.utils.HAPBasicUtility;
 import com.nosliw.common.utils.HAPConstant;
@@ -54,13 +54,13 @@ public abstract class HAPEntityDataAccessImp implements HAPEntityDataAccess{
 	//store all the operations related with request
 	private HAPOperationAllResult m_results;
 
-	private HAPConfiguration m_configure;
+	private HAPConfigure m_configure;
 	private HAPDataContext m_dataContext;
 	
 	//operation scope within this data access
 	private int m_operationScope;
 	
-	public HAPEntityDataAccessImp(HAPConfiguration configure, HAPEntityDataAccess access, HAPDataContext dataContext) {
+	public HAPEntityDataAccessImp(HAPConfigure configure, HAPEntityDataAccess access, HAPDataContext dataContext) {
 		this.m_configure = configure;
 		this.m_dataContext = dataContext;
 		this.m_underMe = access;
@@ -484,7 +484,7 @@ public abstract class HAPEntityDataAccessImp implements HAPEntityDataAccess{
 	public HAPDataContext getDataContext(){ return this.m_dataContext; }
 	public void setDataContext(HAPDataContext dataContext){ this.m_dataContext = dataContext; }
 
-	protected HAPConfiguration getConfigure(){ return this.m_configure; }
+	protected HAPConfigure getConfigure(){ return this.m_configure; }
 	
 	@Override
 	public String toStringValue(String format){

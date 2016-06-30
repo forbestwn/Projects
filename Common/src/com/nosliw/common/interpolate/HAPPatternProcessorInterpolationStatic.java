@@ -1,7 +1,6 @@
 package com.nosliw.common.interpolate;
 
-import java.util.Map;
-
+import com.nosliw.common.configure.HAPConfigureImp;
 import com.nosliw.common.pattern.HAPPatternProcessorImp;
 
 public abstract class HAPPatternProcessorInterpolationStatic extends HAPPatternProcessorImp{
@@ -20,8 +19,8 @@ public abstract class HAPPatternProcessorInterpolationStatic extends HAPPatternP
 		return HAPInterpolateUtility.process(text, data, this.m_startToken, this.m_endToken, new HAPExpressionProcessor(){
 			@Override
 			public String process(String expression, Object object) {
-				Map<String, String> varValues = (Map<String, String>)object;
-				String varValue = varValues.get(expression);
+				HAPConfigureImp varValues = (HAPConfigureImp)object;
+				String varValue = varValues.getStringValue(expression);
 				return varValue;
 			}
 		});

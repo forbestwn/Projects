@@ -1,6 +1,6 @@
 package com.nosliw.data.library.color.v100;
 
-import com.nosliw.common.configure.HAPConfiguration;
+import com.nosliw.common.configure.HAPConfigure;
 import com.nosliw.common.exception.HAPServiceData;
 import com.nosliw.data.HAPData;
 import com.nosliw.data.HAPDataType;
@@ -15,7 +15,7 @@ public class HAPColor extends HAPDataTypeImp{
 	private HAPColor(HAPDataTypeInfoWithVersion dataTypeInfo, 
 					HAPDataType olderDataType, 
 					HAPDataTypeInfoWithVersion parentDataTypeInfo, 
-					HAPConfiguration configure,
+					HAPConfigure configure,
 					String description,
 					HAPDataTypeManager dataTypeMan) {
 		super(dataTypeInfo, olderDataType, parentDataTypeInfo, configure, description, dataTypeMan);
@@ -46,7 +46,7 @@ public class HAPColor extends HAPDataTypeImp{
 	static public HAPColor createDataType(HAPDataTypeInfoWithVersion dataTypeInfo, 
 			HAPDataType olderDataType, 		
 			HAPDataTypeInfoWithVersion parentDataTypeInfo, 
-			HAPConfiguration configures,
+			HAPConfigure configures,
 			String description,
 			HAPDataTypeManager dataTypeMan){
 		return new HAPColor(dataTypeInfo, olderDataType, parentDataTypeInfo, configures, description, dataTypeMan);
